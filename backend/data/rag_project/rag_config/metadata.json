@@ -1,0 +1,31 @@
+{
+  "streams": {
+    "biological_science": {
+      "label": "Biological Science",
+      "code": "BS"
+    },
+    "physical_science": {
+      "label": "Physical Science",
+      "code": "PS"
+    },
+    "commerce": {
+      "label": "Commerce",
+      "code": "CM"
+    },
+    "art": {
+      "label": "Art",
+      "code": "AR"
+    },
+    "technology": {
+      "label": "Technology",
+      "code": "TECH"
+    }
+  },
+  "questions_per_stream": 10,
+  "max_marks_per_question": 1,
+  "answer_type": "short_answer",
+  "chunking": {
+    "approx_words_per_chunk": 450,
+    "overlap_words": 75
+  }
+}
