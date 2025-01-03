@@ -1,6 +1,6 @@
 import React from "react";
 import { AlertCircle } from "lucide-react";
-import { ErrorAlertProps } from "../../types/predictor.types";
+import { ErrorAlertProps } from "../../../types/predictor.types";
 
 export default function ErrorAlert({ message }: ErrorAlertProps) {
     return (
