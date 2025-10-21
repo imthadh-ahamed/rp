@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { motion } from 'framer-motion';
 import { FormInput, Button, Checkbox, FormDivider, SocialButton, showToast } from '@/components/ui';
 import authService from '@/services/auth.service';
 
@@ -76,22 +77,41 @@ export default function LoginForm() {
   });
 
   return (
-    <div className="w-full max-w-md">
-      <div className="mb-8">
+    <motion.div
+      className="w-full max-w-md"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        className="mb-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign In</h2>
         <p className="text-gray-600">Enter your credentials to access your account</p>
-      </div>
+      </motion.div>
 
       <form className="space-y-6" onSubmit={formik.handleSubmit}>
         {/* Error Message */}
         {error && (
-          <div className="p-3 rounded-lg bg-red-50 border border-red-200">
+          <motion.div
+            className="p-3 rounded-lg bg-red-50 border border-red-200"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
             <p className="text-sm text-red-600">{error}</p>
-          </div>
+          </motion.div>
         )}
 
         {/* Email Field */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
           <FormInput
             id="email"
             name="email"
@@ -104,12 +124,22 @@ export default function LoginForm() {
             disabled={loading}
           />
           {formik.touched.email && formik.errors.email && (
-            <p className="mt-1 text-sm text-red-600">{formik.errors.email}</p>
+            <motion.p
+              className="mt-1 text-sm text-red-600"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              {formik.errors.email}
+            </motion.p>
           )}
-        </div>
+        </motion.div>
 
         {/* Password Field */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
           <FormInput
             id="password"
             name="password"
@@ -122,40 +152,71 @@ export default function LoginForm() {
             disabled={loading}
           />
           {formik.touched.password && formik.errors.password && (
-            <p className="mt-1 text-sm text-red-600">{formik.errors.password}</p>
+            <motion.p
+              className="mt-1 text-sm text-red-600"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              {formik.errors.password}
+            </motion.p>
           )}
-        </div>
+        </motion.div>
 
         {/* Remember Me & Forgot Password */}
-        <div className="flex items-center justify-between">
+        <motion.div
+          className="flex items-center justify-between"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
           <Checkbox label="Remember me" />
           <Link href="/forgot-password" className="text-sm text-cyan-600 hover:text-cyan-700">
             Forgot password?
           </Link>
-        </div>
+        </motion.div>
 
         {/* Submit Button */}
-        <Button type="submit" fullWidth disabled={loading}>
-          {loading ? 'Signing In...' : 'Sign In'}
-        </Button>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <Button type="submit" fullWidth disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
+          </Button>
+        </motion.div>
       </form>
 
       {/* Divider */}
-      <FormDivider text="Or continue with" />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
+      >
+        <FormDivider text="Or continue with" />
+      </motion.div>
 
       {/* Social Login */}
+      {/* Social SignUp */}
       <div className="grid grid-cols-2 gap-4">
         <SocialButton provider="google" />
         <SocialButton provider="facebook" />
       </div>
 
       {/* Sign Up Link */}
-      <p className="mt-8 text-center text-sm text-gray-600">
+      <motion.p
+        className="mt-8 text-center text-sm text-gray-600"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.0, duration: 0.5 }}
+      >
         Don't have an account?{' '}
         <Link href="/signup" className="font-semibold text-cyan-600 hover:text-cyan-700">
           Sign up
         </Link>
-      </p>
-    </div>
+      </motion.p>
+    </motion.div>
   );
 }
