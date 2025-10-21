@@ -39,19 +39,21 @@ export default function DashboardHeader() {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <Image
-              src="/AspireAI.png"
-              alt="AspireAI"
-              width={40}
-              height={40}
-              className="drop-shadow-md"
-            />
-            <span className="text-2xl font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
-              AspireAI
-            </span>
+        <div className="flex justify-between items-center h-20">
+          {/* Logo and Welcome */}
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-3">
+              <Image
+                src="/AspireAI.png"
+                alt="AspireAI"
+                width={40}
+                height={40}
+                className="drop-shadow-md"
+              />
+              <span className="text-2xl font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
+                AspireAI
+              </span>
+            </div>
           </div>
 
           {/* User Menu */}
