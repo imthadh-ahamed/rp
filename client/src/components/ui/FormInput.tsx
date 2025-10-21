@@ -8,6 +8,9 @@ interface FormInputProps {
   placeholder: string;
   required?: boolean;
   autoComplete?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 export default function FormInput({
@@ -17,7 +20,10 @@ export default function FormInput({
   label,
   placeholder,
   required = false,
-  autoComplete
+  autoComplete,
+  value,
+  onChange,
+  disabled = false
 }: FormInputProps) {
   return (
     <div>
@@ -30,7 +36,10 @@ export default function FormInput({
         name={name}
         required={required}
         autoComplete={autoComplete}
-        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition"
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition disabled:bg-gray-100 disabled:cursor-not-allowed"
         placeholder={placeholder}
       />
     </div>
