@@ -103,6 +103,30 @@ export default function SignUpForm() {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Back to Home Button */}
+      <motion.div
+        className="mb-6"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.5 }}
+      >
+        <Link 
+          href="/"
+          className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-cyan-600 transition-colors"
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="h-4 w-4" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Back to Home
+        </Link>
+      </motion.div>
+
       <motion.div
         className="mb-8"
         initial={{ opacity: 0, y: 20 }}
