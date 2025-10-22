@@ -42,7 +42,7 @@ jobs:
       DB_USER: postgres
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
-      DB_HOST: postgres
+      DB_HOST: localhost
       DB_PORT: 5432
       DB_DIALECT: postgres
       CORS_ORIGIN: http://localhost:3000
@@ -58,21 +58,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Install Postgres client (to check readiness)
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
-
-      - name: Wait for Postgres to be ready
-        run: |
-          for i in {1..30}; do
-            pg_isready -h postgres -p 5432 -U $DB_USER >/dev/null 2>&1 && { echo "Postgres ready"; exit 0; }
-            echo "Waiting for Postgres..."
-            sleep 1
-          done
-          echo "Postgres did not become ready in time" && exit 1
-
-      # - name: Run migrations (uncomment if needed)
-      #   run: npm run migrate
 
       - name: Run tests
         run: npm test
