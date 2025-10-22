@@ -35,7 +35,7 @@ jobs:
         working-directory: server
 
     env:
-      NODE_ENV: development
+      NODE_ENV: test
       PORT: 8080
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       JWT_EXPIRE: 7d
