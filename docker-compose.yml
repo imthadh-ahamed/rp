@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Server service
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: rp-server
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRE=${JWT_EXPIRE:-7d}
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=${DB_DATABASE}
+      - CORS_ORIGIN=http://localhost:3000
+    restart: unless-stopped
+    networks:
+      - rp-network
+
+  # Client service
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: rp-client
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://localhost:8080
+    depends_on:
+      - server
+    restart: unless-stopped
+    networks:
+      - rp-network
+
+networks:
+  rp-network:
+    driver: bridge
