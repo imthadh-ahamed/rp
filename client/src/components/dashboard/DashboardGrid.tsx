@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const gridItems = [
   {
@@ -20,9 +21,9 @@ const gridItems = [
   {
     emoji: "🚀",
     title: "Career Guide for Non-Traditional Students",
-    description: "Show alternative education and ROI-based options.",
+    description: "Show alternative education options.",
     buttonText: "Explore",
-    href: "#"
+    href: "/career-guide"
   },
   {
     emoji: "💡",
@@ -34,6 +35,14 @@ const gridItems = [
 ];
 
 export default function DashboardGrid() {
+  const router = useRouter();
+
+  const handleCardClick = (href: string) => {
+    if (href !== '#') {
+      router.push(href);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
       {gridItems.map((item, idx) => (
@@ -45,7 +54,10 @@ export default function DashboardGrid() {
           whileHover={{ scale: 1.02, y: -4 }}
           className="group"
         >
-          <div className="h-full rounded-2xl bg-white shadow-md hover:shadow-xl border border-gray-100 p-6 transition-all cursor-pointer">
+          <div 
+            className="h-full rounded-2xl bg-white shadow-md hover:shadow-xl border border-gray-100 p-6 transition-all cursor-pointer"
+            onClick={() => handleCardClick(item.href)}
+          >
             {/* Header with emoji */}
             <div className="flex justify-between items-start mb-4">
               <div className="text-5xl">{item.emoji}</div>
@@ -65,6 +77,10 @@ export default function DashboardGrid() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCardClick(item.href);
+              }}
               className="w-full py-2.5 px-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white rounded-xl font-medium text-sm hover:from-cyan-600 hover:to-teal-600 transition-all shadow-sm hover:shadow-md"
             >
               {item.buttonText}
