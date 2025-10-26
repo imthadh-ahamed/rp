@@ -62,7 +62,7 @@ const startServer = async () => {
     
     // Start listening
     app.listen(PORT, () => {
-      console.log(`🚀 AspireAI Server Running on Port: ${PORT}`);
+      console.log(`\x1b[34m🚀 AspireAI Server Running on Port: ${PORT}\x1b[0m`);
     });
   } catch (error) {
     console.error('❌ Failed to start server:', error);
