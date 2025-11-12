@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -29,13 +29,13 @@ export default function Home() {
       {/* Main Content */}
       <div className="relative z-10 text-center space-y-8 p-8 max-w-5xl mx-auto">
         {/* Logo Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
           className="mb-8"
         >
-          <motion.div 
+          <motion.div
             className="flex justify-center mb-6"
             whileHover={{ scale: 1.05, rotate: 2 }}
             transition={{ type: "spring", stiffness: 300 }}
@@ -49,28 +49,30 @@ export default function Home() {
               className="drop-shadow-2xl"
             />
           </motion.div>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-2xl md:text-3xl font-semibold text-gray-800 mb-3 flex items-center justify-center gap-2"
           >
-            Empowering every student with intelligent, personalized career guidance
+            Empowering every student with intelligent, personalized career
+            guidance
           </motion.p>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
             className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto"
           >
-            Discover your best A/L stream, university course, and career path — powered by AI.
+            Discover your best A/L stream, university course, and career path —
+            powered by AI.
           </motion.p>
         </motion.div>
-        
+
         {/* Call to Action */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
@@ -88,7 +90,7 @@ export default function Home() {
                 Sign In
               </Link>
             </motion.div>
-            
+
             <motion.div
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
@@ -103,7 +105,7 @@ export default function Home() {
           </div>
 
           {/* Progressive Callout */}
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.6 }}
@@ -115,7 +117,7 @@ export default function Home() {
         </motion.div>
 
         {/* Features Preview */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.6 }}
@@ -125,7 +127,7 @@ export default function Home() {
             { emoji: "🎓", text: "A/L Stream Guidance" },
             { emoji: "🏛️", text: "University Selection" },
             { emoji: "🚀", text: "Career Pathways" },
-            { emoji: "💡", text: "Skill Development" }
+            { emoji: "💡", text: "Skill Development" },
           ].map((feature, idx) => (
             <motion.div
               key={feature.text}
@@ -136,7 +138,9 @@ export default function Home() {
               className="bg-white/60 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-xl transition-all border border-cyan-100"
             >
               <div className="text-3xl mb-2">{feature.emoji}</div>
-              <p className="text-sm font-medium text-gray-700">{feature.text}</p>
+              <p className="text-sm font-medium text-gray-700">
+                {feature.text}
+              </p>
             </motion.div>
           ))}
         </motion.div>
@@ -165,4 +169,3 @@ export default function Home() {
     </div>
   );
 }
-

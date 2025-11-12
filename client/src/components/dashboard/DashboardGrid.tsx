@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const gridItems = [
   {
@@ -9,36 +9,37 @@ const gridItems = [
     title: "A/L Stream Guidance",
     description: "Analyze O/L results to recommend the best stream.",
     buttonText: "Explore",
-    href: "#"
+    href: "/AL-Stream",
   },
   {
     emoji: "🏛️",
     title: "State University Course Selector",
     description: "Predict top 15 UGC programs using AI.",
     buttonText: "Explore",
-    href: "#"
+    href: "#",
   },
   {
     emoji: "🚀",
     title: "Career Guide for Non-Traditional Students",
     description: "Show alternative education options.",
     buttonText: "Explore",
-    href: "/career-guide"
+    href: "/career-guide",
   },
   {
     emoji: "💡",
     title: "Soft Skill Developer",
-    description: "Assess and enhance communication, leadership, teamwork skills.",
+    description:
+      "Assess and enhance communication, leadership, teamwork skills.",
     buttonText: "Explore",
-    href: "#"
-  }
+    href: "#",
+  },
 ];
 
 export default function DashboardGrid() {
   const router = useRouter();
 
   const handleCardClick = (href: string) => {
-    if (href !== '#') {
+    if (href !== "#") {
       router.push(href);
     }
   };
@@ -54,7 +55,7 @@ export default function DashboardGrid() {
           whileHover={{ scale: 1.02, y: -4 }}
           className="group"
         >
-          <div 
+          <div
             className="h-full rounded-2xl bg-white shadow-md hover:shadow-xl border border-gray-100 p-6 transition-all cursor-pointer"
             onClick={() => handleCardClick(item.href)}
           >
