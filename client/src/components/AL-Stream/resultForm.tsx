@@ -39,36 +39,31 @@ export default function ResultForm() {
   const calculateAverage = (subject: string) => {
     const t1 = parseFloat(term1Results[subject]) || 0;
     const t2 = parseFloat(term2Results[subject]) || 0;
-    return ((t1 + t2) / 2).toFixed(1);
+    return (t1 + t2) / 2;
   };
 
-  const getGrade = (subject: string) => {
-    const average = parseFloat(calculateAverage(subject));
+  const getLetterGrade = (subject: string) => {
+    const avg = calculateAverage(subject);
 
-    if (average >= 75)
-      return {
-        grade: "A",
-        color: "from-green-50 to-emerald-50 border-green-300 text-green-700",
-      };
-    if (average >= 65)
-      return {
-        grade: "B",
-        color: "from-blue-50 to-cyan-50 border-blue-300 text-blue-700",
-      };
-    if (average >= 55)
-      return {
-        grade: "C",
-        color: "from-yellow-50 to-amber-50 border-yellow-300 text-yellow-700",
-      };
-    if (average >= 35)
-      return {
-        grade: "S",
-        color: "from-orange-50 to-orange-100 border-orange-300 text-orange-700",
-      };
-    return {
-      grade: "F",
-      color: "from-red-50 to-rose-50 border-red-300 text-red-700",
-    };
+    if (avg >= 75) return "A";
+    if (avg >= 65) return "B";
+    if (avg >= 55) return "C";
+    if (avg >= 35) return "S";
+    return "F";
+  };
+
+  const getGradeColor = (subject: string) => {
+    const avg = calculateAverage(subject);
+
+    if (avg >= 75)
+      return "from-green-50 to-emerald-50 border-green-300 text-green-700";
+    if (avg >= 65)
+      return "from-blue-50 to-cyan-50 border-blue-300 text-blue-700";
+    if (avg >= 55)
+      return "from-yellow-50 to-amber-50 border-yellow-300 text-yellow-700";
+    if (avg >= 35)
+      return "from-orange-50 to-orange-100 border-orange-300 text-orange-700";
+    return "from-red-50 to-rose-50 border-red-300 text-red-700";
   };
 
   const handleSubmit = async () => {
@@ -77,17 +72,13 @@ export default function ResultForm() {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    const results = subjects.map((subject) => {
-      const avg = calculateAverage(subject);
-      const { grade } = getGrade(subject);
-      return {
-        subject,
-        term1: term1Results[subject],
-        term2: term2Results[subject],
-        average: avg,
-        grade, // include grade in payload
-      };
-    });
+    const results = subjects.map((subject) => ({
+      subject,
+      term1: term1Results[subject],
+      term2: term2Results[subject],
+      average: calculateAverage(subject).toFixed(1),
+      grade: getLetterGrade(subject),
+    }));
 
     console.log("Submitted Results:", results);
     alert("Results submitted successfully! Analyzing your best A/L stream...");
@@ -131,12 +122,14 @@ export default function ResultForm() {
               <h2 className="font-bold text-gray-900 mb-2">Instructions</h2>
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>
-                  • Enter your marks (0-100) for each subject for both terms
+                  • Enter your marks (0-100) for each subject from both terms
                 </li>
                 <li>
                   • All fields are required for accurate stream prediction
                 </li>
-                <li>• Your average and grade are calculated automatically</li>
+                <li>
+                  • Grades: A (75+), B (65-74), C (55-64), S (35-54), F (&lt;35)
+                </li>
               </ul>
             </div>
           </div>
@@ -170,7 +163,7 @@ export default function ResultForm() {
                 </div>
 
                 {/* Term 1 Input */}
-                <div className="flex items-center justify-center text-gray-800">
+                <div className="flex items-center justify-center">
                   <input
                     type="number"
                     min="0"
@@ -178,12 +171,13 @@ export default function ResultForm() {
                     value={term1Results[subject]}
                     onChange={(e) => handleTerm1Change(subject, e.target.value)}
                     placeholder="0-100"
-                    className="w-24 px-3 py-2 border-2 border-gray-200 rounded-lg text-center focus:border-cyan-500 focus:outline-none transition-colors"
+                    style={{ color: "#1f2937" }}
+                    className="w-24 px-3 py-2 border-2 border-gray-200 rounded-lg text-center focus:border-cyan-500 focus:outline-none transition-colors font-semibold bg-white"
                   />
                 </div>
 
                 {/* Term 2 Input */}
-                <div className="flex items-center justify-center text-gray-800">
+                <div className="flex items-center justify-center">
                   <input
                     type="number"
                     min="0"
@@ -191,30 +185,23 @@ export default function ResultForm() {
                     value={term2Results[subject]}
                     onChange={(e) => handleTerm2Change(subject, e.target.value)}
                     placeholder="0-100"
-                    className="w-24 px-3 py-2 border-2 border-gray-200 rounded-lg text-center focus:border-cyan-500 focus:outline-none transition-colors"
+                    style={{ color: "#1f2937" }}
+                    className="w-24 px-3 py-2 border-2 border-gray-200 rounded-lg text-center focus:border-cyan-500 focus:outline-none transition-colors font-semibold bg-white"
                   />
                 </div>
 
-                {/* Grade Badge (with avg caption) */}
+                {/* Grade Display */}
                 <div className="flex items-center justify-center">
                   {term1Results[subject] && term2Results[subject] ? (
-                    (() => {
-                      const { grade, color } = getGrade(subject);
-                      const avg = calculateAverage(subject);
-                      return (
-                        <div
-                          className={`w-24 px-3 py-2 bg-gradient-to-r border-2 rounded-lg text-center font-bold ${color}`}
-                          title={`Average: ${avg}`}
-                        >
-                          {grade}
-                          <div className="text-[11px] font-medium opacity-70 mt-0.5 leading-none">
-                            {avg}
-                          </div>
-                        </div>
-                      );
-                    })()
+                    <div
+                      className={`w-24 px-3 py-2 bg-gradient-to-r ${getGradeColor(
+                        subject
+                      )} border-2 rounded-lg text-center font-bold text-2xl`}
+                    >
+                      {getLetterGrade(subject)}
+                    </div>
                   ) : (
-                    <div className="w-24 px-3 py-2 bg-gray-50 border-2 border-gray-200 rounded-lg text-center text-gray-400">
+                    <div className="w-24 px-3 py-2 bg-gray-100 border-2 border-gray-200 rounded-lg text-center font-semibold text-gray-400 text-xl">
                       -
                     </div>
                   )}
