@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { testConnection } from './config/sequelize.js';
+import connectDB from './config/db.js';
 import routes from './routes/index.js';
 import errorHandler from './middlewares/errorHandler.js';
 
@@ -57,9 +57,9 @@ app.use(errorHandler);
 // Start server
 const startServer = async () => {
   try {
-    // Test database connection
-    await testConnection();
-    
+    // Connect to MongoDB
+    await connectDB();
+
     // Start listening
     app.listen(PORT, () => {
       console.log(`\x1b[34m🚀 AspireAI Server Running on Port: ${PORT}\x1b[0m`);

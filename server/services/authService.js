@@ -1,6 +1,5 @@
-import { sequelize } from '../config/sequelize.js';
+import User from '../models/User.js';
 import { generateToken } from '../utils/jwt.js';
-import bcrypt from 'bcryptjs';
 
 class AuthService {
   /**
@@ -11,43 +10,24 @@ class AuthService {
   async register(userData) {
     const { firstName, lastName, email, password } = userData;
 
-    // Check if user already exists using raw SQL
-    const [existingUsers] = await sequelize.query(
-      'SELECT id, email FROM users WHERE email = :email LIMIT 1',
-      {
-        replacements: { email },
-        type: sequelize.QueryTypes.SELECT
-      }
-    );
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
 
-    if (existingUsers) {
+    if (existingUser) {
       throw new Error('User with this email already exists');
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Insert new user using raw SQL
-    const [result] = await sequelize.query(
-      `INSERT INTO users (id, first_name, last_name, email, password, is_active, created_at, updated_at) 
-       VALUES (gen_random_uuid(), :firstName, :lastName, :email, :password, true, NOW(), NOW()) 
-       RETURNING id, first_name as "firstName", last_name as "lastName", email, is_active as "isActive", created_at as "createdAt"`,
-      {
-        replacements: { 
-          firstName, 
-          lastName, 
-          email, 
-          password: hashedPassword 
-        },
-        type: sequelize.QueryTypes.INSERT
-      }
-    );
-
-    const user = result[0];
+    // Create new user
+    // Password hashing is handled by the User model pre-save hook
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      password
+    });
 
     // Generate token
-    const token = generateToken({ id: user.id, email: user.email });
+    const token = generateToken({ id: user._id, email: user.email });
 
     return { user, token };
   }
@@ -59,14 +39,8 @@ class AuthService {
    * @returns {Object} User and token
    */
   async login(email, password) {
-    // Find user by email using raw SQL
-    const [user] = await sequelize.query(
-      'SELECT id, first_name as "firstName", last_name as "lastName", email, password, is_active as "isActive", last_login as "lastLogin" FROM users WHERE email = :email LIMIT 1',
-      {
-        replacements: { email },
-        type: sequelize.QueryTypes.SELECT
-      }
-    );
+    // Find user by email and select password (since it's excluded by default)
+    const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
       throw new Error('Invalid email or password');
@@ -78,23 +52,19 @@ class AuthService {
     }
 
     // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
       throw new Error('Invalid email or password');
     }
 
-    // Update last login using raw SQL
-    await sequelize.query(
-      'UPDATE users SET last_login = NOW(), updated_at = NOW() WHERE id = :userId',
-      {
-        replacements: { userId: user.id },
-        type: sequelize.QueryTypes.UPDATE
-      }
-    );
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
 
     // Generate token
-    const token = generateToken({ id: user.id, email: user.email });
+    const token = generateToken({ id: user._id, email: user.email });
 
+    // Return user without password (toJSON handles this)
     return { user, token };
   }
 
@@ -104,14 +74,7 @@ class AuthService {
    * @returns {Object} User profile
    */
   async getProfile(userId) {
-    // Get user by ID using raw SQL
-    const [user] = await sequelize.query(
-      'SELECT id, first_name as "firstName", last_name as "lastName", email, is_active as "isActive", last_login as "lastLogin", created_at as "createdAt", updated_at as "updatedAt" FROM users WHERE id = :userId LIMIT 1',
-      {
-        replacements: { userId },
-        type: sequelize.QueryTypes.SELECT
-      }
-    );
+    const user = await User.findById(userId);
 
     if (!user) {
       throw new Error('User not found');
