@@ -3,14 +3,19 @@
 import { motion } from 'framer-motion';
 import { X, ArrowLeft } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { saveUserData, UserData } from '@/utils/userStorage';
 
 interface OLFormProps {
   isOpen: boolean;
   onClose: () => void;
   onBack: () => void;
+  initialData?: UserData | null;
 }
 
-export default function OLForm({ isOpen, onClose, onBack }: OLFormProps) {
+export default function OLForm({ isOpen, onClose, onBack, initialData }: OLFormProps) {
+  const router = useRouter();
   const initialState = {
     age: '',
     gender: '',
@@ -36,10 +41,31 @@ export default function OLForm({ isOpen, onClose, onBack }: OLFormProps) {
   // Reset form when opened
   useEffect(() => {
     if (isOpen) {
-      setFormData(initialState);
+      if (initialData) {
+        setFormData({
+          age: initialData.age || '',
+          gender: initialData.gender || '',
+          nativeLanguage: initialData.nativeLanguage || '',
+          preferredLanguage: initialData.preferredLanguage || '',
+          olResults: initialData.olResults || '',
+          otherQualifications: initialData.otherQualifications || '',
+          ieltsScore: initialData.ieltsScore || '',
+          interestArea: initialData.interestArea || '',
+          careerGoal: initialData.careerGoal || '',
+          monthlyIncome: initialData.monthlyIncome || '',
+          fundingMethod: initialData.fundingMethod || '',
+          availability: initialData.availability || '',
+          completionPeriod: initialData.completionPeriod || '',
+          studyMethod: initialData.studyMethod || '',
+          currentLocation: initialData.currentLocation || '',
+          preferredLocations: initialData.preferredLocations || ''
+        });
+      } else {
+        setFormData(initialState);
+      }
       setErrors({});
     }
-  }, [isOpen]);
+  }, [isOpen, initialData]);
 
   const validate = () => {
     const newErrors: Partial<Record<keyof typeof formData, string>> = {};
@@ -75,14 +101,16 @@ export default function OLForm({ isOpen, onClose, onBack }: OLFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      const submissionData = {
+      const submissionData: UserData = {
         ...formData,
         alStream: null,
-        alResults: null
+        alResults: null,
+        qualificationType: 'OL'
       };
       console.log('O/L Form Data:', submissionData);
-      // Handle form submission
+      saveUserData(submissionData);
       onClose();
+      router.push('/course-suggestion');
     }
   };
 
