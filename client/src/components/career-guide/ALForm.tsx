@@ -4,17 +4,21 @@ import { motion } from 'framer-motion';
 import { X, ArrowLeft } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 import { saveUserData, UserData } from '@/utils/userStorage';
+import profileService from '@/services/profile.service';
+import { CreateALProfileRequest } from '@/types/profile.types';
 
 interface ALFormProps {
   isOpen: boolean;
   onClose: () => void;
   onBack: () => void;
   initialData?: UserData | null;
+  profileId?: string;
 }
 
-export default function ALForm({ isOpen, onClose, onBack, initialData }: ALFormProps) {
+export default function ALForm({ isOpen, onClose, onBack, initialData, profileId }: ALFormProps) {
   const router = useRouter();
   const initialState = {
     age: '',
@@ -39,6 +43,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData }: ALFormP
 
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Reset form when opened
   useEffect(() => {
@@ -105,17 +110,61 @@ export default function ALForm({ isOpen, onClose, onBack, initialData }: ALFormP
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      const submissionData: UserData = {
-        ...formData,
-        qualificationType: 'AL'
-      };
-      console.log('A/L Form Data:', submissionData);
-      saveUserData(submissionData);
-      onClose();
-      router.push('/course-suggestion');
+      setIsSubmitting(true);
+
+      try {
+        const submissionData: CreateALProfileRequest = {
+          age: formData.age,
+          gender: formData.gender as 'Male' | 'Female' | 'Other',
+          nativeLanguage: formData.nativeLanguage as 'English' | 'Sinhala' | 'Tamil',
+          preferredLanguage: formData.preferredLanguage as 'English' | 'Sinhala' | 'Tamil',
+          olResults: formData.olResults,
+          alStream: formData.alStream as any,
+          alResults: formData.alResults,
+          otherQualifications: formData.otherQualifications,
+          ieltsScore: formData.ieltsScore,
+          interestArea: formData.interestArea as any,
+          careerGoal: formData.careerGoal,
+          monthlyIncome: formData.monthlyIncome,
+          fundingMethod: formData.fundingMethod as 'Self-funded' | 'Need scholarship',
+          availability: formData.availability as 'Weekday' | 'Weekend',
+          completionPeriod: formData.completionPeriod as any,
+          studyMethod: formData.studyMethod as 'Hybrid' | 'Online' | 'Onsite',
+          currentLocation: formData.currentLocation,
+          preferredLocations: formData.preferredLocations
+        };
+
+        let profile;
+        if (profileId) {
+          // Update existing profile
+          profile = await profileService.updateProfile(profileId, submissionData);
+          toast.success('Profile updated successfully!');
+        } else {
+          // Create new profile
+          profile = await profileService.createProfile(submissionData);
+          toast.success('Profile created successfully!');
+        }
+
+        // Also save to local storage for backward compatibility
+        const localData: UserData = {
+          ...formData,
+          qualificationType: 'AL'
+        };
+        saveUserData(localData);
+
+        onClose();
+        if (!profileId) {
+          router.push('/course-suggestion');
+        }
+      } catch (error: any) {
+        console.error('Error saving profile:', error);
+        toast.error(error.message || 'Failed to save profile');
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -396,11 +445,12 @@ export default function ALForm({ isOpen, onClose, onBack, initialData }: ALFormP
             </motion.button>
             <motion.button
               type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-md hover:shadow-lg"
+              disabled={isSubmitting}
+              whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
+              whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Submit Assessment
+              {isSubmitting ? 'Submitting...' : 'Submit Assessment'}
             </motion.button>
           </div>
         </form>
