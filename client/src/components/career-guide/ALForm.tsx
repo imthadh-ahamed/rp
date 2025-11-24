@@ -3,14 +3,19 @@
 import { motion } from 'framer-motion';
 import { X, ArrowLeft } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+import { saveUserData, UserData } from '@/utils/userStorage';
 
 interface ALFormProps {
   isOpen: boolean;
   onClose: () => void;
   onBack: () => void;
+  initialData?: UserData | null;
 }
 
-export default function ALForm({ isOpen, onClose, onBack }: ALFormProps) {
+export default function ALForm({ isOpen, onClose, onBack, initialData }: ALFormProps) {
+  const router = useRouter();
   const initialState = {
     age: '',
     gender: '',
@@ -38,10 +43,34 @@ export default function ALForm({ isOpen, onClose, onBack }: ALFormProps) {
   // Reset form when opened
   useEffect(() => {
     if (isOpen) {
-      setFormData(initialState);
+      if (initialData) {
+        // Map UserData to form state (ensure all fields exist)
+        setFormData({
+          age: initialData.age || '',
+          gender: initialData.gender || '',
+          nativeLanguage: initialData.nativeLanguage || '',
+          preferredLanguage: initialData.preferredLanguage || '',
+          olResults: initialData.olResults || '',
+          alStream: initialData.alStream || '',
+          alResults: initialData.alResults || '',
+          otherQualifications: initialData.otherQualifications || '',
+          ieltsScore: initialData.ieltsScore || '',
+          interestArea: initialData.interestArea || '',
+          careerGoal: initialData.careerGoal || '',
+          monthlyIncome: initialData.monthlyIncome || '',
+          fundingMethod: initialData.fundingMethod || '',
+          availability: initialData.availability || '',
+          completionPeriod: initialData.completionPeriod || '',
+          studyMethod: initialData.studyMethod || '',
+          currentLocation: initialData.currentLocation || '',
+          preferredLocations: initialData.preferredLocations || ''
+        });
+      } else {
+        setFormData(initialState);
+      }
       setErrors({});
     }
-  }, [isOpen]);
+  }, [isOpen, initialData]);
 
   const validate = () => {
     const newErrors: Partial<Record<keyof typeof formData, string>> = {};
@@ -79,9 +108,14 @@ export default function ALForm({ isOpen, onClose, onBack }: ALFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      console.log('A/L Form Data:', formData);
-      // Handle form submission
+      const submissionData: UserData = {
+        ...formData,
+        qualificationType: 'AL'
+      };
+      console.log('A/L Form Data:', submissionData);
+      saveUserData(submissionData);
       onClose();
+      router.push('/course-suggestion');
     }
   };
 
