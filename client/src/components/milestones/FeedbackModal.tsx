@@ -9,16 +9,19 @@ interface FeedbackModalProps {
     onClose: () => void;
     onSubmit: (feedback: string) => void;
     milestoneTitle: string;
+    initialFeedback?: string;
 }
 
-export default function FeedbackModal({ isOpen, onClose, onSubmit, milestoneTitle }: FeedbackModalProps) {
-    const [feedback, setFeedback] = useState('');
+export default function FeedbackModal({ isOpen, onClose, onSubmit, milestoneTitle, initialFeedback = '' }: FeedbackModalProps) {
+    const [feedback, setFeedback] = useState(initialFeedback);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (feedback.trim()) {
             onSubmit(feedback);
-            setFeedback('');
+            if (!initialFeedback) {
+                setFeedback('');
+            }
         }
     };
 
@@ -40,22 +43,26 @@ export default function FeedbackModal({ isOpen, onClose, onSubmit, milestoneTitl
                         </button>
 
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                            Congratulations! 🎉
+                            {initialFeedback ? 'Edit Your Experience' : 'Congratulations! 🎉'}
                         </h2>
                         <p className="text-gray-600 mb-6">
-                            You're about to complete <span className="font-semibold">{milestoneTitle}</span>
+                            {initialFeedback
+                                ? `Update your feedback for ${milestoneTitle}`
+                                : `You're about to complete ${milestoneTitle}`
+                            }
                         </p>
 
                         <form onSubmit={handleSubmit}>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Share your experience (optional)
+                                Share your experience <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 value={feedback}
                                 onChange={(e) => setFeedback(e.target.value)}
-                                placeholder="What did you learn? What challenges did you face? Any insights to share?"
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none"
                                 rows={5}
+                                required
+                                placeholder="Describe what you learned, challenges faced, and key achievements..."
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
                             />
 
                             <div className="flex gap-4 mt-6">
@@ -70,7 +77,7 @@ export default function FeedbackModal({ isOpen, onClose, onSubmit, milestoneTitl
                                     type="submit"
                                     className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all shadow-md hover:shadow-lg"
                                 >
-                                    Complete Milestone
+                                    {initialFeedback ? 'Update' : 'Complete Step'}
                                 </button>
                             </div>
                         </form>

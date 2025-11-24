@@ -20,7 +20,7 @@ export default function MilestoneCard({ milestone, onDelete }: MilestoneCardProp
         : 0;
 
     const handleView = () => {
-        router.push(`/milestone?milestoneId=${milestone.id}`);
+        router.push(`/milestones?milestoneId=${milestone.id}`);
     };
 
     const handleDelete = () => {
