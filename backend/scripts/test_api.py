@@ -31,6 +31,21 @@ try:
         data = response.json()
         print("\n✅ API Response Success!")
         print(f"Status: {data.get('status')}")
+        
+        if data.get('recommendations'):
+            top_rec = data['recommendations'][0]
+            print(f"\nTop Recommendation Details:")
+            print(f"ID: {top_rec.get('id')}")
+            print(f"Course: {top_rec.get('course_name')}")
+            print(f"Fee: {top_rec.get('course_fee')}")
+            print(f"Tags: {top_rec.get('tags')}")
+            print(f"Requirements: {top_rec.get('requirements')[:50]}...")
+            
+            # Save to file for verification
+            with open("result.json", "w", encoding="utf-8") as f:
+                json.dump(top_rec, f, indent=2)
+    else:
+        print(f"❌ API Error: {response.text}")
 
 except Exception as e:
     print(f"❌ Connection Error: {e}")

@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from api.schemas.recommendation import UserProfile, RecommendationResponse, RecommendationResult
 from core.agents.orchestrator import recommend_courses
 import traceback
+import uuid
 
 router = APIRouter()
 
@@ -75,6 +76,7 @@ async def get_recommendations(profile: UserProfile):
                     return "N/A"
 
                 mapped_recommendations.append(RecommendationResult(
+                    id=str(uuid.uuid4()),
                     rank=index,
                     course_name=item.get("course", "Unknown"),
                     university=meta.get("campus", "Unknown"),
@@ -93,7 +95,8 @@ async def get_recommendations(profile: UserProfile):
                         extract_field("Study Language"), 
                         extract_field("Study Method")
                     ],
-                    url=meta.get("url", "Null")
+                    url=meta.get("url", "Null"),
+                    isSelected=False
                 ))
         
         return RecommendationResponse(
