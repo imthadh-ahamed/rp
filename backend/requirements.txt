@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+python-dotenv
+openai
+google-cloud-aiplatform
+anthropic
+pinecone-client
+qdrant-client
+chromadb
+faiss-cpu
+pandas
+numpy
+scikit-learn

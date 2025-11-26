@@ -9,8 +9,8 @@ class ALProfileController {
     async createProfile(req, res, next) {
         try {
             const userId = req.user.id;
-            const profile = await alProfileService.createProfile(userId, req.body);
-            created(res, { profile }, 'AL profile created successfully');
+            const { profile, recommendations } = await alProfileService.createProfile(userId, req.body);
+            created(res, { profile, recommendations }, 'AL profile created successfully');
         } catch (error) {
             if (error.message.includes('already has a profile')) {
                 return badRequest(res, error.message);
