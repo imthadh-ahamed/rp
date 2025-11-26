@@ -110,7 +110,28 @@ const alProfileSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
         index: true
-    }
+    },
+    recommendations: [{
+        rank: Number,
+        course_name: String,
+        university: String,
+        location: String,
+        match_score: Number,
+        explanation: String,
+        url: String,
+        career_opportunities: String,
+        study_language: String,
+        study_method: String,
+        duration: String,
+        requirements: String,
+        course_fee: String,
+        department: String,
+        tags: [String],
+        isSelected: {
+            type: Boolean,
+            default: false
+        }
+    }]
 }, {
     timestamps: true,
     toJSON: {

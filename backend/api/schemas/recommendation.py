@@ -20,6 +20,7 @@ class UserProfile(BaseModel):
     preferred_locations: Optional[str] = Field(None, description="Preferred study locations")
 
 class RecommendationResult(BaseModel):
+    id: str
     rank: int
     course_name: str
     university: str
@@ -35,6 +36,7 @@ class RecommendationResult(BaseModel):
     course_fee: Optional[str] = "N/A"
     department: Optional[str] = "N/A"
     tags: List[str] = []
+    isSelected: Optional[bool] = False
 
 class RecommendationResponse(BaseModel):
     status: str

@@ -11,10 +11,6 @@ class ALProfileService {
         // Check if user already has an active AL profile
         const existingProfile = await ALProfile.findOne({ userId, isDeleted: false });
 
-        if (existingProfile) {
-            throw new Error('User already has a profile. Please update instead.');
-        }
-
         // Create new profile
         const profile = await ALProfile.create({
             userId,
@@ -26,12 +22,19 @@ class ALProfileService {
         // Fetch AI Recommendations
         let recommendations = null;
         try {
-            recommendations = await this.getRecommendations(profileData);
+            const aiResponse = await this.getRecommendations(profileData);
+            if (aiResponse && aiResponse.recommendations) {
+                recommendations = aiResponse.recommendations;
+
+                // Update profile with recommendations
+                profile.recommendations = recommendations;
+                await profile.save();
+            }
         } catch (error) {
             console.error('Error fetching recommendations:', error.message);
-            // We don't block profile creation if AI fails, just return null recommendations
+            // We don't block profile creation if AI fails
         }
-        console.log(recommendations);
+
         return { profile, recommendations };
     }
 
@@ -51,10 +54,10 @@ class ALProfileService {
                 al_stream: profileData.alStream,
                 al_results: profileData.alResults,
                 other_qualifications: profileData.otherQualifications,
-                ielts: profileData.ieltsScore, // Note: ieltsScore -> ielts
+                ielts: profileData.ieltsScore,
                 interest_area: profileData.interestArea,
                 career_goal: profileData.careerGoal,
-                income: profileData.monthlyIncome, // Note: monthlyIncome -> income
+                income: profileData.monthlyIncome,
                 study_method: profileData.studyMethod,
                 availability: profileData.availability,
                 completion_period: profileData.completionPeriod,

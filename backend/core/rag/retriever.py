@@ -10,8 +10,8 @@ backend_dir = os.path.dirname(os.path.dirname(current_dir))
 persist_dir = os.path.join(backend_dir, "data", "embeddings")
 
 # Initialize SentenceTransformer model
-print("Loading embedding model: all-MiniLM-L6-v2...")
-embed_model = SentenceTransformer("all-MiniLM-L6-v2")
+print("Loading embedding model: BAAI/bge-base-en-v1.5...")
+embed_model = SentenceTransformer("BAAI/bge-base-en-v1.5")
 
 # Connect to ChromaDB
 chroma = chromadb.PersistentClient(path=persist_dir)
