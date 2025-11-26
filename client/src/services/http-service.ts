@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 // Create axios instance without static auth header
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8080/api",
-  timeout: 5000,
+  timeout: 120000,
   headers: {
     "Content-Type": "application/json",
   },

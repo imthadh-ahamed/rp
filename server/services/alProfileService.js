@@ -23,7 +23,62 @@ class ALProfileService {
             isDeleted: false
         });
 
-        return profile;
+        // Fetch AI Recommendations
+        let recommendations = null;
+        try {
+            recommendations = await this.getRecommendations(profileData);
+        } catch (error) {
+            console.error('Error fetching recommendations:', error.message);
+            // We don't block profile creation if AI fails, just return null recommendations
+        }
+        console.log(recommendations);
+        return { profile, recommendations };
+    }
+
+    /**
+     * Fetch course recommendations from Python Agentic API
+     * @param {Object} profileData - User profile data
+     * @returns {Object} Recommendation response
+     */
+    async getRecommendations(profileData) {
+        try {
+            // Map Node.js camelCase to Python snake_case
+            const pythonPayload = {
+                age: profileData.age,
+                native_language: profileData.nativeLanguage,
+                preferred_language: profileData.preferredLanguage,
+                ol_results: profileData.olResults,
+                al_stream: profileData.alStream,
+                al_results: profileData.alResults,
+                other_qualifications: profileData.otherQualifications,
+                ielts: profileData.ieltsScore, // Note: ieltsScore -> ielts
+                interest_area: profileData.interestArea,
+                career_goal: profileData.careerGoal,
+                income: profileData.monthlyIncome, // Note: monthlyIncome -> income
+                study_method: profileData.studyMethod,
+                availability: profileData.availability,
+                completion_period: profileData.completionPeriod,
+                current_location: profileData.currentLocation,
+                preferred_locations: profileData.preferredLocations
+            };
+
+            const response = await fetch('http://localhost:8000/recommend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(pythonPayload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Failed to connect to Recommendation API:', error);
+            return null;
+        }
     }
 
     /**
