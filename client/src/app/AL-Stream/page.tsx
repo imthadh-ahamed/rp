@@ -1,7 +1,12 @@
 "use client";
 
-import ResultForm from "../../components/AL-Stream/resultForm";
+import IntegratedALApp from "@/components/AL-Stream/IntegratedALApp";
+import AppShell from "@/components/common/AppShell";
 
 export default function ALStreamGuidancePage() {
-  return <ResultForm />;
+  return (
+    <AppShell>
+      <IntegratedALApp />
+    </AppShell>
+  );
 }
