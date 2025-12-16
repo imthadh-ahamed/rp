@@ -122,10 +122,10 @@ export default function Home() {
           className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-12 max-w-4xl mx-auto"
         >
           {[
-            { emoji: "🎓", text: "A/L Stream Guidance" },
-            { emoji: "🏛️", text: "University Selection" },
-            { emoji: "🚀", text: "Career Pathways" },
-            { emoji: "💡", text: "Skill Development" }
+            { emoji: "🎓", text: "A/L Stream Guidance", link:"#" },
+            { emoji: "🏛️", text: "University Selection", link:"#" },
+            { emoji: "🚀", text: "Career Pathways", link:"#" },
+            { emoji: "💡", text: "Skill Development", link:"/skill-development" }
           ].map((feature, idx) => (
             <motion.div
               key={feature.text}
@@ -135,8 +135,11 @@ export default function Home() {
               whileHover={{ y: -5, scale: 1.05 }}
               className="bg-white/60 backdrop-blur-sm rounded-xl p-4 shadow-md hover:shadow-xl transition-all border border-cyan-100"
             >
+              <a href={feature.link} className="flex flex-col items-center space-y-2">
               <div className="text-3xl mb-2">{feature.emoji}</div>
               <p className="text-sm font-medium text-gray-700">{feature.text}</p>
+
+              </a>
             </motion.div>
           ))}
         </motion.div>
