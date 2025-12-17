@@ -12,20 +12,20 @@ from core.agents.orchestrator import recommend_courses
 
 # Sample user profile
 sample_user = {
-    "age": 20,
+    "age": "20",
     "native_language": "Tamil",
     "preferred_language": "English",
     "ol_results": "Maths: A, Science: B, English: A, ICT: B",
     "al_stream": "Physical Science",
     "al_results": "Combined Maths: B, Chemistry: C, Physics: C",
-    "other_qualifications": "",
-    "ielts": "",
-    "interest_area": "Software Engineering",
+    "other_qualifications": "None",
+    "ielts": "6.0",
+    "interest_area": "Information Technology",
     "career_goal": "Software Engineer, Data Scientist",
-    "income": "Medium",
-    "study_method": "Full Time",
+    "income": "45000 LKR",
+    "study_method": "Onsite",
     "availability": "Weekdays",
-    "completion_period": "4 years",
+    "completion_period": "3-4 years",
     "current_location": "Colombo",
     "preferred_locations": "Colombo",
 }
@@ -46,7 +46,7 @@ print("\n")
 response = asyncio.run(recommend_courses(sample_user, initial_k=25, final_k=10, explain_top_n=5))
 
 print("\n🔹 RAW JSON RESPONSE 🔹")
-print(json.dumps(response, indent=4))
+# print(json.dumps(response, indent=4))
 
 # Display results
 print("\n" + "="*80)

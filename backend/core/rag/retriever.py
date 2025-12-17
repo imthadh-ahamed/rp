@@ -1,17 +1,22 @@
 import json
 import os
 import numpy as np
-from sentence_transformers import SentenceTransformer
 import chromadb
+
+# Import Nomic embedder
+try:
+    from core.rag.nomic_embedder import get_nomic_embedder, embed_text
+except ImportError:
+    from nomic_embedder import get_nomic_embedder, embed_text
 
 # Get paths
 current_dir = os.path.dirname(os.path.abspath(__file__))
 backend_dir = os.path.dirname(os.path.dirname(current_dir))
 persist_dir = os.path.join(backend_dir, "data", "embeddings")
 
-# Initialize SentenceTransformer model
-print("Loading embedding model: BAAI/bge-base-en-v1.5...")
-embed_model = SentenceTransformer("BAAI/bge-base-en-v1.5")
+# Initialize Nomic embedding model
+print("Loading embedding model: nomic-ai/nomic-embed-text-v1.5...")
+embedder = get_nomic_embedder()
 
 # Connect to ChromaDB
 chroma = chromadb.PersistentClient(path=persist_dir)
@@ -23,13 +28,12 @@ def normalize(v):
     return (np.array(v) / np.linalg.norm(v)).tolist()
 
 
-def embed_text(text: str):
-    """Generate normalized vector embedding using SentenceTransformer"""
+def generate_embedding(text: str):
+    """Generate normalized vector embedding using Nomic embedder"""
     try:
         print(f"Generating embedding for text length: {len(text)}")
-        # Generate embedding
-        embedding = embed_model.encode(text, convert_to_tensor=False, normalize_embeddings=True)
-        vec = embedding.tolist()
+        # Use the global embedder
+        vec = embed_text(text, normalize=True)
         print(f"Embedding generated. Dimension: {len(vec)}")
         return vec
     except Exception as e:
@@ -78,8 +82,8 @@ def rag_search(user_input: dict, top_k: int = 10):
     # Build user profile text
     user_profile_text = build_user_profile(user_input)
 
-    # Generate embedding
-    query_vec = embed_text(user_profile_text)
+    # Generate embedding using Nomic
+    query_vec = generate_embedding(user_profile_text)
     
     if not query_vec:
         print("⚠️ Failed to generate embedding for query.")
