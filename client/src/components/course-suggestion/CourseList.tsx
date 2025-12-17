@@ -21,12 +21,11 @@ export default function CourseList() {
     const fetchRecommendations = async () => {
         try {
             setIsLoading(true);
+            // API now returns only the logged-in user's profiles (already filtered)
             const { profiles } = await profileService.getAllProfiles();
 
             if (profiles && profiles.length > 0) {
                 // Get recommendations from the most recent profile
-                // Assuming the API returns profiles sorted or we pick the first one
-                // We can also sort by createdAt if needed
                 const sortedProfiles = profiles.sort((a, b) =>
                     new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
