@@ -3,14 +3,22 @@ import traceback
 print("DEBUG: Script started")
 import json
 import os
+import sys
 import numpy as np
-from sentence_transformers import SentenceTransformer
 import chromadb
 
+# Add parent directory to path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+backend_dir = os.path.dirname(script_dir)
+sys.path.insert(0, backend_dir)
+
+# Import Nomic embedder
+from core.rag.nomic_embedder import get_nomic_embedder
+
 try:
-    # Initialize SentenceTransformer model
-    print("Loading embedding model: BAAI/bge-base-en-v1.5...")
-    embed_model = SentenceTransformer("BAAI/bge-base-en-v1.5")
+    # Initialize Nomic embedding model
+    print("Loading embedding model: nomic-ai/nomic-embed-text-v1.5...")
+    embedder = get_nomic_embedder()
 
     # Load JSON
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -74,10 +82,9 @@ try:
         """Normalize embedding vector"""
         return (np.array(v) / np.linalg.norm(v)).tolist()
 
-    # Generate embeddings with SentenceTransformer
+    # Generate embeddings with Nomic
     def embed_text(text):
-        embedding = embed_model.encode(text, convert_to_tensor=False, normalize_embeddings=True)
-        return embedding.tolist()
+        return embedder.embed(text, normalize=True)
 
 
     # Build embeddings
@@ -96,6 +103,8 @@ try:
             "department": str(c.get('Department', '')),
             "campus": str(c.get('Campus', '')),
             "duration": str(c.get('Duration', '')),
+            "location": str(c.get('Location', '')),
+            "study_method": str(c.get('Study Method', '')),
             "url": str(c.get('URL', ''))
         }
 
@@ -113,7 +122,7 @@ try:
     )
 
     # PersistentClient auto-saves, no need to call persist()
-    print(f"\n✅ Vector index created successfully with SentenceTransformer embeddings!")
+    print(f"\n✅ Vector index created successfully with Nomic embeddings!")
     print(f"   Total courses indexed: {len(courses)}")
     print(f"   Embeddings saved to: {persist_dir}")
 
