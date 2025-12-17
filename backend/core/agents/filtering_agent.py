@@ -15,10 +15,23 @@ def matches_location(user: Dict[str, Any], course_meta: Dict[str, Any]) -> bool:
     if not pref or pref == "n/a":
         return True
     
+    # Get location from metadata (falls back to campus if location not available)
     course_loc = (course_meta.get("location") or course_meta.get("campus") or "").lower()
     
-    # Simple contains check - if any preferred location is in course location
-    return any(p.strip() in course_loc for p in pref.split(","))
+    # Debug logging
+    print(f"🔍 Location match - User pref: '{pref}', Course loc: '{course_loc}', Match: {any(p.strip() in course_loc for p in pref.split(','))}")
+    
+    # Split course location by / or , to handle multi-location strings like "Colombo/Kandy/Matara"
+    course_locations = [loc.strip() for loc in course_loc.replace('/', ',').split(',')]
+    
+    # Check if any user preferred location matches any course location
+    for user_loc in pref.split(","):
+        user_loc = user_loc.strip()
+        for course_location in course_locations:
+            if user_loc in course_location or course_location in user_loc:
+                return True
+    
+    return False
 
 
 def matches_study_method(user: Dict[str, Any], course_meta: Dict[str, Any]) -> bool:
@@ -38,7 +51,21 @@ def matches_study_method(user: Dict[str, Any], course_meta: Dict[str, Any]) -> b
     
     course_method = (course_meta.get("study_method") or "").lower()
     
-    # Check if user's preferred method is in the course's study method
+    # Handle synonyms: "onsite" = "full time", "online" = "distance/part time"
+    onsite_keywords = ["onsite", "full time", "full-time", "fulltime"]
+    online_keywords = ["online", "distance", "part time", "part-time", "parttime"]
+    
+    # Check if user wants onsite and course offers it
+    if any(keyword in pref_method for keyword in onsite_keywords):
+        if any(keyword in course_method for keyword in onsite_keywords):
+            return True
+    
+    # Check if user wants online and course offers it
+    if any(keyword in pref_method for keyword in online_keywords):
+        if any(keyword in course_method for keyword in online_keywords):
+            return True
+    
+    # Fallback: direct substring match
     return pref_method in course_method or course_method in pref_method
 
 

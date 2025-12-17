@@ -79,7 +79,6 @@ def validate_user_profile(user: Dict[str, Any], available_locations: List[str]) 
             
             errors.append(
                 f"No degree programs are available in your preferred location: {preferred_location}. "
-                f"Available locations include: {sample_str}, etc."
             )
 
     # -------------------

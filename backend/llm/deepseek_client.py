@@ -121,7 +121,14 @@ def chat(prompt: str, system: str = "You are a helpful course advisor.", timeout
             request_params["extra_body"] = {"n_gpu_layers": -1}
 
         resp = client.chat.completions.create(**request_params)
-        return resp.choices[0].message.content.strip()
+        
+        # Check if response is valid
+        if resp and resp.choices and len(resp.choices) > 0:
+            content = resp.choices[0].message.content
+            if content:
+                return content.strip()
+        
+        return "(LLM returned empty response)"
     except TimeoutError:
         print(f"⚠️ LLM request timed out after {timeout}s")
         return "(LLM request timed out - model may be loading or unresponsive)"
