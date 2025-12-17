@@ -14,87 +14,58 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 export default function ProfileTab() {
-    const [userData, setUserData] = useState<UserData | null>(null);
-    const [profile, setProfile] = useState<ALProfile | null>(null);
+    const [profiles, setProfiles] = useState<ALProfile[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isALModalOpen, setIsALModalOpen] = useState(false);
     const [isOLModalOpen, setIsOLModalOpen] = useState(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [editingProfile, setEditingProfile] = useState<ALProfile | null>(null);
+    const [deletingProfileId, setDeletingProfileId] = useState<string | null>(null);
 
-    // Fetch user's profile on component mount
-    const fetchProfile = async () => {
+    // Fetch user's profiles on component mount
+    const fetchProfiles = async () => {
         try {
             setIsLoading(true);
-            const { profiles } = await profileService.getAllProfiles();
-
-            // Get the first profile (assuming user has only one profile)
-            // In a real app, you'd filter by current user's ID
-            if (profiles && profiles.length > 0) {
-                const userProfile = profiles[0];
-                setProfile(userProfile);
-
-                // Convert ALProfile to UserData format for backward compatibility
-                const formattedData: UserData = {
-                    age: userProfile.age,
-                    gender: userProfile.gender,
-                    nativeLanguage: userProfile.nativeLanguage,
-                    preferredLanguage: userProfile.preferredLanguage,
-                    olResults: userProfile.olResults,
-                    alStream: userProfile.alStream || null,
-                    alResults: userProfile.alResults || null,
-                    otherQualifications: userProfile.otherQualifications || '',
-                    ieltsScore: userProfile.ieltsScore || '',
-                    interestArea: userProfile.interestArea,
-                    careerGoal: userProfile.careerGoal,
-                    monthlyIncome: userProfile.monthlyIncome,
-                    fundingMethod: userProfile.fundingMethod,
-                    availability: userProfile.availability,
-                    completionPeriod: userProfile.completionPeriod,
-                    studyMethod: userProfile.studyMethod,
-                    currentLocation: userProfile.currentLocation,
-                    preferredLocations: userProfile.preferredLocations,
-                    qualificationType: userProfile.qualificationType
-                };
-                setUserData(formattedData);
-            } else {
-                setUserData(null);
-                setProfile(null);
-            }
+            // API returns only the logged-in user's profiles
+            const { profiles: fetchedProfiles } = await profileService.getAllProfiles();
+            setProfiles(fetchedProfiles || []);
         } catch (error: any) {
-            console.error('Error fetching profile:', error);
+            console.error('Error fetching profiles:', error);
             toast.error('Failed to load profile data');
-            setUserData(null);
-            setProfile(null);
+            setProfiles([]);
         } finally {
             setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchProfile();
+        fetchProfiles();
     }, []);
 
-    const handleEdit = () => {
-        if (userData?.qualificationType === 'AL') {
+    const handleEdit = (profile: ALProfile) => {
+        setEditingProfile(profile);
+        if (profile.qualificationType === 'AL') {
             setIsALModalOpen(true);
-        } else if (userData?.qualificationType === 'OL') {
+        } else if (profile.qualificationType === 'OL') {
             setIsOLModalOpen(true);
         }
     };
 
-    const handleDelete = () => {
+    const handleDelete = (profileId: string) => {
+        setDeletingProfileId(profileId);
         setShowDeleteConfirm(true);
     };
 
     const confirmDelete = async () => {
-        if (!profile) return;
+        if (!deletingProfileId) return;
 
         try {
-            await profileService.deleteProfile(profile._id);
+            await profileService.deleteProfile(deletingProfileId);
             toast.success('Profile deleted successfully');
-            setUserData(null);
-            setProfile(null);
             setShowDeleteConfirm(false);
+            setDeletingProfileId(null);
+            // Refresh profiles after deletion
+            fetchProfiles();
         } catch (error: any) {
             console.error('Error deleting profile:', error);
             toast.error(error.message || 'Failed to delete profile');
@@ -104,8 +75,33 @@ export default function ProfileTab() {
     const handleCloseModal = () => {
         setIsALModalOpen(false);
         setIsOLModalOpen(false);
+        setEditingProfile(null);
         // Refresh profile data when modal closes (in case it was updated)
-        fetchProfile();
+        fetchProfiles();
+    };
+
+    const convertToUserData = (profile: ALProfile): UserData => {
+        return {
+            age: profile.age,
+            gender: profile.gender,
+            nativeLanguage: profile.nativeLanguage,
+            preferredLanguage: profile.preferredLanguage,
+            olResults: profile.olResults,
+            alStream: profile.alStream || null,
+            alResults: profile.alResults || null,
+            otherQualifications: profile.otherQualifications || '',
+            ieltsScore: profile.ieltsScore || '',
+            interestArea: profile.interestArea,
+            careerGoal: profile.careerGoal,
+            monthlyIncome: profile.monthlyIncome,
+            fundingMethod: profile.fundingMethod,
+            availability: profile.availability,
+            completionPeriod: profile.completionPeriod,
+            studyMethod: profile.studyMethod,
+            currentLocation: profile.currentLocation,
+            preferredLocations: profile.preferredLocations,
+            qualificationType: profile.qualificationType
+        };
     };
 
     if (isLoading) {
@@ -118,12 +114,17 @@ export default function ProfileTab() {
 
     return (
         <>
-            {userData ? (
-                <QualificationCard
-                    userData={userData}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                />
+            {profiles.length > 0 ? (
+                <div className="space-y-6">
+                    {profiles.map((profile, index) => (
+                        <QualificationCard
+                            key={profile._id}
+                            userData={convertToUserData(profile)}
+                            onEdit={() => handleEdit(profile)}
+                            onDelete={() => handleDelete(profile._id)}
+                        />
+                    ))}
+                </div>
             ) : (
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -151,15 +152,15 @@ export default function ProfileTab() {
                 isOpen={isALModalOpen}
                 onClose={handleCloseModal}
                 onBack={handleCloseModal}
-                initialData={userData}
-                profileId={profile?._id}
+                initialData={editingProfile ? convertToUserData(editingProfile) : undefined}
+                profileId={editingProfile?._id}
             />
             <OLForm
                 isOpen={isOLModalOpen}
                 onClose={handleCloseModal}
                 onBack={handleCloseModal}
-                initialData={userData}
-                profileId={profile?._id}
+                initialData={editingProfile ? convertToUserData(editingProfile) : undefined}
+                profileId={editingProfile?._id}
             />
 
             <ConfirmModal

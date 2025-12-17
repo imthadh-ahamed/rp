@@ -101,11 +101,12 @@ class ALProfileService {
     }
 
     /**
-     * Get all profiles
-     * @returns {Array} All profiles
+     * Get all profiles for a specific user
+     * @param {String} userId - User ID to filter profiles
+     * @returns {Array} User's profiles
      */
-    async getAllProfiles() {
-        const profiles = await ALProfile.find({ isDeleted: false })
+    async getAllProfiles(userId) {
+        const profiles = await ALProfile.find({ userId, isDeleted: false })
             .populate('userId', 'firstName lastName email')
             .sort({ createdAt: -1 });
 
