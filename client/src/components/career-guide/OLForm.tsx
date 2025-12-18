@@ -115,7 +115,8 @@ export default function OLForm({ isOpen, onClose, onBack, initialData, profileId
           nativeLanguage: formData.nativeLanguage as 'English' | 'Sinhala' | 'Tamil',
           preferredLanguage: formData.preferredLanguage as 'English' | 'Sinhala' | 'Tamil',
           olResults: formData.olResults,
-          // OL form doesn't have A/L stream and results
+          alStream: undefined,
+          alResults: undefined,
           otherQualifications: formData.otherQualifications,
           ieltsScore: formData.ieltsScore,
           interestArea: formData.interestArea as any,
