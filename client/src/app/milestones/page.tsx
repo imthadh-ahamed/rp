@@ -5,7 +5,7 @@ import MilestoneDetailsView from '@/components/milestones/MilestoneDetailsView';
 import MilestonesTab from '@/components/milestones/MilestonesTab';
 import ProfileTab from '@/components/milestones/ProfileTab';
 import { motion } from 'framer-motion';
-import { Plus, Target, User } from 'lucide-react';
+import { Plus, Target, User, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
@@ -16,7 +16,8 @@ function MilestonesContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const milestoneId = searchParams.get('milestoneId');
-    const [activeTab, setActiveTab] = useState<TabType>('milestones');
+    const tabParam = searchParams.get('tab') as TabType | null;
+    const [activeTab, setActiveTab] = useState<TabType>(tabParam || 'milestones');
 
     const tabs = [
         { id: 'milestones' as TabType, label: 'My Milestones', icon: Target },
@@ -47,6 +48,17 @@ function MilestonesContent() {
         <AppShell>
             <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-6xl mx-auto">
+                    {/* Back Button */}
+                    <div className="mb-6">
+                        <Link
+                            href="/career-guide"
+                            className="inline-flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors"
+                        >
+                            <ArrowLeft className="w-5 h-5" />
+                            <span className="font-medium">Back to Career Guide</span>
+                        </Link>
+                    </div>
+
                     {/* Header */}
                     <div className="flex items-center justify-between mb-8">
                         <div>
