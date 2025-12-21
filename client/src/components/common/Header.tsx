@@ -11,9 +11,16 @@ import authService from '@/services/auth.service';
 
 export default function DashboardHeader() {
   const user = useSelector((state: RootState) => state.user.userData) as CurrentUser | null;
+  const [mounted, setMounted] = React.useState(false);
+  
+  // Only show user-specific content after client-side mount
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+  
   // Compute initials from user name
   let initials = 'U';
-  if (user) {
+  if (user && mounted) {
     const first = user.firstName?.[0] || '';
     const last = user.lastName?.[0] || '';
     initials = (first + last).toUpperCase() || 'U';
