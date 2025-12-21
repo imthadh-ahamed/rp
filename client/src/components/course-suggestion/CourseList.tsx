@@ -1,16 +1,18 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Clock, Star, Eye, BookOpen, DollarSign, Loader2, AlertCircle } from 'lucide-react';
+import { Clock, Star, Eye, BookOpen, DollarSign, Loader2, AlertCircle, MapPin, Info } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import CourseDetailModal from './CourseDetailModal';
 import profileService from '@/services/profile.service';
 import { Recommendation } from '@/types/profile.types';
+import Link from 'next/link';
 
 export default function CourseList() {
     const [courses, setCourses] = useState<Recommendation[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const [selectedCourse, setSelectedCourse] = useState<Recommendation | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -21,6 +23,9 @@ export default function CourseList() {
     const fetchRecommendations = async () => {
         try {
             setIsLoading(true);
+            setError(null);
+            setValidationErrors([]);
+            
             // API now returns only the logged-in user's profiles (already filtered)
             const { profiles } = await profileService.getAllProfiles();
 
@@ -31,17 +36,29 @@ export default function CourseList() {
                 );
 
                 const latestProfile = sortedProfiles[0];
-                if (latestProfile.recommendations && latestProfile.recommendations.length > 0) {
-                    setCourses(latestProfile.recommendations);
+                
+                // Check if the recommendations contain validation errors
+                if (latestProfile.recommendations && Array.isArray(latestProfile.recommendations)) {
+                    // Check if it's an error response (validation errors from backend)
+                    const firstItem = latestProfile.recommendations[0];
+                    if (firstItem && typeof firstItem === 'string') {
+                        // It's a validation error
+                        setValidationErrors(latestProfile.recommendations as unknown as string[]);
+                        setError("We couldn't find suitable courses based on your criteria");
+                    } else if (latestProfile.recommendations.length > 0) {
+                        setCourses(latestProfile.recommendations);
+                    } else {
+                        setError("No course recommendations found for your profile");
+                    }
                 } else {
-                    setError("No recommendations found in your profile.");
+                    setError("No recommendations available. Please try updating your profile.");
                 }
             } else {
                 setError("No profiles found. Please create a profile first.");
             }
         } catch (err: any) {
             console.error("Error fetching recommendations:", err);
-            setError(err.message || "Failed to load recommendations.");
+            setError(err.message || "Failed to load recommendations. Please try again.");
         } finally {
             setIsLoading(false);
         }
@@ -64,17 +81,63 @@ export default function CourseList() {
     if (error) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-6">
-                <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mb-4">
-                    <AlertCircle className="w-8 h-8 text-red-500" />
+                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
+                    <AlertCircle className="w-10 h-10 text-red-500" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Oops! Something went wrong</h3>
-                <p className="text-gray-600 mb-6 max-w-md">{error}</p>
-                <button
-                    onClick={fetchRecommendations}
-                    className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
-                >
-                    Try Again
-                </button>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Oops! Something went wrong</h3>
+                <p className="text-gray-600 mb-4 max-w-md">{error}</p>
+                
+                {validationErrors.length > 0 && (
+                    <div className="w-full max-w-lg mb-6">
+                        <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+                            <div className="flex items-start">
+                                <Info className="w-5 h-5 text-amber-600 mt-0.5 mr-3 flex-shrink-0" />
+                                <div className="text-left">
+                                    <h4 className="text-sm font-semibold text-amber-800 mb-2">
+                                        Why aren't there any recommendations?
+                                    </h4>
+                                    <ul className="space-y-1 text-sm text-amber-700">
+                                        {validationErrors.map((err, idx) => (
+                                            <li key={idx} className="flex items-start">
+                                                <span className="mr-2">•</span>
+                                                <span>{err}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                            <div className="flex items-start">
+                                <MapPin className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+                                <div className="text-left text-sm text-blue-900">
+                                    <p className="font-medium mb-1">Suggestions:</p>
+                                    <ul className="space-y-1 text-blue-800">
+                                        <li>• Try selecting a different location in Sri Lanka (e.g., Colombo, Kandy, Galle)</li>
+                                        <li>• Adjust your career goals to explore more options</li>
+                                        <li>• Consider changing your study method preferences</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                
+                <div className="flex gap-3">
+                    <Link
+                        href="/milestones?tab=profile"
+                        className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium shadow-md hover:shadow-lg"
+                    >
+                        Update Profile
+                    </Link>
+                    <button
+                        onClick={fetchRecommendations}
+                        className="px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                    >
+                        Try Again
+                    </button>
+                </div>
             </div>
         );
     }
@@ -146,7 +209,7 @@ export default function CourseList() {
                                 </div>
                                 <div className="flex items-center text-gray-500 text-sm">
                                     <DollarSign className="w-4 h-4 mr-1" />
-                                    {course.course_fee}
+                                    {course.course_fee === 'None' || !course.course_fee ? 'Not Available' : course.course_fee}
                                 </div>
                             </div>
 
