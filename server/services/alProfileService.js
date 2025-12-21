@@ -23,10 +23,15 @@ class ALProfileService {
         let recommendations = null;
         try {
             const aiResponse = await this.getRecommendations(profileData);
-            if (aiResponse && aiResponse.recommendations) {
-                recommendations = aiResponse.recommendations;
+            if (aiResponse) {
+                // Check if it's an error response with validation errors
+                if (aiResponse.status === 'error' && aiResponse.recommendations) {
+                    recommendations = aiResponse.recommendations; // Store error messages
+                } else if (aiResponse.recommendations) {
+                    recommendations = aiResponse.recommendations;
+                }
 
-                // Update profile with recommendations
+                // Update profile with recommendations (or errors)
                 profile.recommendations = recommendations;
                 await profile.save();
             }
@@ -77,7 +82,19 @@ class ALProfileService {
                 throw new Error(`API Error: ${response.statusText}`);
             }
 
-            return await response.json();
+            const result = await response.json();
+            
+            // Check if the API returned an error status (validation failed)
+            if (result.status === 'error' && result.errors && result.errors.length > 0) {
+                // Return validation errors as recommendations so the frontend can display them
+                return {
+                    recommendations: result.errors,
+                    status: 'error',
+                    warnings: result.warnings || []
+                };
+            }
+
+            return result;
         } catch (error) {
             console.error('Failed to connect to Recommendation API:', error);
             return null;
@@ -140,6 +157,34 @@ class ALProfileService {
         // Update profile
         Object.assign(profile, updateData);
         await profile.save();
+
+        // Fetch new AI Recommendations based on updated profile data
+        try {
+            const aiResponse = await this.getRecommendations(updateData);
+            if (aiResponse) {
+                let newRecommendations;
+                
+                // Check if it's an error response with validation errors
+                if (aiResponse.status === 'error' && aiResponse.recommendations) {
+                    newRecommendations = aiResponse.recommendations; // Store error messages
+                } else if (aiResponse.recommendations) {
+                    // Reset all isSelected flags to false for new recommendations
+                    newRecommendations = aiResponse.recommendations.map(rec => ({
+                        ...rec,
+                        isSelected: false
+                    }));
+                }
+                
+                // Update profile with new recommendations (or errors)
+                if (newRecommendations) {
+                    profile.recommendations = newRecommendations;
+                    await profile.save();
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching recommendations:', error.message);
+            // We don't block profile update if AI fails
+        }
 
         return profile;
     }
