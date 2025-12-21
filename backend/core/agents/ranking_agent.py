@@ -1,4 +1,6 @@
 from typing import List, Dict, Any
+from core.agents.career_intent import get_domain_penalty
+
 
 def compute_score(user: Dict[str, Any], candidate: Dict[str, Any]) -> float:
     """
@@ -60,6 +62,11 @@ def compute_score(user: Dict[str, Any], candidate: Dict[str, Any]) -> float:
     course_location = (meta.get("campus") or "").lower()
     if user_locations and any(loc.strip() in course_location for loc in user_locations.split(",")):
         score += 5
+    
+    # CRITICAL: Apply career domain penalty
+    # This ensures courses not matching career goal sink to bottom
+    domain_penalty = get_domain_penalty(user, meta)
+    score -= domain_penalty
     
     # Clamp score to 0-100 range
     return max(0.0, min(100.0, score))
