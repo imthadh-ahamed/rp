@@ -1,4 +1,6 @@
 from typing import List, Dict, Any
+from core.agents.career_intent import matches_career_domain
+
 
 def matches_location(user: Dict[str, Any], course_meta: Dict[str, Any]) -> bool:
     """
@@ -97,10 +99,40 @@ def matches_duration(user: Dict[str, Any], course_meta: Dict[str, Any]) -> bool:
     return True
 
 
+def matches_career_domain_filter(user: Dict[str, Any], course_meta: Dict[str, Any]) -> bool:
+    """
+    Check if course domain aligns with user's career goal.
+    This is a HARD filter to ensure career relevance.
+    
+    Args:
+        user: User profile
+        course_meta: Course metadata
+        
+    Returns:
+        True if domain matches or no career goal specified
+    """
+    career_goal = user.get("career_goal", "")
+    
+    # If no career goal, allow all courses
+    if not career_goal:
+        return True
+    
+    # Build searchable course text
+    course_text = " ".join([
+        course_meta.get("course", ""),
+        course_meta.get("Course", ""),
+        course_meta.get("department", ""),
+        course_meta.get("Department", ""),
+        course_meta.get("Career Opportunities", ""),
+    ])
+    
+    return matches_career_domain(career_goal, course_text)
+
+
 def filter_candidates(user: Dict[str, Any],
                       candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
-    Filter candidates based on user preferences (location, study method, duration).
+    Filter candidates based on user preferences (location, study method, duration, career domain).
     
     Args:
         user: User profile
@@ -110,11 +142,17 @@ def filter_candidates(user: Dict[str, Any],
         Filtered list of candidates matching user preferences
     """
     filtered = []
+    excluded_by_domain = []
     
     for c in candidates:
         meta = c.get("metadata", {})
         
-        # Apply all filters
+        # Apply career domain filter first (HARD constraint)
+        if not matches_career_domain_filter(user, meta):
+            excluded_by_domain.append(c)
+            continue
+            
+        # Apply other filters (soft constraints)
         if not matches_location(user, meta):
             continue
         if not matches_study_method(user, meta):
@@ -124,9 +162,20 @@ def filter_candidates(user: Dict[str, Any],
         
         filtered.append(c)
     
-    # If filters are too strict and nothing passes, return original
+    # Log career domain filtering for transparency
+    if excluded_by_domain:
+        career_goal = user.get("career_goal", "")
+        print(f"🎯 Career Domain Filter: Excluded {len(excluded_by_domain)} courses not matching '{career_goal}'")
+        print(f"   Examples: {', '.join([c.get('metadata', {}).get('course', 'Unknown')[:50] for c in excluded_by_domain[:3]])}")
+    
+    # If filters are too strict and nothing passes, return career-filtered results only
+    if not filtered and excluded_by_domain:
+        print("⚠️ Location/study filters too strict. Returning career-relevant courses only.")
+        return [c for c in candidates if matches_career_domain_filter(user, c.get("metadata", {}))]
+    
+    # If even career filter removed everything, return original (failsafe)
     if not filtered:
-        print("⚠️ All candidates filtered out by preferences. Returning original list.")
+        print("⚠️ All candidates filtered out. Returning original list as failsafe.")
         return candidates
     
     return filtered
