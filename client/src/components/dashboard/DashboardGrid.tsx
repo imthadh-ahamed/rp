@@ -16,7 +16,7 @@ const gridItems = [
     title: "State University Course Selector",
     description: "Predict Eligible UGC programs using AI.",
     buttonText: "Explore",
-    href: "#"
+    href: "/ugc-course-recommender"
   },
   {
     emoji: "🚀",
