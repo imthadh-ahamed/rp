@@ -5,8 +5,8 @@ import { Star } from 'lucide-react';
 import { useState } from 'react';
 
 export interface CareerQuizAnswer {
-    questionId: number;
-    answer: string | number;
+    questionId: string;
+    answer: number;
 }
 
 interface CareerQuizProps {
@@ -19,64 +19,88 @@ interface CareerQuizProps {
 
 const quizQuestions = [
     {
-        id: 1,
-        question: "How interested are you in designing structures or buildings?",
+        id: "q1_science_tech",
+        question: "How interested are you in exploring scientific principles, working with advanced technology, gadgets, or solving problems using tools like computers and machines?",
+        description: "(e.g., careers in Engineering, Computer Science, Physical Science)",
         type: "rating",
-        scale: "Not Interested to Very Interested"
+        scale: "1 = Not interested at all, 5 = Extremely interested"
     },
     {
-        id: 2,
-        question: "Do you prefer technical or creative careers?",
-        type: "choice",
-        options: ["Technical", "Creative"]
-    },
-    {
-        id: 3,
-        question: "Would you prefer fieldwork or office-based work?",
-        type: "choice",
-        options: ["Fieldwork", "Office-based"]
-    },
-    {
-        id: 4,
-        question: "How interested are you in mathematics and calculations?",
+        id: "q2_healthcare",
+        question: "How interested are you in helping people stay healthy, understanding the human body, treating illnesses, or working in medical settings?",
+        description: "(e.g., careers in Medicine, Nursing, Pharmacy, Biological Science)",
         type: "rating",
-        scale: "Not Interested to Very Interested"
+        scale: "1 = Not interested at all, 5 = Extremely interested"
     },
     {
-        id: 5,
-        question: "Are you more data-oriented or people-oriented?",
-        type: "choice",
-        options: ["Data-oriented", "People-oriented"]
-    },
-    {
-        id: 6,
-        question: "How interested are you in innovation and new technologies?",
+        id: "q3_design",
+        question: "How interested are you in creating visual designs, planning buildings/layouts, fashion, or innovative products through drawing and creativity?",
+        description: "(e.g., careers in Architecture, Fashion Design, Landscape Architecture)",
         type: "rating",
-        scale: "Not Interested to Very Interested"
+        scale: "1 = Not interested at all, 5 = Extremely interested"
     },
     {
-        id: 7,
-        question: "Do you prefer urban or rural work settings?",
-        type: "choice",
-        options: ["Urban", "Rural"]
-    },
-    {
-        id: 8,
-        question: "Do you enjoy problem-solving and analytical thinking?",
-        type: "choice",
-        options: ["Yes", "No"]
-    },
-    {
-        id: 9,
-        question: "How interested are you in sustainable development and environment?",
+        id: "q4_data",
+        question: "How interested are you in analyzing numbers, statistics, data patterns, programming, or using information systems to make decisions?",
+        description: "(e.g., careers in Information Systems, Computer Science, Statistics)",
         type: "rating",
-        scale: "Not Interested to Very Interested"
+        scale: "1 = Not interested at all, 5 = Extremely interested"
     },
     {
-        id: 10,
-        question: "Do you prefer leadership roles or individual work?",
-        type: "choice",
-        options: ["Leadership", "Individual"]
+        id: "q5_business",
+        question: "How interested are you in managing money, starting businesses, marketing products, or leading teams in commercial environments?",
+        description: "(e.g., careers in Management, Commerce, Finance, Entrepreneurship)",
+        type: "rating",
+        scale: "1 = Not interested at all, 5 = Extremely interested"
+    },
+    {
+        id: "q6_arts_culture",
+        question: "How interested are you in expressing yourself through art, music, drama, literature, or preserving cultural heritage?",
+        description: "(e.g., careers in Arts, Mass Communication, Performing Arts, Visual Arts)",
+        type: "rating",
+        scale: "1 = Not interested at all, 5 = Extremely interested"
+    },
+    {
+        id: "q7_nature_env",
+        question: "How interested are you in protecting the environment, working with plants/animals, agriculture, or sustainable natural resources?",
+        description: "(e.g., careers in Agriculture, Environmental Conservation, Animal Science, Green Technology)",
+        type: "rating",
+        scale: "1 = Not interested at all, 5 = Extremely interested"
+    },
+    {
+        id: "q8_hands_on",
+        question: "How interested are you in practical, hands-on work like building, repairing machines, experimenting in labs, or technical fieldwork?",
+        description: "(e.g., careers in Engineering Technology, Biosystems Technology)",
+        type: "rating",
+        scale: "1 = Not interested at all, 5 = Extremely interested"
+    },
+    {
+        id: "q9_innovation",
+        question: "How interested are you in inventing new ideas, researching cutting-edge solutions, or developing innovative technologies/products?",
+        description: "(e.g., careers in Software Engineering, Biotechnology, Artificial Intelligence)",
+        type: "rating",
+        scale: "1 = Not interested at all, 5 = Extremely interested"
+    },
+    {
+        id: "q10_people_social",
+        question: "How interested are you in working with people, teaching, counseling, social work, or community development?",
+        description: "(e.g., careers in Social Work, Peace & Conflict Resolution, Teaching, Law)",
+        type: "rating",
+        scale: "1 = Not interested at all, 5 = Extremely interested"
+    },
+    {
+        id: "q11_urban_corporate",
+        question: "How interested are you in city planning, corporate offices, urban development, facilities management, or big business environments?",
+        description: "(e.g., careers in Urban Planning, Facilities Management, Quantity Surveying)",
+        type: "rating",
+        scale: "1 = Not interested at all, 5 = Extremely interested"
+    },
+    {
+        id: "q12_flexible_path",
+        question: "How interested are you in careers with varied daily tasks, freedom to choose projects, or non-traditional/flexible work options?",
+        description: "(e.g., careers in Translation Studies, Project Management, Tourism & Hospitality)",
+        type: "rating",
+        scale: "1 = Not interested at all, 5 = Extremely interested"
     }
 ];
 
@@ -91,7 +115,6 @@ export default function CareerQuiz({ questionNumber, totalQuestions, onNext, onP
     };
 
     const isRatingQuestion = currentQuestion.type === 'rating';
-    const isChoiceQuestion = currentQuestion.type === 'choice';
 
     // Calculate progress percentage
     const progressPercentage = (questionNumber / totalQuestions) * 100;
@@ -115,7 +138,10 @@ export default function CareerQuiz({ questionNumber, totalQuestions, onNext, onP
 
             {/* Question */}
             <div className="mb-12">
-                <h3 className="text-xl font-bold text-gray-900 mb-8">{currentQuestion.question}</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">{currentQuestion.question}</h3>
+                {currentQuestion.description && (
+                    <p className="text-sm text-cyan-600 mb-8 italic">{currentQuestion.description}</p>
+                )}
 
                 {/* Rating Question */}
                 {isRatingQuestion && (
@@ -127,11 +153,10 @@ export default function CareerQuiz({ questionNumber, totalQuestions, onNext, onP
                                 whileTap={{ scale: 0.95 }}
                                 type="button"
                                 onClick={() => setSelectedAnswer(rating)}
-                                className={`w-16 h-16 rounded-full border-2 flex flex-col items-center justify-center transition-all ${
-                                    selectedAnswer === rating
-                                        ? 'bg-cyan-500 border-cyan-600 text-white'
-                                        : 'bg-white border-gray-300 text-gray-600 hover:border-cyan-400'
-                                }`}
+                                className={`w-16 h-16 rounded-full border-2 flex flex-col items-center justify-center transition-all ${selectedAnswer === rating
+                                    ? 'bg-cyan-500 border-cyan-600 text-white'
+                                    : 'bg-white border-gray-300 text-gray-600 hover:border-cyan-400'
+                                    }`}
                             >
                                 <Star className="w-6 h-6 mb-1" />
                                 <span className="text-sm font-bold">{rating}</span>
@@ -140,33 +165,14 @@ export default function CareerQuiz({ questionNumber, totalQuestions, onNext, onP
                     </div>
                 )}
 
-                {/* Choice Question */}
-                {isChoiceQuestion && (
-                    <div className="grid grid-cols-2 gap-4">
-                        {currentQuestion.options?.map((option, idx) => (
-                            <motion.button
-                                key={idx}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                type="button"
-                                onClick={() => setSelectedAnswer(option)}
-                                className={`py-4 px-6 rounded-lg border-2 font-medium transition-all text-center ${
-                                    selectedAnswer === option
-                                        ? 'bg-cyan-500 border-cyan-600 text-white'
-                                        : 'bg-white border-gray-300 text-gray-700 hover:border-cyan-400'
-                                }`}
-                            >
-                                {option}
-                            </motion.button>
-                        ))}
-                    </div>
-                )}
-
                 {/* Scale Labels for Rating */}
                 {isRatingQuestion && (
-                    <div className="flex justify-between text-xs text-gray-500 mt-4 px-2">
-                        <span>Not Interested</span>
-                        <span>Very Interested</span>
+                    <div className="flex justify-between text-xs text-gray-500 mt-4 px-4">
+                        <span>1 = Not interested at all</span>
+                        <span>2 = Slightly</span>
+                        <span>3 = Moderate</span>
+                        <span>4 = Very</span>
+                        <span>5 = Extremely interested</span>
                     </div>
                 )}
             </div>
@@ -210,9 +216,8 @@ export default function CareerQuiz({ questionNumber, totalQuestions, onNext, onP
                 {Array.from({ length: totalQuestions }).map((_, idx) => (
                     <div
                         key={idx}
-                        className={`w-2 h-2 rounded-full transition-all ${
-                            idx < questionNumber ? 'bg-cyan-500' : idx === questionNumber - 1 ? 'bg-cyan-400' : 'bg-gray-300'
-                        }`}
+                        className={`w-2 h-2 rounded-full transition-all ${idx < questionNumber ? 'bg-cyan-500' : idx === questionNumber - 1 ? 'bg-cyan-400' : 'bg-gray-300'
+                            }`}
                     />
                 ))}
             </div>
