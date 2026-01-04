@@ -23,6 +23,7 @@ export interface ALResultsData {
 
 interface ALResultsFormProps {
     onSubmit: (data: ALResultsData) => void;
+    initialData?: ALResultsData | null;
     isLoading?: boolean;
 }
 
@@ -201,8 +202,8 @@ const olSubjects = [
 
 const grades = ['A', 'B', 'C', 'S', 'F'];
 
-export default function ALResultsForm({ onSubmit, isLoading = false }: ALResultsFormProps) {
-    const [formData, setFormData] = useState<ALResultsData>({
+export default function ALResultsForm({ onSubmit, initialData, isLoading = false }: ALResultsFormProps) {
+    const [formData, setFormData] = useState<ALResultsData>(initialData || {
         stream: '',
         subjects: [],
         olLanguage: 'Sinhala',
@@ -320,11 +321,10 @@ export default function ALResultsForm({ onSubmit, isLoading = false }: ALResults
                 <select
                     value={formData.stream}
                     onChange={(e) => handleStreamChange(e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:outline-none transition-all appearance-none bg-white ${
-                        errors.stream
-                            ? 'border-red-500 focus:ring-red-200 text-black'
-                            : formData.stream ? 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black' : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-gray-400'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:outline-none transition-all appearance-none bg-white ${errors.stream
+                        ? 'border-red-500 focus:ring-red-200 text-black'
+                        : formData.stream ? 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black' : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-gray-400'
+                        }`}
                 >
                     <option value="">Select your stream</option>
                     {streams.map(stream => (
@@ -341,7 +341,7 @@ export default function ALResultsForm({ onSubmit, isLoading = false }: ALResults
                         Select 3 A/L Subjects <span className="text-red-500">*</span>
                     </label>
                     <p className="text-sm text-gray-600 mb-4">Choose exactly 3 subjects from the available options for {formData.stream}</p>
-                    
+
                     {/* Subject Selection Dropdowns */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         {[0, 1, 2].map((idx) => (
@@ -352,11 +352,10 @@ export default function ALResultsForm({ onSubmit, isLoading = false }: ALResults
                                 <select
                                     value={formData.subjects[idx]?.code || ''}
                                     onChange={(e) => handleSubjectSelect(idx, parseInt(e.target.value))}
-                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:outline-none transition-all appearance-none bg-white text-sm ${
-                                        errors.subjects && !formData.subjects[idx]
-                                            ? 'border-red-500 focus:ring-red-200'
-                                            : formData.subjects[idx] ? 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black' : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-gray-400'
-                                    }`}
+                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:outline-none transition-all appearance-none bg-white text-sm ${errors.subjects && !formData.subjects[idx]
+                                        ? 'border-red-500 focus:ring-red-200'
+                                        : formData.subjects[idx] ? 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black' : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-gray-400'
+                                        }`}
                                 >
                                     <option value="">Select subject</option>
                                     {availableSubjectsByStream[formData.stream]?.map(subject => (
@@ -385,11 +384,10 @@ export default function ALResultsForm({ onSubmit, isLoading = false }: ALResults
                                                 key={grade}
                                                 type="button"
                                                 onClick={() => handleGradeChange(idx, grade)}
-                                                className={`w-12 h-12 rounded-lg font-bold text-sm transition-all ${
-                                                    subject.grade === grade
-                                                        ? 'bg-cyan-500 text-white border-2 border-cyan-600'
-                                                        : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-cyan-400'
-                                                }`}
+                                                className={`w-12 h-12 rounded-lg font-bold text-sm transition-all ${subject.grade === grade
+                                                    ? 'bg-cyan-500 text-white border-2 border-cyan-600'
+                                                    : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-cyan-400'
+                                                    }`}
                                             >
                                                 {grade}
                                             </button>
@@ -419,22 +417,20 @@ export default function ALResultsForm({ onSubmit, isLoading = false }: ALResults
                         <button
                             type="button"
                             onClick={() => handleLanguageChange('Sinhala')}
-                            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
-                                formData.olLanguage === 'Sinhala'
-                                    ? 'bg-cyan-500 text-white border-2 border-cyan-600'
-                                    : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-cyan-400'
-                            }`}
+                            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${formData.olLanguage === 'Sinhala'
+                                ? 'bg-cyan-500 text-white border-2 border-cyan-600'
+                                : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-cyan-400'
+                                }`}
                         >
                             Sinhala
                         </button>
                         <button
                             type="button"
                             onClick={() => handleLanguageChange('Tamil')}
-                            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
-                                formData.olLanguage === 'Tamil'
-                                    ? 'bg-cyan-500 text-white border-2 border-cyan-600'
-                                    : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-cyan-400'
-                            }`}
+                            className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${formData.olLanguage === 'Tamil'
+                                ? 'bg-cyan-500 text-white border-2 border-cyan-600'
+                                : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-cyan-400'
+                                }`}
                         >
                             Tamil
                         </button>
@@ -475,11 +471,10 @@ export default function ALResultsForm({ onSubmit, isLoading = false }: ALResults
                                                 handleOLGradeChange(subject.idx, grade);
                                             }
                                         }}
-                                        className={`w-12 h-12 rounded-lg font-bold text-sm transition-all ${
-                                            formData.olResults[subject.idx]?.grade === grade
-                                                ? 'bg-cyan-500 text-white border-2 border-cyan-600'
-                                                : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-cyan-400'
-                                        }`}
+                                        className={`w-12 h-12 rounded-lg font-bold text-sm transition-all ${formData.olResults[subject.idx]?.grade === grade
+                                            ? 'bg-cyan-500 text-white border-2 border-cyan-600'
+                                            : 'bg-white border-2 border-gray-300 text-gray-700 hover:border-cyan-400'
+                                            }`}
                                     >
                                         {grade}
                                     </button>
