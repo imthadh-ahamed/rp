@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export interface CareerQuizAnswer {
     questionId: string;
@@ -14,6 +14,7 @@ interface CareerQuizProps {
     totalQuestions: number;
     onNext: (answer: string | number) => void;
     onPrevious: () => void;
+    currentAnswer?: string | number;
     isLoading?: boolean;
 }
 
@@ -104,9 +105,13 @@ const quizQuestions = [
     }
 ];
 
-export default function CareerQuiz({ questionNumber, totalQuestions, onNext, onPrevious, isLoading = false }: CareerQuizProps) {
+export default function CareerQuiz({ questionNumber, totalQuestions, onNext, onPrevious, currentAnswer, isLoading = false }: CareerQuizProps) {
     const currentQuestion = quizQuestions[questionNumber - 1];
     const [selectedAnswer, setSelectedAnswer] = useState<string | number>('');
+
+    useEffect(() => {
+        setSelectedAnswer(currentAnswer || '');
+    }, [questionNumber, currentAnswer]);
 
     const handleNext = () => {
         if (selectedAnswer !== '') {
