@@ -2,11 +2,11 @@
 
 import { motion } from 'framer-motion';
 import { BookOpen, AlertCircle, Loader2 } from 'lucide-react';
-import { Course } from '@/utils/recommendationEngine';
+import { RecommendedCourse } from '@/utils/recommendationEngine';
 
 interface CourseRecommendationsProps {
-    courses: Course[];
-    onSelectCourse: (course: Course) => void;
+    courses: RecommendedCourse[];
+    onSelectCourse: (course: RecommendedCourse) => void;
     isLoading?: boolean;
 }
 
@@ -38,7 +38,7 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
         );
     }
 
-    const CourseCard = ({ course, category }: { course: Course; category: string }) => (
+    const CourseCard = ({ course, category }: { course: RecommendedCourse; category: string }) => (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -52,24 +52,23 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
                 {/* Header */}
                 <div className="flex justify-between items-start mb-4">
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-1">{course.name}</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-1">{course.courseName}</h3>
                         <p className="text-sm text-gray-600">{course.university}</p>
                     </div>
                     <span
-                        className={`px-3 py-1 rounded-full text-sm font-bold text-white ${
-                            category === 'highly-recommended'
+                        className={`px-3 py-1 rounded-full text-sm font-bold text-white ${category === 'highly-recommended'
                                 ? 'bg-green-500'
                                 : category === 'moderately-recommended'
-                                ? 'bg-amber-500'
-                                : 'bg-gray-500'
-                        }`}
+                                    ? 'bg-amber-500'
+                                    : 'bg-gray-500'
+                            }`}
                     >
                         {category === 'highly-recommended' ? '✓ Recommended' : category === 'moderately-recommended' ? '◐ Moderate' : '? Conditional'}
                     </span>
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-600 text-sm mb-4">{course.description}</p>
+                {/* Description placeholder - can be added to RecommendedCourse interface if needed */}
 
                 {/* Scores */}
                 <div className="grid grid-cols-3 gap-3 mb-6 p-4 bg-gray-50 rounded-lg">
@@ -100,7 +99,7 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
                 </div>
 
                 {/* Aptitude Test Button */}
-                {course.hasAptitudeTest && (
+                {course.requiresAptitudeTest && (
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
@@ -127,7 +126,7 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {highlyRecommended.map(course => (
-                            <CourseCard key={course.id} course={course} category="highly-recommended" />
+                            <CourseCard key={course.uniCode} course={course} category="highly-recommended" />
                         ))}
                     </div>
                 </div>
@@ -143,7 +142,7 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {moderatelyRecommended.map(course => (
-                            <CourseCard key={course.id} course={course} category="moderately-recommended" />
+                            <CourseCard key={course.uniCode} course={course} category="moderately-recommended" />
                         ))}
                     </div>
                 </div>
@@ -159,7 +158,7 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {conditionallyEligible.map(course => (
-                            <CourseCard key={course.id} course={course} category="conditionally-eligible" />
+                            <CourseCard key={course.uniCode} course={course} category="conditionally-eligible" />
                         ))}
                     </div>
                 </div>
