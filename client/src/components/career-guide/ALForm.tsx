@@ -236,13 +236,13 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Age */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Age <span className="text-red-500">*</span></label>
                 <input type="text" name="age" value={formData.age} onChange={handleChange} className={inputClass(errors.age)} />
                 <ErrorMsg error={errors.age} />
               </div>
               {/* Gender */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Gender <span className="text-red-500">*</span></label>
                 <select name="gender" value={formData.gender} onChange={handleChange} className={inputClass(errors.gender)}>
                   <option value="" disabled>Select Gender</option>
                   <option value="Male">Male</option>
@@ -253,7 +253,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
               </div>
               {/* Native Language */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Native Language</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Native Language <span className="text-red-500">*</span></label>
                 <select name="nativeLanguage" value={formData.nativeLanguage} onChange={handleChange} className={inputClass(errors.nativeLanguage)}>
                   <option value="" disabled>Select Language</option>
                   <option value="English">English</option>
@@ -264,7 +264,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
               </div>
               {/* Preferred Language */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Language for Study</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Language for Study <span className="text-red-500">*</span></label>
                 <select name="preferredLanguage" value={formData.preferredLanguage} onChange={handleChange} className={inputClass(errors.preferredLanguage)}>
                   <option value="" disabled>Select Language</option>
                   <option value="English">English</option>
@@ -282,7 +282,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
 
             {/* O/L Results */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">O/L Results (Maths, English, Science, ICT)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">O/L Results (Maths, English, Science, ICT) <span className="text-red-500">*</span></label>
               <textarea name="olResults" value={formData.olResults} onChange={handleChange} className={inputClass(errors.olResults)} rows={2} placeholder="e.g., Maths: A, English: B..." />
               <ErrorMsg error={errors.olResults} />
             </div>
@@ -290,7 +290,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* A/L Stream */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">A/L Stream</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">A/L Stream <span className="text-red-500">*</span></label>
                 <select name="alStream" value={formData.alStream} onChange={handleChange} className={inputClass(errors.alStream)}>
                   <option value="" disabled>Select Stream</option>
                   <option value="Bio Science">Bio Science</option>
@@ -312,7 +312,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
 
             {/* A/L Results */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">A/L Results</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">A/L Results <span className="text-red-500">*</span></label>
               <textarea name="alResults" value={formData.alResults} onChange={handleChange} className={inputClass(errors.alResults)} rows={2} placeholder="Enter your results..." />
               <ErrorMsg error={errors.alResults} />
             </div>
@@ -332,7 +332,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Interest Area */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Interest Area</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Interest Area <span className="text-red-500">*</span></label>
                 <select name="interestArea" value={formData.interestArea} onChange={handleChange} className={inputClass(errors.interestArea)}>
                   <option value="" disabled>Select Interest Area</option>
                   <option value="Information Technology">Information Technology</option>
@@ -347,7 +347,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
               </div>
               {/* Monthly Income */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Income</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Monthly Income <span className="text-red-500">*</span></label>
                 <input type="text" name="monthlyIncome" value={formData.monthlyIncome} onChange={handleChange} className={inputClass(errors.monthlyIncome)} placeholder="e.g. 50000 LKR" />
                 <ErrorMsg error={errors.monthlyIncome} />
               </div>
@@ -355,7 +355,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
 
             {/* Career Goal */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Career Goal</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Career Goal <span className="text-red-500">*</span></label>
               <textarea name="careerGoal" value={formData.careerGoal} onChange={handleChange} className={inputClass(errors.careerGoal)} rows={2} placeholder="Describe your career aspirations..." />
               <ErrorMsg error={errors.careerGoal} />
             </div>
@@ -363,7 +363,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Funding Method */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Funding Method</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Funding Method <span className="text-red-500">*</span></label>
                 <select name="fundingMethod" value={formData.fundingMethod} onChange={handleChange} className={inputClass(errors.fundingMethod)}>
                   <option value="" disabled>Select Funding Method</option>
                   <option value="Self-funded">Self-funded</option>
@@ -373,7 +373,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
               </div>
               {/* Availability */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Availability</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Availability <span className="text-red-500">*</span></label>
                 <select name="availability" value={formData.availability} onChange={handleChange} className={inputClass(errors.availability)}>
                   <option value="" disabled>Select Availability</option>
                   <option value="Weekday">Weekday</option>
@@ -391,7 +391,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Target Completion Period */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Target Completion Period</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Target Completion Period <span className="text-red-500">*</span></label>
                 <select name="completionPeriod" value={formData.completionPeriod} onChange={handleChange} className={inputClass(errors.completionPeriod)}>
                   <option value="" disabled>Select Period</option>
                   <option value="< 1 year">&lt; 1 year</option>
@@ -404,7 +404,7 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
               </div>
               {/* Study Method */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Study Method</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Study Method <span className="text-red-500">*</span></label>
                 <select name="studyMethod" value={formData.studyMethod} onChange={handleChange} className={inputClass(errors.studyMethod)}>
                   <option value="" disabled>Select Method</option>
                   <option value="Hybrid">Hybrid</option>
@@ -418,13 +418,13 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Current Location */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Current Location</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Current Location <span className="text-red-500">*</span></label>
                 <input type="text" name="currentLocation" value={formData.currentLocation} onChange={handleChange} className={inputClass(errors.currentLocation)} placeholder="City, Country" />
                 <ErrorMsg error={errors.currentLocation} />
               </div>
               {/* Preferred Locations */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Locations</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Preferred Locations <span className="text-red-500">*</span></label>
                 <input type="text" name="preferredLocations" value={formData.preferredLocations} onChange={handleChange} className={inputClass(errors.preferredLocations)} placeholder="Cities or Countries" />
                 <ErrorMsg error={errors.preferredLocations} />
               </div>
