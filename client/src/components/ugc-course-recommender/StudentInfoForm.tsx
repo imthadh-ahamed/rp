@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 interface StudentInfoFormProps {
     onSubmit: (data: StudentInfoData) => void;
+    initialData?: StudentInfoData | null;
     isLoading?: boolean;
 }
 
@@ -56,8 +57,8 @@ const endYear = currentYear + FUTURE_YEARS;
 
 const examYears = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
 
-export default function StudentInfoForm({ onSubmit, isLoading = false }: StudentInfoFormProps) {
-    const [formData, setFormData] = useState<StudentInfoData>({
+export default function StudentInfoForm({ onSubmit, initialData, isLoading = false }: StudentInfoFormProps) {
+    const [formData, setFormData] = useState<StudentInfoData>(initialData || {
         fullName: '',
         age: 18,
         district: '',
@@ -132,11 +133,10 @@ export default function StudentInfoForm({ onSubmit, isLoading = false }: Student
                         placeholder="Enter your full name"
                         value={formData.fullName}
                         onChange={(e) => handleChange('fullName', e.target.value)}
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${
-                            errors.fullName
-                                ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
-                                : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${errors.fullName
+                            ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
+                            : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
+                            }`}
                     />
                     {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName}</p>}
                 </div>
@@ -153,11 +153,10 @@ export default function StudentInfoForm({ onSubmit, isLoading = false }: Student
                         placeholder="18"
                         value={formData.age}
                         onChange={(e) => handleChange('age', parseInt(e.target.value) || 18)}
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${
-                            errors.age
-                                ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
-                                : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${errors.age
+                            ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
+                            : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
+                            }`}
                     />
                     {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age}</p>}
                 </div>
@@ -170,11 +169,10 @@ export default function StudentInfoForm({ onSubmit, isLoading = false }: Student
                     <select
                         value={formData.district}
                         onChange={(e) => handleChange('district', e.target.value)}
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all appearance-none bg-white transform-gpu hover:shadow-sm hover:border-cyan-300 ${
-                            errors.district
-                                ? 'border-red-500 focus:ring-red-200 text-black'
-                                : formData.district ? 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black' : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-gray-400'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all appearance-none bg-white transform-gpu hover:shadow-sm hover:border-cyan-300 ${errors.district
+                            ? 'border-red-500 focus:ring-red-200 text-black'
+                            : formData.district ? 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black' : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-gray-400'
+                            }`}
                         style={{
                             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2306b6d4' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
                             backgroundRepeat: 'no-repeat',
@@ -200,11 +198,10 @@ export default function StudentInfoForm({ onSubmit, isLoading = false }: Student
                         placeholder="Your school name"
                         value={formData.schoolName}
                         onChange={(e) => handleChange('schoolName', e.target.value)}
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${
-                            errors.schoolName
-                                ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
-                                : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${errors.schoolName
+                            ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
+                            : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
+                            }`}
                     />
                     {errors.schoolName && <p className="text-red-500 text-sm mt-1">{errors.schoolName}</p>}
                 </div>
@@ -219,11 +216,10 @@ export default function StudentInfoForm({ onSubmit, isLoading = false }: Student
                         placeholder="your.email@example.com"
                         value={formData.email}
                         onChange={(e) => handleChange('email', e.target.value)}
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${
-                            errors.email
-                                ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
-                                : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${errors.email
+                            ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
+                            : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
+                            }`}
                     />
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
@@ -238,11 +234,10 @@ export default function StudentInfoForm({ onSubmit, isLoading = false }: Student
                         placeholder="07X XXX XXXX"
                         value={formData.phoneNumber}
                         onChange={(e) => handleChange('phoneNumber', e.target.value)}
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${
-                            errors.phoneNumber
-                                ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
-                                : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all placeholder:text-gray-400 transform-gpu hover:shadow-sm hover:border-cyan-300 ${errors.phoneNumber
+                            ? 'border-red-500 focus:ring-red-200 text-black shadow-inner'
+                            : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black'
+                            }`}
                     />
                     {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>}
                 </div>
@@ -255,9 +250,8 @@ export default function StudentInfoForm({ onSubmit, isLoading = false }: Student
                     <select
                         value={formData.examYear}
                         onChange={(e) => handleChange('examYear', parseInt(e.target.value))}
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all appearance-none bg-white transform-gpu hover:shadow-sm hover:border-cyan-300 ${
-                            formData.examYear ? 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black' : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-gray-400'
-                        }`}
+                        className={`w-full px-4 py-3 border rounded-lg focus:ring-4 focus:ring-cyan-100 focus:outline-none transition-all appearance-none bg-white transform-gpu hover:shadow-sm hover:border-cyan-300 ${formData.examYear ? 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-black' : 'border-gray-300 focus:ring-cyan-200 focus:border-cyan-500 text-gray-400'
+                            }`}
                         style={{
                             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2306b6d4' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
                             backgroundRepeat: 'no-repeat',
