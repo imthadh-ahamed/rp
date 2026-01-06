@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { CheckCircle, XCircle, BarChart3 } from 'lucide-react';
 import { useState } from 'react';
-import { Course } from '@/utils/recommendationEngine';
+import { RecommendedCourse } from '@/utils/recommendationEngine';
 
 interface AptitudeQuestion {
     id: number;
@@ -14,7 +14,7 @@ interface AptitudeQuestion {
 }
 
 interface AptitudeTestQuizProps {
-    course: Course;
+    course: RecommendedCourse;
     testName: string;
     onBack: () => void;
 }
@@ -204,11 +204,10 @@ export default function AptitudeTestQuiz({ course, testName, onBack }: AptitudeT
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.05 }}
-                            className={`p-4 rounded-lg border-2 ${
-                                answers[idx] === q.correctAnswer
-                                    ? 'bg-green-50 border-green-200'
-                                    : 'bg-red-50 border-red-200'
-                            }`}
+                            className={`p-4 rounded-lg border-2 ${answers[idx] === q.correctAnswer
+                                ? 'bg-green-50 border-green-200'
+                                : 'bg-red-50 border-red-200'
+                                }`}
                         >
                             <div className="flex items-start gap-3">
                                 {answers[idx] === q.correctAnswer ? (
@@ -300,11 +299,10 @@ export default function AptitudeTestQuiz({ course, testName, onBack }: AptitudeT
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => handleSelectAnswer(option)}
-                                className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                                    answers[currentQuestion] === option
-                                        ? 'bg-cyan-500 border-cyan-600 text-white'
-                                        : 'bg-white border-gray-300 text-gray-700 hover:border-cyan-400'
-                                }`}
+                                className={`w-full text-left p-4 rounded-lg border-2 transition-all ${answers[currentQuestion] === option
+                                    ? 'bg-cyan-500 border-cyan-600 text-white'
+                                    : 'bg-white border-gray-300 text-gray-700 hover:border-cyan-400'
+                                    }`}
                             >
                                 {option}
                             </motion.button>
