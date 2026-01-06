@@ -2,10 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { BookOpen } from 'lucide-react';
-import { Course } from '@/utils/recommendationEngine';
+import { RecommendedCourse } from '@/utils/recommendationEngine';
 
 interface AptitudeTestListProps {
-    course: Course;
+    course: RecommendedCourse;
     onSelectTest: (testName: string) => void;
     onBack: () => void;
 }
@@ -34,7 +34,7 @@ export default function AptitudeTestList({ course, onSelectTest, onBack }: Aptit
 
             {/* Course Info */}
             <div className="mb-8 p-6 bg-cyan-50 rounded-lg border border-cyan-200">
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{course.name}</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">{course.courseName}</h3>
                 <p className="text-gray-600">{course.university}</p>
             </div>
 
