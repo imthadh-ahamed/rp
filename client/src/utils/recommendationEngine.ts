@@ -35,6 +35,7 @@ export interface RecommendedCourse {
     category: 'highly-recommended' | 'moderately-recommended' | 'conditionally-eligible';
     requiresAptitudeTest: boolean;
     matchingInterests: string[];
+    aptitudeTests?: string[];
 }
 
 const gradePoints: Record<string, number> = { 'A': 5, 'B': 4, 'C': 3, 'S': 2, 'F': 0 };
