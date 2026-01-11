@@ -1,29 +1,116 @@
 # AspireAI - Intelligent Career Guidance & Course Recommendation System
 
-## 🎯 Overview
+### Topic: Empowering Students with Predictive Intelligence: A Career Guidance System for Sri Lanka
+### Main Research Domain: Software System Technologies (SST)
+### Project ID: 25-26J-336
 
-**AspireAI** is an AI-powered career guidance system designed to support Sri Lankan students in making informed educational and career decisions. The system addresses the lack of personalized guidance that often leads students to select unsuitable A/L streams, university programs, or career paths without understanding their academic strengths, interests, and job market opportunities 
+## 📌 Project Overview
 
-The solution consists of four integrated modules: A/L stream recommendation, university program prediction, career guidance for students without O/L or A/L qualifications, and soft skill enhancement. Using machine learning, NLP, time-series analysis, and large language models, the system delivers personalized recommendations, alternative pathways, and adaptive skill development plans.
+**AspireAI** aims to design and develop an **AI-powered adaptive educational and career guidance platform** tailored to the **Sri Lankan education system**. The platform addresses the lack of structured, personalized guidance faced by students at different academic stages by providing **data-driven recommendations**, **soft skill development**, and **inclusive career pathways**.
+
+The system integrates **machine learning, natural language processing (NLP), time-series analysis, and large language models (LLMs)** to deliver personalized guidance for:
+
+* A/L stream selection
+* University program prediction
+* Career pathways for non-traditional learners
+* Soft skill assessment and enhancement
+
+The platform is designed as a **modular, scalable, and privacy-aware web-based system**, supporting diverse student backgrounds and socio-economic conditions.
 
 ---
 
-### Problem Statement
+## ❗ Problem Statement
 
-Students in Sri Lanka often struggle to make informed education and career decisions due to the lack of structured, personalized guidance. Many students select courses or career paths without clearly understanding how their:
+In Sri Lanka, many students make critical educational and career decisions without sufficient insight into how their academic performance, interests, and abilities align with available opportunities. This often leads to:
 
-* ✅ Academic performance (O/L, A/L results, Z-scores)
-* ✅ Personal interests and career ambitions
-* ✅ Eligibility for university or alternative pathways
-* ✅ Socio-economic and financial limitations
-* ✅ Soft skill readiness for future careers
+* Poor academic satisfaction
+* Skill mismatches
+* Underemployment
+* Limited access to guidance for non-traditional learners
 
-align with available educational and employment opportunities. This mismatch frequently results in **unsuitable course selections, skill gaps, and limited career prospects, highlighting the need for an intelligent, data-driven career guidance solution tailored to the Sri Lankan context .
+Existing guidance systems are largely **static, generic, and exam-centric**, failing to account for:
+
+* Individual interests and ambitions
+* Soft skill readiness
+* Alternative educational pathways
+* Changing labor market trends
+
+This research proposes an **intelligent, adaptive guidance platform** to address these gaps through predictive intelligence and personalization.
+
+---
+
+## 🎯 Research Objectives
+
+### Main Objective
+
+To develop a **data-driven, AI-powered career guidance system** that provides personalized, scalable, and inclusive recommendations for Sri Lankan students across multiple educational pathways.
+
+### Sub-Objectives
+
+* Recommend suitable **A/L streams** based on academic performance and career ambition
+* Predict **UGC-approved university programs** using historical admission data
+* Provide **career guidance for students without O/L or A/L qualifications**
+* Identify and enhance **soft skill gaps** required for academic and career success
+
+---
 
 ## 🏗️ System Architecture Diagram
 
-![AspireAI System Architecture](client/public/RP-Flow.png)
+The platform consists of **four intelligent, interconnected modules**, deployed within a centralized web-based architecture:
 
+### 1️⃣ A/L Stream Recommendation Module
+
+* Analyzes term test results, interests, and ambitions
+* Predicts suitable A/L streams using ML models
+* Provides foundation courses and quizzes for readiness assessment
+* Continuously adapts recommendations based on performance
+
+### 2️⃣ University Program Prediction Module
+
+* Uses historical UGC admission data (Z-scores, cutoffs, trends)
+* Predicts top 15 eligible university programs
+* Integrates quiz-based interest profiling
+* Applies time-series forecasting (ARIMA / Prophet)
+* Ensures ethical and transparent predictions
+
+### 3️⃣ Career Guidance for Non-Traditional Learners
+
+* Targets students without O/L or A/L qualifications
+* Uses adaptive surveys and capability assessments
+* Applies ML-based recommendation and rule-based filtering
+* Includes ROI estimation and learning-to-earning roadmaps
+* Uses LLMs to generate simplified explanations and visual guidance
+
+### 4️⃣ Soft Skill Enhancement Module
+
+* Identifies soft skill gaps via surveys and real-world tasks
+* Uses ML and NLP for skill assessment
+* Recommends personalized tasks and learning resources
+* Tracks progress and adapts recommendations over time
+
+<p align="center">
+  <img src="client/public/RP-Flow.png" alt="AspireAI System Architecture" width="650" style="max-width: 100%; height: auto;" />
+</p>
+
+---
+
+## 👥 Team Members & Responsibilities
+
+| Name              | Registration No | Responsibility                               |
+| ----------------- | --------------- | -------------------------------------------- |
+| Bandara R M M K T | IT22897008      | A/L Stream Recommendation                    |
+| Ahmed M A A       | IT22079572      | University Program Prediction                |
+| Ahamed A L I      | IT22077288      | Career Guidance for Non-Traditional Learners |
+| Areeb Aflah N     | IT22146960      | Soft Skill Enhancement                       |
+
+---
+
+## 👨‍🏫 Supervision
+
+* **Supervisor:** Ms. Jenny Krishara 
+* **Co-Supervisor:** Ms. Poorna Panduwawala
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -46,7 +133,6 @@ align with available educational and employment opportunities. This mismatch fre
 |------------|---------|---------|
 | Node.js | 18+ | Runtime environment |
 | Express.js | 4+ | Web framework |
-| Sequelize | 6+ | ORM for MySQL |
 | MongoDB | Latest | Non-Relational database |
 | JWT | Latest | Authentication |
 | Bcrypt | Latest | Password hashing |
@@ -87,7 +173,7 @@ align with available educational and employment opportunities. This mismatch fre
 ### Prerequisites
 - **Node.js** 18+ and pnpm
 - **Python** 3.9+
-- **MySQL** 8+
+- **Mongoose** 9+
 - **Docker** (optional, for containerized deployment)
 
 ### 1. Clone Repository
