@@ -3,6 +3,7 @@
 ### Topic: Empowering Students with Predictive Intelligence: A Career Guidance System for Sri Lanka
 ### Main Research Domain: Software System Technologies (SST)
 ### Project ID: 25-26J-336
+### Repo Link: https://github.com/imthadh-ahamed/rp.git
 
 ## 📌 Project Overview
 
