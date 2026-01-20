@@ -12,7 +12,9 @@ faiss-cpu
 pandas
 numpy
 scikit-learn
+xgboost
 sentence-transformers
+requests
+psutil
 torch
-transformers<4.49
-einops
+huggingface_hub
