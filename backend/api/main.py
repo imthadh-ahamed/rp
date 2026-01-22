@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.routes import recommend
+from api.routes import recommend, al_predictor, quiz
 import uvicorn
 import os
 
@@ -29,6 +29,8 @@ app.add_middleware(
 
 # Include Routers
 app.include_router(recommend.router, tags=["Recommendations"])
+app.include_router(al_predictor.router)
+app.include_router(quiz.router)
 
 @app.get("/")
 async def root():
