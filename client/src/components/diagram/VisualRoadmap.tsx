@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { CheckCircle2, ChevronDown, ChevronUp, Clock, Flag, Library, ListTodo, Trophy } from 'lucide-react';
+import { CheckCircle2, ChevronDown, ChevronUp, Clock, Flag, Library, ListTodo, Trophy, ExternalLink } from 'lucide-react';
 import { useRef } from 'react';
 import { ROADMAP_STEPS } from './constants';
 
@@ -130,8 +130,16 @@ export default function VisualRoadmap({ expandedStep, toggleStep }: VisualRoadma
                                                         </h4>
                                                         <ul className="space-y-2">
                                                             {step.resources.map((resource, i) => (
-                                                                <li key={i} className="text-gray-600 text-sm hover:text-blue-600 transition-colors cursor-pointer">
-                                                                    • {resource}
+                                                                <li key={i} className="text-gray-600 text-sm">
+                                                                    <a
+                                                                        href={resource.url}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="inline-flex items-center gap-1 hover:text-blue-600 hover:underline transition-colors group"
+                                                                    >
+                                                                        • {resource.title}
+                                                                        <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                                    </a>
                                                                 </li>
                                                             ))}
                                                         </ul>

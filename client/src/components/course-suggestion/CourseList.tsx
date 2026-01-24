@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Clock, Star, Eye, BookOpen, DollarSign, Loader2, AlertCircle, MapPin, Info } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import CourseDetailModal from './CourseDetailModal';
+import CourseSelectionModal from './CourseSelectionModal';
 import profileService from '@/services/profile.service';
 import { Recommendation } from '@/types/profile.types';
 import Link from 'next/link';
@@ -15,6 +16,8 @@ export default function CourseList() {
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const [selectedCourse, setSelectedCourse] = useState<Recommendation | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [courseToSelect, setCourseToSelect] = useState<Recommendation | null>(null);
 
     useEffect(() => {
         fetchRecommendations();
@@ -67,6 +70,25 @@ export default function CourseList() {
     const handleViewCourse = (course: Recommendation) => {
         setSelectedCourse(course);
         setIsModalOpen(true);
+    };
+
+    const handleSelectCourse = (course: Recommendation) => {
+        setCourseToSelect(course);
+        setIsConfirmModalOpen(true);
+    };
+
+    const confirmSelectCourse = () => {
+        if (courseToSelect) {
+            // Modal will handle navigation
+            console.log('Course selected:', courseToSelect.course_name);
+        }
+        setIsConfirmModalOpen(false);
+        setCourseToSelect(null);
+    };
+
+    const cancelSelectCourse = () => {
+        setIsConfirmModalOpen(false);
+        setCourseToSelect(null);
     };
 
     if (isLoading) {
@@ -213,16 +235,28 @@ export default function CourseList() {
                                 </div>
                             </div>
 
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleViewCourse(course);
-                                }}
-                                className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors font-medium group-hover:bg-purple-600 group-hover:text-white"
-                            >
-                                <Eye className="w-4 h-4" />
-                                View Details
-                            </button>
+                            <div className="flex gap-2 mt-4">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleViewCourse(course);
+                                    }}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors font-medium group-hover:bg-purple-600 group-hover:text-white"
+                                >
+                                    <Eye className="w-4 h-4" />
+                                    View Details
+                                </button>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleSelectCourse(course);
+                                    }}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium shadow-sm hover:shadow-md"
+                                >
+                                    <BookOpen className="w-4 h-4" />
+                                    Select Course
+                                </button>
+                            </div>
                         </div>
                     </motion.div>
                 ))}
@@ -232,6 +266,12 @@ export default function CourseList() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 course={selectedCourse}
+            />
+
+            <CourseSelectionModal
+                isOpen={isConfirmModalOpen}
+                onClose={cancelSelectCourse}
+                course={courseToSelect}
             />
         </>
     );
