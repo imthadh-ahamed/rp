@@ -54,7 +54,7 @@ export default function DiagramPage() {
                 goal: step.goal,
                 duration: step.duration,
                 actionPlan: step.actionPlan,
-                resources: step.resources,
+                resources: step.resources.map((r) => r.title),
                 successCriteria: step.successCriteria,
                 status: 'pending',
                 color: step.color,
