@@ -11,11 +11,11 @@ import { clearMilestones, getMilestones, Milestone, saveMilestones } from '@/uti
 import { motion } from 'framer-motion';
 import { Rocket, Loader2, AlertCircle } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import diagramService from '@/services/diagram.service';
 import { Roadmap, RoadmapStep } from '@/types/diagram.types';
 
-export default function DiagramPage() {
+function DiagramContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const roadmapId = searchParams.get('id');
@@ -180,5 +180,19 @@ export default function DiagramPage() {
                 </div>
             </div>
         </AppShell>
+    );
+}
+
+export default function DiagramPage() {
+    return (
+        <Suspense fallback={
+            <AppShell>
+                <div className="flex items-center justify-center min-h-screen">
+                    <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+                </div>
+            </AppShell>
+        }>
+            <DiagramContent />
+        </Suspense>
     );
 }
