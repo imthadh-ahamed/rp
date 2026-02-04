@@ -143,10 +143,21 @@ export default function QuizStart({
                                         </p>
                                         <div className="flex flex-wrap gap-2">
                                             {streams
-                                                .filter(
-                                                    (s) =>
-                                                        s.toLowerCase() !== initialStream?.toLowerCase()
-                                                )
+                                                .filter((s) => {
+                                                    // Normalize both streams for comparison (handle art/arts mismatch)
+                                                    const normalizeStream = (str: string) => {
+                                                        const lower = str.toLowerCase().trim();
+                                                        // Remove trailing 's' for comparison (arts -> art)
+                                                        return lower.endsWith('s') && lower !== 'biological_science' && lower !== 'physical_science'
+                                                            ? lower.slice(0, -1)
+                                                            : lower;
+                                                    };
+
+                                                    const normalizedStream = normalizeStream(s);
+                                                    const normalizedInitial = normalizeStream(initialStream || '');
+
+                                                    return normalizedStream !== normalizedInitial;
+                                                })
                                                 .map((stream) => (
                                                     <button
                                                         key={stream}
