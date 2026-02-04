@@ -97,7 +97,7 @@ export default function QuizApp({
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    stream: streamToUse,
+                    stream: streamToUse.toLowerCase().trim(),
                     num_questions: 10,
                 }),
             });
@@ -209,7 +209,7 @@ export default function QuizApp({
             isCustomQuiz && completedRecommendedQuiz && recommendedQuizResults;
 
         return (
-            <div className="w-full h-full">
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/20 to-teal-50/10 py-6 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-4xl mx-auto space-y-6">
                     {showComparison && (
                         <StreamComparisonCard
@@ -247,38 +247,44 @@ export default function QuizApp({
     const currentQuestionData = quiz.questions[safeCurrentQuestion];
 
     return (
-        <div className="w-full h-full">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-cyan-50/20 to-teal-50/10 py-4 px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-7xl">
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-                    <QuizSidebar
-                        questions={quiz.questions}
-                        userAnswers={userAnswers}
-                        currentQuestion={safeCurrentQuestion}
-                        onQuestionClick={setCurrentQuestion}
-                    />
+                <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-12">
+                    {/* Sidebar - hidden on mobile, shown on desktop */}
+                    <div className="hidden lg:block lg:col-span-3">
+                        <QuizSidebar
+                            questions={quiz.questions}
+                            userAnswers={userAnswers}
+                            currentQuestion={safeCurrentQuestion}
+                            onQuestionClick={setCurrentQuestion}
+                        />
+                    </div>
 
-                    <QuizQuestion
-                        question={currentQuestionData}
-                        questionNumber={safeCurrentQuestion + 1}
-                        totalQuestions={quiz.questions.length}
-                        userAnswer={userAnswers[currentQuestionData.id] || ""}
-                        onAnswerSelect={handleAnswerSelect}
-                        onPrevious={() =>
-                            setCurrentQuestion((prev) => Math.max(0, prev - 1))
-                        }
-                        onNext={() =>
-                            setCurrentQuestion((prev) =>
-                                Math.min(quiz.questions.length - 1, prev + 1)
-                            )
-                        }
-                        onSubmit={submitQuiz}
-                        canGoBack={safeCurrentQuestion > 0}
-                        isLastQuestion={safeCurrentQuestion === quiz.questions.length - 1}
-                        allAnswered={allAnswered}
-                        loading={loading}
-                        error={error}
-                        userAnswers={userAnswers}
-                    />
+                    {/* Main Question Area - full width on mobile, 9 cols on desktop */}
+                    <div className="lg:col-span-9">
+                        <QuizQuestion
+                            question={currentQuestionData}
+                            questionNumber={safeCurrentQuestion + 1}
+                            totalQuestions={quiz.questions.length}
+                            userAnswer={userAnswers[currentQuestionData.id] || ""}
+                            onAnswerSelect={handleAnswerSelect}
+                            onPrevious={() =>
+                                setCurrentQuestion((prev) => Math.max(0, prev - 1))
+                            }
+                            onNext={() =>
+                                setCurrentQuestion((prev) =>
+                                    Math.min(quiz.questions.length - 1, prev + 1)
+                                )
+                            }
+                            onSubmit={submitQuiz}
+                            canGoBack={safeCurrentQuestion > 0}
+                            isLastQuestion={safeCurrentQuestion === quiz.questions.length - 1}
+                            allAnswered={allAnswered}
+                            loading={loading}
+                            error={error}
+                            userAnswers={userAnswers}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
