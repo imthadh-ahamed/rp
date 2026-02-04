@@ -154,55 +154,43 @@ export default function ALStreamPredictor({ onTakeQuiz, setPredictorResults }: A
             <div className="max-w-7xl mx-auto">
 
                 {error && (
-                    <div className="flex items-start p-4 mb-6 border border-red-200 rounded-xl bg-red-50 shadow-sm animate-in fade-in duration-300">
+                    <div className="flex items-start p-4 mb-6 border border-red-200 rounded-lg bg-red-50">
                         <AlertCircle className="w-5 h-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
-                        <p className="text-red-800 text-sm sm:text-base">{error}</p>
+                        <p className="text-red-800">{error}</p>
                     </div>
                 )}
 
                 {!results ? (
-                    <div className="p-6 sm:p-8 lg:p-10 bg-white/80 backdrop-blur-sm shadow-xl rounded-2xl border border-white/20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="p-6 sm:p-8 lg:p-10 bg-gray-50 backdrop-blur-sm shadow-xl rounded-2xl border border-gray-200 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <div className="mb-8">
-                            <div className="flex flex-col sm:flex-row sm:items-center mb-6 gap-2">
-                                <div className="flex items-center">
-                                    <div className="p-2 bg-teal-100 rounded-lg mr-3">
-                                        <BookOpen className="w-5 h-5 text-teal-600" />
-                                    </div>
-                                    <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
-                                        Core Subjects
-                                    </h2>
-                                </div>
-                                <span className="text-xs sm:text-sm font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full border border-red-200">
-                                    All Required
+                            <div className="flex items-center mb-4">
+                                <BookOpen className="w-6 h-6 mr-2 text-teal-600" />
+                                <h2 className="text-2xl font-bold text-gray-800">
+                                    Core Subjects
+                                </h2>
+                                <span className="ml-3 text-sm font-semibold text-red-600">
+                                    (All Required)
                                 </span>
                             </div>
-                            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                                 {baskets.basket1.subjects.map((subject) => (
-                                    <div key={subject} className="group relative">
-                                        <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 to-teal-400/20 rounded-xl blur-sm group-hover:blur-md transition-all"></div>
-                                        <div className="relative p-4 rounded-xl bg-white border-2 border-cyan-100 hover:border-cyan-300 transition-all duration-200 hover:shadow-lg">
-                                            <label className="block mb-2 text-sm font-bold text-gray-700">
-                                                {subject
-                                                    .replace("_", " ")
-                                                    .replace(/\b\w/g, (l) => l.toUpperCase())}
-                                            </label>
-                                            <div className="relative">
-                                                <input
-                                                    type="number"
-                                                    min="0"
-                                                    max="100"
-                                                    value={formData[subject] || ""}
-                                                    onChange={(e) =>
-                                                        handleMarkChange(subject, e.target.value)
-                                                    }
-                                                    className="w-full px-4 py-3 pr-12 text-lg font-semibold text-gray-800 bg-gradient-to-br from-gray-50 to-cyan-50/30 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all placeholder:text-gray-400"
-                                                    placeholder="0-100"
-                                                />
-                                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">
-                                                    /100
-                                                </span>
-                                            </div>
-                                        </div>
+                                    <div key={subject} className="p-4 rounded-lg bg-cyan-50">
+                                        <label className="block mb-2 text-sm font-semibold text-gray-700">
+                                            {subject
+                                                .replace("_", " ")
+                                                .replace(/\b\w/g, (l) => l.toUpperCase())}
+                                        </label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            value={formData[subject] || ""}
+                                            onChange={(e) =>
+                                                handleMarkChange(subject, e.target.value)
+                                            }
+                                            className="w-full px-4 py-3 pr-12 text-lg font-semibold text-gray-800 bg-gray-100 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all placeholder:text-gray-400"
+                                            placeholder="0-100"
+                                        />
                                     </div>
                                 ))}
                             </div>
@@ -238,13 +226,12 @@ export default function ALStreamPredictor({ onTakeQuiz, setPredictorResults }: A
                             color="orange"
                         />
 
-                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8">
+                        <div className="flex gap-4 mt-8">
                             <button
                                 onClick={handleSubmit}
                                 disabled={loading}
-                                className="group relative flex items-center justify-center flex-1 py-4 px-6 font-bold text-white transition-all rounded-xl bg-gradient-to-r from-cyan-500 via-teal-500 to-cyan-600 hover:from-cyan-600 hover:via-teal-600 hover:to-cyan-700 shadow-lg hover:shadow-2xl hover:shadow-cyan-500/50 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] text-base sm:text-lg overflow-hidden"
+                                className="flex items-center justify-center flex-1 py-4 font-semibold text-white transition-all rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 shadow-md hover:shadow-lg disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed"
                             >
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700"></div>
                                 {loading ? (
                                     <>
                                         <div className="w-5 h-5 mr-2 border-b-2 border-white rounded-full animate-spin"></div>
@@ -259,7 +246,7 @@ export default function ALStreamPredictor({ onTakeQuiz, setPredictorResults }: A
                             </button>
                             <button
                                 onClick={resetForm}
-                                className="px-8 py-4 font-bold text-gray-700 transition-all border-2 border-gray-300 rounded-xl hover:bg-gradient-to-br hover:from-gray-50 hover:to-slate-50 hover:border-gray-400 hover:shadow-md transform hover:scale-[1.02] active:scale-[0.98] text-base sm:text-lg"
+                                className="px-8 py-4 font-semibold text-gray-700 transition-colors border-2 border-gray-300 rounded-lg hover:bg-gray-50"
                             >
                                 Reset
                             </button>
