@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel
-from ...core.services import quiz_rag_service
+from core.services import quiz_rag_service
 
 router = APIRouter(prefix="/api/quiz", tags=["Quiz"])
 

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Dict, List, Any
 from pydantic import BaseModel
-from ...core.services import al_predictor_service
+from core.services import al_predictor_service
 
 router = APIRouter(prefix="/api/predict", tags=["AL Predictor"])
 
