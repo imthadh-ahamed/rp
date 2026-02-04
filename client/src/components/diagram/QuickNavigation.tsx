@@ -1,16 +1,17 @@
 'use client';
 
-import { ROADMAP_STEPS } from './constants';
+import { RoadmapStep } from '@/types/diagram.types';
 
 interface QuickNavigationProps {
     expandedStep: number | null;
     scrollToStep: (id: number) => void;
+    roadmapSteps: RoadmapStep[];
 }
 
-export default function QuickNavigation({ expandedStep, scrollToStep }: QuickNavigationProps) {
+export default function QuickNavigation({ expandedStep, scrollToStep, roadmapSteps }: QuickNavigationProps) {
     return (
         <div className="fixed right-8 top-1/2 transform -translate-y-1/2 hidden xl:flex flex-col gap-4 z-50">
-            {ROADMAP_STEPS.map((step) => (
+            {roadmapSteps.map((step) => (
                 <button
                     key={step.id}
                     onClick={() => scrollToStep(step.id)}
@@ -20,7 +21,7 @@ export default function QuickNavigation({ expandedStep, scrollToStep }: QuickNav
                         {step.title}
                     </span>
                     <div
-                        className={`w-3 h-3 rounded-full transition-all duration-300 border-2 border-white shadow-sm ${expandedStep === step.id ? `${step.color} scale-125` : 'bg-gray-300 group-hover:bg-gray-400'
+                        className={`w-3 h-3 rounded-full transition-all duration-300 border-2 border-white shadow-sm ${expandedStep === step.id ? `${step.color || 'bg-purple-500'} scale-125` : 'bg-gray-300 group-hover:bg-gray-400'
                             }`}
                     />
                 </button>

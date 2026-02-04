@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.routes import recommend
+from api.routes import recommend, roadmap
 import uvicorn
 import os
 
@@ -29,6 +29,7 @@ app.add_middleware(
 
 # Include Routers
 app.include_router(recommend.router, tags=["Recommendations"])
+app.include_router(roadmap.router, prefix="/roadmap", tags=["Roadmap"])
 
 @app.get("/")
 async def root():

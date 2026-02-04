@@ -1,0 +1,1614 @@
+[
+  {
+    "status": "success",
+    "name": "Software Engineer (IT)",
+    "interest_area": "Information Technology",
+    "validation_passed": true,
+    "keywords_found": 4,
+    "curriculum_focus": "Software Engineering Foundations",
+    "data": {
+      "status": "success",
+      "roadmap": [
+        {
+          "id": 1,
+          "title": "Foundation Stage",
+          "goal": "Build Strong Programming Fundamentals",
+          "icon": "BookOpen",
+          "duration": "6-8 Weeks",
+          "description": "Master core programming concepts and problem-solving skills essential for your journey.",
+          "actionPlan": [
+            "Master Java programming basics",
+            "Practice coding challenges daily (30-60 min)",
+            "Learn Git version control fundamentals",
+            "Set up development environment and tools"
+          ],
+          "resources": [
+            {
+              "title": "Java Official Tutorial",
+              "url": "https://developer.mozilla.org/"
+            },
+            {
+              "title": "Git Handbook",
+              "url": "https://guides.github.com/introduction/git-handbook/"
+            },
+            {
+              "title": "LeetCode Easy Problems",
+              "url": "https://leetcode.com/problemset/all/?difficulty=Easy"
+            }
+          ],
+          "successCriteria": [
+            "Complete 20+ coding problems",
+            "Build 1-2 small projects",
+            "Comfortable with Git basics"
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Skill Development",
+          "goal": "Develop Core Technical Skills",
+          "icon": "Code",
+          "duration": "8-12 Weeks",
+          "description": "Focus on skills critical for Software Engineer roles, addressing identified gaps.",
+          "actionPlan": [
+            "Deep dive into Object-Oriented Programming",
+            "Build 2-3 intermediate projects",
+            "Learn industry best practices and design patterns",
+            "Start contributing to open source"
+          ],
+          "resources": [
+            {
+              "title": "NeetCode Roadmap",
+              "url": "https://neetcode.io/roadmap"
+            },
+            {
+              "title": "System Design Primer",
+              "url": "https://github.com/donnemartin/system-design-primer"
+            },
+            {
+              "title": "Real Python",
+              "url": "https://realpython.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 50+ DSA problems",
+            "Build 2 portfolio-worthy projects",
+            "Make 5+ open source contributions"
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Real-world Readiness",
+          "goal": "Apply Skills to Real-World Scenarios",
+          "icon": "Briefcase",
+          "duration": "10-14 Weeks",
+          "description": "Gain practical experience through projects, internships, and real-world problem solving.",
+          "actionPlan": [
+            "Build a full-scale capstone project",
+            "Apply for internships and entry-level positions",
+            "Practice technical interview skills",
+            "Network with professionals in your field"
+          ],
+          "resources": [
+            {
+              "title": "Pramp - Mock Interviews",
+              "url": "https://www.pramp.com"
+            },
+            {
+              "title": "LinkedIn Learning",
+              "url": "https://www.linkedin.com/learning/"
+            },
+            {
+              "title": "Internship Platforms",
+              "url": "https://www.internships.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 1 major project",
+            "Pass 5+ mock interviews",
+            "Land internship or contract work"
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Performance Strategies",
+          "goal": "Optimize Performance and Efficiency",
+          "icon": "Target",
+          "duration": "6-10 Weeks",
+          "description": "Learn optimization techniques, performance tuning, and efficient problem-solving strategies.",
+          "actionPlan": [
+            "Study algorithm complexity and optimization",
+            "Learn profiling and debugging techniques",
+            "Practice system design interviews",
+            "Optimize your existing projects"
+          ],
+          "resources": [
+            {
+              "title": "Big O Cheat Sheet",
+              "url": "https://www.bigocheatsheet.com"
+            },
+            {
+              "title": "LeetCode Medium/Hard",
+              "url": "https://leetcode.com/problemset/all/?difficulty=Medium"
+            },
+            {
+              "title": "System Design Interview",
+              "url": "https://www.educative.io/courses/grokking-the-system-design-interview"
+            }
+          ],
+          "successCriteria": [
+            "Solve 30+ medium/hard problems",
+            "Complete system design practice",
+            "Improve project performance metrics"
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Knowledge Expansion",
+          "goal": "Explore Advanced Topics and Specializations",
+          "icon": "GraduationCap",
+          "duration": "8-12 Weeks",
+          "description": "Dive deeper into specialized areas relevant to your career goals.",
+          "actionPlan": [
+            "Study advanced topics in Software Engineer domain",
+            "Attend webinars, conferences, and workshops",
+            "Build expertise in a niche area",
+            "Stay updated with industry trends"
+          ],
+          "resources": [
+            {
+              "title": "Coursera Specializations",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Tech Blogs & Publications",
+              "url": "https://dev.to"
+            },
+            {
+              "title": "Conference Talks",
+              "url": "https://www.youtube.com/c/GOTO-"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2+ advanced courses",
+            "Attend 3+ industry events",
+            "Develop specialized expertise"
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Industry Polishing",
+          "goal": "Prepare for Job Market and Career Launch",
+          "icon": "Award",
+          "duration": "4-8 Weeks",
+          "description": "Final preparation for entering the job market as a professional.",
+          "actionPlan": [
+            "Polish resume and online profiles",
+            "Prepare for behavioral interviews",
+            "Build strong portfolio website",
+            "Apply strategically to target companies",
+            "Practice salary negotiation"
+          ],
+          "resources": [
+            {
+              "title": "Resume Templates",
+              "url": "https://www.resumegenius.com"
+            },
+            {
+              "title": "Interview Preparation",
+              "url": "https://www.interviewcake.com"
+            },
+            {
+              "title": "Salary Negotiation Guide",
+              "url": "https://www.levels.fyi"
+            }
+          ],
+          "successCriteria": [
+            "Professional portfolio completed",
+            "Resume reviewed by 3+ professionals",
+            "Complete 10+ real interviews",
+            "Receive job offer(s)"
+          ]
+        }
+      ],
+      "metadata": {
+        "curriculum_focus": "Software Engineering Foundations",
+        "languages": [
+          "Java",
+          "Python"
+        ],
+        "duration_years": 3.0,
+        "skill_gaps_count": 7,
+        "gap_severity": "high",
+        "priority_skills": [
+          "Object-Oriented Programming",
+          "Version Control (Git)",
+          "RESTful APIs"
+        ]
+      },
+      "warnings": [
+        "Your course has 7 skill gaps. Consider supplementing with online courses or bootcamps.",
+        "Priority skills to learn: Object-Oriented Programming, Version Control (Git), RESTful APIs"
+      ],
+      "errors": []
+    }
+  },
+  {
+    "status": "success",
+    "name": "Civil Engineer (Engineering)",
+    "interest_area": "Engineering/Technology",
+    "validation_passed": true,
+    "keywords_found": 5,
+    "curriculum_focus": "Civil Engineering & Infrastructure",
+    "data": {
+      "status": "success",
+      "roadmap": [
+        {
+          "id": 1,
+          "title": "Foundation Stage",
+          "goal": "Build Strong Engineering Fundamentals",
+          "icon": "BookOpen",
+          "duration": "6-8 Weeks",
+          "description": "Master core civil engineering concepts and essential tools for structural design and analysis.",
+          "actionPlan": [
+            "Master AutoCAD basics for engineering drawings",
+            "Study structural analysis fundamentals",
+            "Learn construction materials and their properties",
+            "Practice surveying and site measurement techniques"
+          ],
+          "resources": [
+            {
+              "title": "AutoCAD Civil 3D Tutorial",
+              "url": "https://www.autodesk.com/products/civil-3d/learn-training-tutorials"
+            },
+            {
+              "title": "MIT OpenCourseWare - Structural Engineering",
+              "url": "https://ocw.mit.edu/courses/civil-and-environmental-engineering/"
+            },
+            {
+              "title": "Civil Engineering Academy",
+              "url": "https://www.youtube.com/c/CivilEngineeringAcademy"
+            }
+          ],
+          "successCriteria": [
+            "Create basic AutoCAD drawings",
+            "Understand load calculations and beam design",
+            "Complete surveying field exercises"
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Skill Development",
+          "goal": "Develop Core Technical Skills",
+          "icon": "Code",
+          "duration": "8-12 Weeks",
+          "description": "Focus on skills critical for Civil Engineer roles, addressing identified gaps: Construction Materials & Methods, Surveying & Site Planning.",
+          "actionPlan": [
+            "Deep dive into structural design principles",
+            "Learn building codes and safety standards",
+            "Master Civil 3D and site planning tools",
+            "Study geotechnical engineering basics"
+          ],
+          "resources": [
+            {
+              "title": "ASCE Standards & Codes",
+              "url": "https://www.asce.org/publications-and-news/civil-engineering-source/standards"
+            },
+            {
+              "title": "Structural Engineering Basics",
+              "url": "https://www.coursera.org/courses?query=structural%20engineering"
+            },
+            {
+              "title": "Geotechnical Software Training",
+              "url": "https://www.rocscience.com/learning"
+            }
+          ],
+          "successCriteria": [
+            "Design a small residential structure",
+            "Apply building codes correctly",
+            "Complete 2-3 CAD design projects"
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Real-world Readiness",
+          "goal": "Apply Skills to Real-World Projects",
+          "icon": "Briefcase",
+          "duration": "10-14 Weeks",
+          "description": "Gain practical experience through site visits, internships, and real construction projects.",
+          "actionPlan": [
+            "Participate in construction site visits",
+            "Work on capstone infrastructure project",
+            "Apply for civil engineering internships",
+            "Learn project management and cost estimation"
+          ],
+          "resources": [
+            {
+              "title": "ASCE Student Resources",
+              "url": "https://www.asce.org/communities/student-and-younger-members"
+            },
+            {
+              "title": "Construction Management Courses",
+              "url": "https://www.linkedin.com/learning/topics/construction-management"
+            },
+            {
+              "title": "Engineering Internship Platforms",
+              "url": "https://www.engineeringinternships.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete internship or co-op program",
+            "Manage a small project from design to execution",
+            "Develop cost estimation skills"
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Performance Strategies",
+          "goal": "Master Advanced Design and Analysis",
+          "icon": "Target",
+          "duration": "6-10 Weeks",
+          "description": "Learn optimization techniques, structural analysis software, and sustainable design practices.",
+          "actionPlan": [
+            "Master structural analysis software (SAP2000, ETABS)",
+            "Study earthquake and wind engineering",
+            "Learn sustainable and green building practices",
+            "Practice advanced foundation design"
+          ],
+          "resources": [
+            {
+              "title": "SAP2000 Training",
+              "url": "https://www.csiamerica.com/products/sap2000/training"
+            },
+            {
+              "title": "LEED Green Associate Prep",
+              "url": "https://www.usgbc.org/credentials/leed-green-associate"
+            },
+            {
+              "title": "Structural Analysis Courses",
+              "url": "https://www.edx.org/learn/structural-engineering"
+            }
+          ],
+          "successCriteria": [
+            "Complete 3+ structural analysis projects",
+            "Understand seismic design principles",
+            "Pass LEED Green Associate exam (optional)"
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Knowledge Expansion",
+          "goal": "Explore Specialized Areas",
+          "icon": "GraduationCap",
+          "duration": "8-12 Weeks",
+          "description": "Dive deeper into specialized civil engineering domains like transportation, hydraulics, or construction management.",
+          "actionPlan": [
+            "Choose specialization (structural, transportation, water resources)",
+            "Attend civil engineering conferences and workshops",
+            "Study advanced topics in chosen specialization",
+            "Stay updated with industry innovations and BIM"
+          ],
+          "resources": [
+            {
+              "title": "Transportation Engineering",
+              "url": "https://www.coursera.org/courses?query=transportation%20engineering"
+            },
+            {
+              "title": "Water Resources Engineering",
+              "url": "https://www.edx.org/learn/water-resources"
+            },
+            {
+              "title": "BIM for Civil Engineers",
+              "url": "https://www.autodesk.com/bim"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2+ advanced courses in specialization",
+            "Attend 3+ industry events or webinars",
+            "Develop expertise in chosen area"
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Industry Polishing",
+          "goal": "Prepare for Professional Licensure and Career",
+          "icon": "Award",
+          "duration": "4-8 Weeks",
+          "description": "Final preparation for PE exam, job market, and professional engineering career.",
+          "actionPlan": [
+            "Prepare for FE (Fundamentals of Engineering) exam",
+            "Build professional engineering portfolio",
+            "Gain EIT (Engineer-in-Training) certification",
+            "Apply to civil engineering firms",
+            "Prepare for PE (Professional Engineer) licensure path"
+          ],
+          "resources": [
+            {
+              "title": "NCEES FE Exam Prep",
+              "url": "https://ncees.org/engineering/fe/"
+            },
+            {
+              "title": "Engineering Portfolio Guide",
+              "url": "https://www.asce.org/career-growth/career-resources"
+            },
+            {
+              "title": "PE Exam Resources",
+              "url": "https://ppi2pass.com/"
+            }
+          ],
+          "successCriteria": [
+            "Pass FE exam and obtain EIT certification",
+            "Professional portfolio with 3-5 major projects",
+            "Complete 10+ job interviews",
+            "Receive engineering job offer(s)"
+          ]
+        }
+      ],
+      "metadata": {
+        "curriculum_focus": "Civil Engineering & Infrastructure",
+        "languages": [],
+        "duration_years": 4.0,
+        "skill_gaps_count": 4,
+        "gap_severity": "medium",
+        "priority_skills": [
+          "Construction Materials & Methods",
+          "Surveying & Site Planning",
+          "Project Management"
+        ]
+      },
+      "warnings": [
+        "Priority skills to learn: Construction Materials & Methods, Surveying & Site Planning, Project Management"
+      ],
+      "errors": []
+    }
+  },
+  {
+    "status": "success",
+    "name": "Nurse (Healthcare)",
+    "interest_area": "Healthcare/Medicine",
+    "validation_passed": true,
+    "keywords_found": 3,
+    "curriculum_focus": "Nursing & Patient Care",
+    "data": {
+      "status": "success",
+      "roadmap": [
+        {
+          "id": 1,
+          "title": "Foundation Stage",
+          "goal": "Build Strong Fundamentals",
+          "icon": "BookOpen",
+          "duration": "6-8 Weeks",
+          "description": "Master core concepts and essential skills for Nurse.",
+          "actionPlan": [
+            "Study fundamentals of Nurse",
+            "Complete introductory courses and certifications",
+            "Practice essential skills daily",
+            "Set up professional tools and environment"
+          ],
+          "resources": [
+            {
+              "title": "Coursera",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "edX",
+              "url": "https://www.edx.org"
+            },
+            {
+              "title": "LinkedIn Learning",
+              "url": "https://www.linkedin.com/learning/"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2-3 foundational courses",
+            "Build 1-2 beginner projects",
+            "Understand industry basics"
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Skill Development",
+          "goal": "Develop Core Skills",
+          "icon": "Code",
+          "duration": "8-12 Weeks",
+          "description": "Focus on skills critical for Nurse roles.",
+          "actionPlan": [
+            "Deep dive into Data Structures & Algorithms",
+            "Build practical projects",
+            "Learn industry best practices",
+            "Network with professionals"
+          ],
+          "resources": [
+            {
+              "title": "Industry Blogs",
+              "url": "https://medium.com"
+            },
+            {
+              "title": "Professional Courses",
+              "url": "https://www.udemy.com"
+            },
+            {
+              "title": "YouTube Tutorials",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 3-5 skill-building projects",
+            "Understand industry standards",
+            "Build professional network"
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Real-world Readiness",
+          "goal": "Apply Skills to Real-World Scenarios",
+          "icon": "Briefcase",
+          "duration": "10-14 Weeks",
+          "description": "Gain practical experience through projects and internships.",
+          "actionPlan": [
+            "Work on capstone project",
+            "Apply for internships",
+            "Practice interview skills",
+            "Build professional portfolio"
+          ],
+          "resources": [
+            {
+              "title": "Internship Platforms",
+              "url": "https://www.internships.com"
+            },
+            {
+              "title": "Project Ideas",
+              "url": "https://github.com/topics"
+            },
+            {
+              "title": "Interview Prep",
+              "url": "https://www.glassdoor.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete major project",
+            "Gain practical experience",
+            "Build strong portfolio"
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Performance Strategies",
+          "goal": "Master Advanced Techniques",
+          "icon": "Target",
+          "duration": "6-10 Weeks",
+          "description": "Learn optimization and advanced skills in your field.",
+          "actionPlan": [
+            "Study advanced topics",
+            "Optimize your work processes",
+            "Learn industry tools",
+            "Practice problem-solving"
+          ],
+          "resources": [
+            {
+              "title": "Advanced Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Professional Certifications",
+              "url": "https://www.certifications.com"
+            },
+            {
+              "title": "Industry Standards",
+              "url": "https://www.iso.org"
+            }
+          ],
+          "successCriteria": [
+            "Master advanced concepts",
+            "Improve efficiency",
+            "Gain specialized knowledge"
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Knowledge Expansion",
+          "goal": "Explore Specializations",
+          "icon": "GraduationCap",
+          "duration": "8-12 Weeks",
+          "description": "Dive deeper into specialized areas.",
+          "actionPlan": [
+            "Choose specialization area",
+            "Attend industry events",
+            "Study specialized topics",
+            "Stay updated with trends"
+          ],
+          "resources": [
+            {
+              "title": "Specialization Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Industry Publications",
+              "url": "https://www.medium.com"
+            },
+            {
+              "title": "Conference Videos",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2+ specialized courses",
+            "Attend 3+ events",
+            "Develop expertise"
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Industry Polishing",
+          "goal": "Prepare for Career Launch",
+          "icon": "Award",
+          "duration": "4-8 Weeks",
+          "description": "Final preparation for job market.",
+          "actionPlan": [
+            "Polish resume and profiles",
+            "Prepare for interviews",
+            "Build portfolio",
+            "Apply to companies",
+            "Practice negotiation"
+          ],
+          "resources": [
+            {
+              "title": "Resume Builder",
+              "url": "https://www.resumegenius.com"
+            },
+            {
+              "title": "Interview Guide",
+              "url": "https://www.thebalancecareers.com"
+            },
+            {
+              "title": "Job Boards",
+              "url": "https://www.indeed.com"
+            }
+          ],
+          "successCriteria": [
+            "Professional portfolio",
+            "Polished resume",
+            "Complete interviews",
+            "Receive job offers"
+          ]
+        }
+      ],
+      "metadata": {
+        "curriculum_focus": "Nursing & Patient Care",
+        "languages": [],
+        "duration_years": 4.0,
+        "skill_gaps_count": 8,
+        "gap_severity": "high",
+        "priority_skills": [
+          "Data Structures & Algorithms",
+          "Object-Oriented Programming",
+          "Version Control (Git)"
+        ]
+      },
+      "warnings": [
+        "Your course has 8 skill gaps. Consider supplementing with online courses or bootcamps.",
+        "Priority skills to learn: Data Structures & Algorithms, Object-Oriented Programming, Version Control (Git)"
+      ],
+      "errors": []
+    }
+  },
+  {
+    "status": "success",
+    "name": "Teacher (Education)",
+    "interest_area": "Education/Teaching",
+    "validation_passed": false,
+    "keywords_found": 2,
+    "curriculum_focus": "Education & Teaching",
+    "data": {
+      "status": "success",
+      "roadmap": [
+        {
+          "id": 1,
+          "title": "Foundation Stage",
+          "goal": "Build Strong Fundamentals",
+          "icon": "BookOpen",
+          "duration": "6-8 Weeks",
+          "description": "Master core concepts and essential skills for Teacher.",
+          "actionPlan": [
+            "Study fundamentals of Teacher",
+            "Complete introductory courses and certifications",
+            "Practice essential skills daily",
+            "Set up professional tools and environment"
+          ],
+          "resources": [
+            {
+              "title": "Coursera",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "edX",
+              "url": "https://www.edx.org"
+            },
+            {
+              "title": "LinkedIn Learning",
+              "url": "https://www.linkedin.com/learning/"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2-3 foundational courses",
+            "Build 1-2 beginner projects",
+            "Understand industry basics"
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Skill Development",
+          "goal": "Develop Core Skills",
+          "icon": "Code",
+          "duration": "8-12 Weeks",
+          "description": "Focus on skills critical for Teacher roles.",
+          "actionPlan": [
+            "Deep dive into Data Structures & Algorithms",
+            "Build practical projects",
+            "Learn industry best practices",
+            "Network with professionals"
+          ],
+          "resources": [
+            {
+              "title": "Industry Blogs",
+              "url": "https://medium.com"
+            },
+            {
+              "title": "Professional Courses",
+              "url": "https://www.udemy.com"
+            },
+            {
+              "title": "YouTube Tutorials",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 3-5 skill-building projects",
+            "Understand industry standards",
+            "Build professional network"
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Real-world Readiness",
+          "goal": "Apply Skills to Real-World Scenarios",
+          "icon": "Briefcase",
+          "duration": "10-14 Weeks",
+          "description": "Gain practical experience through projects and internships.",
+          "actionPlan": [
+            "Work on capstone project",
+            "Apply for internships",
+            "Practice interview skills",
+            "Build professional portfolio"
+          ],
+          "resources": [
+            {
+              "title": "Internship Platforms",
+              "url": "https://www.internships.com"
+            },
+            {
+              "title": "Project Ideas",
+              "url": "https://github.com/topics"
+            },
+            {
+              "title": "Interview Prep",
+              "url": "https://www.glassdoor.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete major project",
+            "Gain practical experience",
+            "Build strong portfolio"
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Performance Strategies",
+          "goal": "Master Advanced Techniques",
+          "icon": "Target",
+          "duration": "6-10 Weeks",
+          "description": "Learn optimization and advanced skills in your field.",
+          "actionPlan": [
+            "Study advanced topics",
+            "Optimize your work processes",
+            "Learn industry tools",
+            "Practice problem-solving"
+          ],
+          "resources": [
+            {
+              "title": "Advanced Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Professional Certifications",
+              "url": "https://www.certifications.com"
+            },
+            {
+              "title": "Industry Standards",
+              "url": "https://www.iso.org"
+            }
+          ],
+          "successCriteria": [
+            "Master advanced concepts",
+            "Improve efficiency",
+            "Gain specialized knowledge"
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Knowledge Expansion",
+          "goal": "Explore Specializations",
+          "icon": "GraduationCap",
+          "duration": "8-12 Weeks",
+          "description": "Dive deeper into specialized areas.",
+          "actionPlan": [
+            "Choose specialization area",
+            "Attend industry events",
+            "Study specialized topics",
+            "Stay updated with trends"
+          ],
+          "resources": [
+            {
+              "title": "Specialization Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Industry Publications",
+              "url": "https://www.medium.com"
+            },
+            {
+              "title": "Conference Videos",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2+ specialized courses",
+            "Attend 3+ events",
+            "Develop expertise"
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Industry Polishing",
+          "goal": "Prepare for Career Launch",
+          "icon": "Award",
+          "duration": "4-8 Weeks",
+          "description": "Final preparation for job market.",
+          "actionPlan": [
+            "Polish resume and profiles",
+            "Prepare for interviews",
+            "Build portfolio",
+            "Apply to companies",
+            "Practice negotiation"
+          ],
+          "resources": [
+            {
+              "title": "Resume Builder",
+              "url": "https://www.resumegenius.com"
+            },
+            {
+              "title": "Interview Guide",
+              "url": "https://www.thebalancecareers.com"
+            },
+            {
+              "title": "Job Boards",
+              "url": "https://www.indeed.com"
+            }
+          ],
+          "successCriteria": [
+            "Professional portfolio",
+            "Polished resume",
+            "Complete interviews",
+            "Receive job offers"
+          ]
+        }
+      ],
+      "metadata": {
+        "curriculum_focus": "Education & Teaching",
+        "languages": [],
+        "duration_years": 4.0,
+        "skill_gaps_count": 8,
+        "gap_severity": "high",
+        "priority_skills": [
+          "Data Structures & Algorithms",
+          "Object-Oriented Programming",
+          "Version Control (Git)"
+        ]
+      },
+      "warnings": [
+        "Your course has 8 skill gaps. Consider supplementing with online courses or bootcamps.",
+        "Priority skills to learn: Data Structures & Algorithms, Object-Oriented Programming, Version Control (Git)"
+      ],
+      "errors": []
+    }
+  },
+  {
+    "status": "success",
+    "name": "Graphic Designer (Arts)",
+    "interest_area": "Arts & Design",
+    "validation_passed": true,
+    "keywords_found": 3,
+    "curriculum_focus": "Graphic Design & Visual Communication",
+    "data": {
+      "status": "success",
+      "roadmap": [
+        {
+          "id": 1,
+          "title": "Foundation Stage",
+          "goal": "Build Strong Fundamentals",
+          "icon": "BookOpen",
+          "duration": "6-8 Weeks",
+          "description": "Master core concepts and essential skills for Graphic Designer.",
+          "actionPlan": [
+            "Study fundamentals of Graphic Designer",
+            "Complete introductory courses and certifications",
+            "Practice essential skills daily",
+            "Set up professional tools and environment"
+          ],
+          "resources": [
+            {
+              "title": "Coursera",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "edX",
+              "url": "https://www.edx.org"
+            },
+            {
+              "title": "LinkedIn Learning",
+              "url": "https://www.linkedin.com/learning/"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2-3 foundational courses",
+            "Build 1-2 beginner projects",
+            "Understand industry basics"
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Skill Development",
+          "goal": "Develop Core Skills",
+          "icon": "Code",
+          "duration": "8-12 Weeks",
+          "description": "Focus on skills critical for Graphic Designer roles.",
+          "actionPlan": [
+            "Deep dive into Data Structures & Algorithms",
+            "Build practical projects",
+            "Learn industry best practices",
+            "Network with professionals"
+          ],
+          "resources": [
+            {
+              "title": "Industry Blogs",
+              "url": "https://medium.com"
+            },
+            {
+              "title": "Professional Courses",
+              "url": "https://www.udemy.com"
+            },
+            {
+              "title": "YouTube Tutorials",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 3-5 skill-building projects",
+            "Understand industry standards",
+            "Build professional network"
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Real-world Readiness",
+          "goal": "Apply Skills to Real-World Scenarios",
+          "icon": "Briefcase",
+          "duration": "10-14 Weeks",
+          "description": "Gain practical experience through projects and internships.",
+          "actionPlan": [
+            "Work on capstone project",
+            "Apply for internships",
+            "Practice interview skills",
+            "Build professional portfolio"
+          ],
+          "resources": [
+            {
+              "title": "Internship Platforms",
+              "url": "https://www.internships.com"
+            },
+            {
+              "title": "Project Ideas",
+              "url": "https://github.com/topics"
+            },
+            {
+              "title": "Interview Prep",
+              "url": "https://www.glassdoor.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete major project",
+            "Gain practical experience",
+            "Build strong portfolio"
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Performance Strategies",
+          "goal": "Master Advanced Techniques",
+          "icon": "Target",
+          "duration": "6-10 Weeks",
+          "description": "Learn optimization and advanced skills in your field.",
+          "actionPlan": [
+            "Study advanced topics",
+            "Optimize your work processes",
+            "Learn industry tools",
+            "Practice problem-solving"
+          ],
+          "resources": [
+            {
+              "title": "Advanced Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Professional Certifications",
+              "url": "https://www.certifications.com"
+            },
+            {
+              "title": "Industry Standards",
+              "url": "https://www.iso.org"
+            }
+          ],
+          "successCriteria": [
+            "Master advanced concepts",
+            "Improve efficiency",
+            "Gain specialized knowledge"
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Knowledge Expansion",
+          "goal": "Explore Specializations",
+          "icon": "GraduationCap",
+          "duration": "8-12 Weeks",
+          "description": "Dive deeper into specialized areas.",
+          "actionPlan": [
+            "Choose specialization area",
+            "Attend industry events",
+            "Study specialized topics",
+            "Stay updated with trends"
+          ],
+          "resources": [
+            {
+              "title": "Specialization Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Industry Publications",
+              "url": "https://www.medium.com"
+            },
+            {
+              "title": "Conference Videos",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2+ specialized courses",
+            "Attend 3+ events",
+            "Develop expertise"
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Industry Polishing",
+          "goal": "Prepare for Career Launch",
+          "icon": "Award",
+          "duration": "4-8 Weeks",
+          "description": "Final preparation for job market.",
+          "actionPlan": [
+            "Polish resume and profiles",
+            "Prepare for interviews",
+            "Build portfolio",
+            "Apply to companies",
+            "Practice negotiation"
+          ],
+          "resources": [
+            {
+              "title": "Resume Builder",
+              "url": "https://www.resumegenius.com"
+            },
+            {
+              "title": "Interview Guide",
+              "url": "https://www.thebalancecareers.com"
+            },
+            {
+              "title": "Job Boards",
+              "url": "https://www.indeed.com"
+            }
+          ],
+          "successCriteria": [
+            "Professional portfolio",
+            "Polished resume",
+            "Complete interviews",
+            "Receive job offers"
+          ]
+        }
+      ],
+      "metadata": {
+        "curriculum_focus": "Graphic Design & Visual Communication",
+        "languages": [],
+        "duration_years": 4.0,
+        "skill_gaps_count": 8,
+        "gap_severity": "high",
+        "priority_skills": [
+          "Data Structures & Algorithms",
+          "Object-Oriented Programming",
+          "Version Control (Git)"
+        ]
+      },
+      "warnings": [
+        "Your course has 8 skill gaps. Consider supplementing with online courses or bootcamps.",
+        "Priority skills to learn: Data Structures & Algorithms, Object-Oriented Programming, Version Control (Git)"
+      ],
+      "errors": []
+    }
+  },
+  {
+    "status": "success",
+    "name": "Marketing Manager (Business)",
+    "interest_area": "Business & Management",
+    "validation_passed": false,
+    "keywords_found": 1,
+    "curriculum_focus": "Business Administration & Management",
+    "data": {
+      "status": "success",
+      "roadmap": [
+        {
+          "id": 1,
+          "title": "Foundation Stage",
+          "goal": "Build Strong Fundamentals",
+          "icon": "BookOpen",
+          "duration": "6-8 Weeks",
+          "description": "Master core concepts and essential skills for Marketing Manager.",
+          "actionPlan": [
+            "Study fundamentals of Marketing Manager",
+            "Complete introductory courses and certifications",
+            "Practice essential skills daily",
+            "Set up professional tools and environment"
+          ],
+          "resources": [
+            {
+              "title": "Coursera",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "edX",
+              "url": "https://www.edx.org"
+            },
+            {
+              "title": "LinkedIn Learning",
+              "url": "https://www.linkedin.com/learning/"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2-3 foundational courses",
+            "Build 1-2 beginner projects",
+            "Understand industry basics"
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Skill Development",
+          "goal": "Develop Core Skills",
+          "icon": "Code",
+          "duration": "8-12 Weeks",
+          "description": "Focus on skills critical for Marketing Manager roles.",
+          "actionPlan": [
+            "Deep dive into Data Structures & Algorithms",
+            "Build practical projects",
+            "Learn industry best practices",
+            "Network with professionals"
+          ],
+          "resources": [
+            {
+              "title": "Industry Blogs",
+              "url": "https://medium.com"
+            },
+            {
+              "title": "Professional Courses",
+              "url": "https://www.udemy.com"
+            },
+            {
+              "title": "YouTube Tutorials",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 3-5 skill-building projects",
+            "Understand industry standards",
+            "Build professional network"
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Real-world Readiness",
+          "goal": "Apply Skills to Real-World Scenarios",
+          "icon": "Briefcase",
+          "duration": "10-14 Weeks",
+          "description": "Gain practical experience through projects and internships.",
+          "actionPlan": [
+            "Work on capstone project",
+            "Apply for internships",
+            "Practice interview skills",
+            "Build professional portfolio"
+          ],
+          "resources": [
+            {
+              "title": "Internship Platforms",
+              "url": "https://www.internships.com"
+            },
+            {
+              "title": "Project Ideas",
+              "url": "https://github.com/topics"
+            },
+            {
+              "title": "Interview Prep",
+              "url": "https://www.glassdoor.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete major project",
+            "Gain practical experience",
+            "Build strong portfolio"
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Performance Strategies",
+          "goal": "Master Advanced Techniques",
+          "icon": "Target",
+          "duration": "6-10 Weeks",
+          "description": "Learn optimization and advanced skills in your field.",
+          "actionPlan": [
+            "Study advanced topics",
+            "Optimize your work processes",
+            "Learn industry tools",
+            "Practice problem-solving"
+          ],
+          "resources": [
+            {
+              "title": "Advanced Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Professional Certifications",
+              "url": "https://www.certifications.com"
+            },
+            {
+              "title": "Industry Standards",
+              "url": "https://www.iso.org"
+            }
+          ],
+          "successCriteria": [
+            "Master advanced concepts",
+            "Improve efficiency",
+            "Gain specialized knowledge"
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Knowledge Expansion",
+          "goal": "Explore Specializations",
+          "icon": "GraduationCap",
+          "duration": "8-12 Weeks",
+          "description": "Dive deeper into specialized areas.",
+          "actionPlan": [
+            "Choose specialization area",
+            "Attend industry events",
+            "Study specialized topics",
+            "Stay updated with trends"
+          ],
+          "resources": [
+            {
+              "title": "Specialization Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Industry Publications",
+              "url": "https://www.medium.com"
+            },
+            {
+              "title": "Conference Videos",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2+ specialized courses",
+            "Attend 3+ events",
+            "Develop expertise"
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Industry Polishing",
+          "goal": "Prepare for Career Launch",
+          "icon": "Award",
+          "duration": "4-8 Weeks",
+          "description": "Final preparation for job market.",
+          "actionPlan": [
+            "Polish resume and profiles",
+            "Prepare for interviews",
+            "Build portfolio",
+            "Apply to companies",
+            "Practice negotiation"
+          ],
+          "resources": [
+            {
+              "title": "Resume Builder",
+              "url": "https://www.resumegenius.com"
+            },
+            {
+              "title": "Interview Guide",
+              "url": "https://www.thebalancecareers.com"
+            },
+            {
+              "title": "Job Boards",
+              "url": "https://www.indeed.com"
+            }
+          ],
+          "successCriteria": [
+            "Professional portfolio",
+            "Polished resume",
+            "Complete interviews",
+            "Receive job offers"
+          ]
+        }
+      ],
+      "metadata": {
+        "curriculum_focus": "Business Administration & Management",
+        "languages": [],
+        "duration_years": 3.0,
+        "skill_gaps_count": 8,
+        "gap_severity": "high",
+        "priority_skills": [
+          "Data Structures & Algorithms",
+          "Object-Oriented Programming",
+          "Version Control (Git)"
+        ]
+      },
+      "warnings": [
+        "Your course has 8 skill gaps. Consider supplementing with online courses or bootcamps.",
+        "Priority skills to learn: Data Structures & Algorithms, Object-Oriented Programming, Version Control (Git)"
+      ],
+      "errors": []
+    }
+  },
+  {
+    "status": "success",
+    "name": "Environmental Scientist (Agriculture/Environment)",
+    "interest_area": "Agriculture/Environment",
+    "validation_passed": false,
+    "keywords_found": 2,
+    "curriculum_focus": "Environmental Science & Sustainability",
+    "data": {
+      "status": "success",
+      "roadmap": [
+        {
+          "id": 1,
+          "title": "Foundation Stage",
+          "goal": "Build Strong Fundamentals",
+          "icon": "BookOpen",
+          "duration": "6-8 Weeks",
+          "description": "Master core concepts and essential skills for Environmental Scientist.",
+          "actionPlan": [
+            "Study fundamentals of Environmental Scientist",
+            "Complete introductory courses and certifications",
+            "Practice essential skills daily",
+            "Set up professional tools and environment"
+          ],
+          "resources": [
+            {
+              "title": "Coursera",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "edX",
+              "url": "https://www.edx.org"
+            },
+            {
+              "title": "LinkedIn Learning",
+              "url": "https://www.linkedin.com/learning/"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2-3 foundational courses",
+            "Build 1-2 beginner projects",
+            "Understand industry basics"
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Skill Development",
+          "goal": "Develop Core Skills",
+          "icon": "Code",
+          "duration": "8-12 Weeks",
+          "description": "Focus on skills critical for Environmental Scientist roles.",
+          "actionPlan": [
+            "Deep dive into Data Structures & Algorithms",
+            "Build practical projects",
+            "Learn industry best practices",
+            "Network with professionals"
+          ],
+          "resources": [
+            {
+              "title": "Industry Blogs",
+              "url": "https://medium.com"
+            },
+            {
+              "title": "Professional Courses",
+              "url": "https://www.udemy.com"
+            },
+            {
+              "title": "YouTube Tutorials",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 3-5 skill-building projects",
+            "Understand industry standards",
+            "Build professional network"
+          ]
+        },
+        {
+          "id": 3,
+          "title": "Real-world Readiness",
+          "goal": "Apply Skills to Real-World Scenarios",
+          "icon": "Briefcase",
+          "duration": "10-14 Weeks",
+          "description": "Gain practical experience through projects and internships.",
+          "actionPlan": [
+            "Work on capstone project",
+            "Apply for internships",
+            "Practice interview skills",
+            "Build professional portfolio"
+          ],
+          "resources": [
+            {
+              "title": "Internship Platforms",
+              "url": "https://www.internships.com"
+            },
+            {
+              "title": "Project Ideas",
+              "url": "https://github.com/topics"
+            },
+            {
+              "title": "Interview Prep",
+              "url": "https://www.glassdoor.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete major project",
+            "Gain practical experience",
+            "Build strong portfolio"
+          ]
+        },
+        {
+          "id": 4,
+          "title": "Performance Strategies",
+          "goal": "Master Advanced Techniques",
+          "icon": "Target",
+          "duration": "6-10 Weeks",
+          "description": "Learn optimization and advanced skills in your field.",
+          "actionPlan": [
+            "Study advanced topics",
+            "Optimize your work processes",
+            "Learn industry tools",
+            "Practice problem-solving"
+          ],
+          "resources": [
+            {
+              "title": "Advanced Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Professional Certifications",
+              "url": "https://www.certifications.com"
+            },
+            {
+              "title": "Industry Standards",
+              "url": "https://www.iso.org"
+            }
+          ],
+          "successCriteria": [
+            "Master advanced concepts",
+            "Improve efficiency",
+            "Gain specialized knowledge"
+          ]
+        },
+        {
+          "id": 5,
+          "title": "Knowledge Expansion",
+          "goal": "Explore Specializations",
+          "icon": "GraduationCap",
+          "duration": "8-12 Weeks",
+          "description": "Dive deeper into specialized areas.",
+          "actionPlan": [
+            "Choose specialization area",
+            "Attend industry events",
+            "Study specialized topics",
+            "Stay updated with trends"
+          ],
+          "resources": [
+            {
+              "title": "Specialization Courses",
+              "url": "https://www.coursera.org"
+            },
+            {
+              "title": "Industry Publications",
+              "url": "https://www.medium.com"
+            },
+            {
+              "title": "Conference Videos",
+              "url": "https://www.youtube.com"
+            }
+          ],
+          "successCriteria": [
+            "Complete 2+ specialized courses",
+            "Attend 3+ events",
+            "Develop expertise"
+          ]
+        },
+        {
+          "id": 6,
+          "title": "Industry Polishing",
+          "goal": "Prepare for Career Launch",
+          "icon": "Award",
+          "duration": "4-8 Weeks",
+          "description": "Final preparation for job market.",
+          "actionPlan": [
+            "Polish resume and profiles",
+            "Prepare for interviews",
+            "Build portfolio",
+            "Apply to companies",
+            "Practice negotiation"
+          ],
+          "resources": [
+            {
+              "title": "Resume Builder",
+              "url": "https://www.resumegenius.com"
+            },
+            {
+              "title": "Interview Guide",
+              "url": "https://www.thebalancecareers.com"
+            },
+            {
+              "title": "Job Boards",
+              "url": "https://www.indeed.com"
+            }
+          ],
+          "successCriteria": [
+            "Professional portfolio",
+            "Polished resume",
+            "Complete interviews",
+            "Receive job offers"
+          ]
+        }
+      ],
+      "metadata": {
+        "curriculum_focus": "Environmental Science & Sustainability",
+        "languages": [],
+        "duration_years": 4.0,
+        "skill_gaps_count": 8,
+        "gap_severity": "high",
+        "priority_skills": [
+          "Data Structures & Algorithms",
+          "Object-Oriented Programming",
+          "Version Control (Git)"
+        ]
+      },
+      "warnings": [
+        "Your course has 8 skill gaps. Consider supplementing with online courses or bootcamps.",
+        "Priority skills to learn: Data Structures & Algorithms, Object-Oriented Programming, Version Control (Git)"
+      ],
+      "errors": []
+    }
+  }
+]

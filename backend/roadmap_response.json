@@ -1,0 +1,225 @@
+{
+  "status": "success",
+  "roadmap": [
+    {
+      "id": 1,
+      "title": "Foundation Stage",
+      "goal": "Build Strong Programming Fundamentals",
+      "icon": "BookOpen",
+      "duration": "6-8 Weeks",
+      "description": "Master core programming concepts and problem-solving skills essential for your journey.",
+      "actionPlan": [
+        "Master Python programming basics",
+        "Practice coding challenges daily (30-60 min)",
+        "Learn Git version control fundamentals",
+        "Set up development environment and tools"
+      ],
+      "resources": [
+        {
+          "title": "Python Official Tutorial",
+          "url": "https://docs.python.org/3/tutorial/"
+        },
+        {
+          "title": "Git Handbook",
+          "url": "https://guides.github.com/introduction/git-handbook/"
+        },
+        {
+          "title": "LeetCode Easy Problems",
+          "url": "https://leetcode.com/problemset/all/?difficulty=Easy"
+        }
+      ],
+      "successCriteria": [
+        "Complete 20+ coding problems",
+        "Build 1-2 small projects",
+        "Comfortable with Git basics"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Skill Development",
+      "goal": "Develop Core Technical Skills",
+      "icon": "Code",
+      "duration": "8-12 Weeks",
+      "description": "Focus on skills critical for Software Engineer roles, addressing identified gaps.",
+      "actionPlan": [
+        "Deep dive into Data Structures & Algorithms",
+        "Build 2-3 intermediate projects",
+        "Learn industry best practices and design patterns",
+        "Start contributing to open source"
+      ],
+      "resources": [
+        {
+          "title": "NeetCode Roadmap",
+          "url": "https://neetcode.io/roadmap"
+        },
+        {
+          "title": "System Design Primer",
+          "url": "https://github.com/donnemartin/system-design-primer"
+        },
+        {
+          "title": "Real Python",
+          "url": "https://realpython.com"
+        }
+      ],
+      "successCriteria": [
+        "Complete 50+ DSA problems",
+        "Build 2 portfolio-worthy projects",
+        "Make 5+ open source contributions"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Real-world Readiness",
+      "goal": "Apply Skills to Real-World Scenarios",
+      "icon": "Briefcase",
+      "duration": "10-14 Weeks",
+      "description": "Gain practical experience through projects, internships, and real-world problem solving.",
+      "actionPlan": [
+        "Build a full-scale capstone project",
+        "Apply for internships and entry-level positions",
+        "Practice technical interview skills",
+        "Network with professionals in your field"
+      ],
+      "resources": [
+        {
+          "title": "Pramp - Mock Interviews",
+          "url": "https://www.pramp.com"
+        },
+        {
+          "title": "LinkedIn Learning",
+          "url": "https://www.linkedin.com/learning/"
+        },
+        {
+          "title": "Internship Platforms",
+          "url": "https://www.internships.com"
+        }
+      ],
+      "successCriteria": [
+        "Complete 1 major project",
+        "Pass 5+ mock interviews",
+        "Land internship or contract work"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Performance Strategies",
+      "goal": "Optimize Performance and Efficiency",
+      "icon": "Target",
+      "duration": "6-10 Weeks",
+      "description": "Learn optimization techniques, performance tuning, and efficient problem-solving strategies.",
+      "actionPlan": [
+        "Study algorithm complexity and optimization",
+        "Learn profiling and debugging techniques",
+        "Practice system design interviews",
+        "Optimize your existing projects"
+      ],
+      "resources": [
+        {
+          "title": "Big O Cheat Sheet",
+          "url": "https://www.bigocheatsheet.com"
+        },
+        {
+          "title": "LeetCode Medium/Hard",
+          "url": "https://leetcode.com/problemset/all/?difficulty=Medium"
+        },
+        {
+          "title": "System Design Interview",
+          "url": "https://www.educative.io/courses/grokking-the-system-design-interview"
+        }
+      ],
+      "successCriteria": [
+        "Solve 30+ medium/hard problems",
+        "Complete system design practice",
+        "Improve project performance metrics"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Knowledge Expansion",
+      "goal": "Explore Advanced Topics and Specializations",
+      "icon": "GraduationCap",
+      "duration": "8-12 Weeks",
+      "description": "Dive deeper into specialized areas relevant to your career goals.",
+      "actionPlan": [
+        "Study advanced topics in Software Engineer domain",
+        "Attend webinars, conferences, and workshops",
+        "Build expertise in a niche area",
+        "Stay updated with industry trends"
+      ],
+      "resources": [
+        {
+          "title": "Coursera Specializations",
+          "url": "https://www.coursera.org"
+        },
+        {
+          "title": "Tech Blogs & Publications",
+          "url": "https://dev.to"
+        },
+        {
+          "title": "Conference Talks",
+          "url": "https://www.youtube.com/c/GOTO-"
+        }
+      ],
+      "successCriteria": [
+        "Complete 2+ advanced courses",
+        "Attend 3+ industry events",
+        "Develop specialized expertise"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Industry Polishing",
+      "goal": "Prepare for Job Market and Career Launch",
+      "icon": "Award",
+      "duration": "4-8 Weeks",
+      "description": "Final preparation for entering the job market as a professional.",
+      "actionPlan": [
+        "Polish resume and online profiles",
+        "Prepare for behavioral interviews",
+        "Build strong portfolio website",
+        "Apply strategically to target companies",
+        "Practice salary negotiation"
+      ],
+      "resources": [
+        {
+          "title": "Resume Templates",
+          "url": "https://www.resumegenius.com"
+        },
+        {
+          "title": "Interview Preparation",
+          "url": "https://www.interviewcake.com"
+        },
+        {
+          "title": "Salary Negotiation Guide",
+          "url": "https://www.levels.fyi"
+        }
+      ],
+      "successCriteria": [
+        "Professional portfolio completed",
+        "Resume reviewed by 3+ professionals",
+        "Complete 10+ real interviews",
+        "Receive job offer(s)"
+      ]
+    }
+  ],
+  "metadata": {
+    "curriculum_focus": "Software Engineering Foundations",
+    "languages": [
+      "Python",
+      "Java"
+    ],
+    "duration_years": 3.0,
+    "skill_gaps_count": 8,
+    "gap_severity": "high",
+    "priority_skills": [
+      "Data Structures & Algorithms",
+      "Object-Oriented Programming",
+      "Version Control (Git)"
+    ]
+  },
+  "warnings": [
+    "Your course has 8 skill gaps. Consider supplementing with online courses or bootcamps.",
+    "Priority skills to learn: Data Structures & Algorithms, Object-Oriented Programming, Version Control (Git)"
+  ],
+  "errors": []
+}

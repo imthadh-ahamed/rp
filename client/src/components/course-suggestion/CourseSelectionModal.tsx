@@ -1,27 +1,51 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CheckCircle, X, Clock, BookOpen } from 'lucide-react';
+import { CheckCircle, X, Clock, BookOpen, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Recommendation } from '@/types/profile.types';
+import diagramService from '@/services/diagram.service';
+import { useState } from 'react';
 
 interface CourseSelectionModalProps {
     isOpen: boolean;
     onClose: () => void;
     course: Recommendation | null;
+    profileId: string;
 }
 
-export default function CourseSelectionModal({ isOpen, onClose, course }: CourseSelectionModalProps) {
+export default function CourseSelectionModal({ isOpen, onClose, course, profileId }: CourseSelectionModalProps) {
     const router = useRouter();
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     if (!isOpen || !course) return null;
 
-    const handleConfirmSelection = () => {
-        const courseId = course.id || course._id;
-        if (courseId) {
-            router.push(`/diagram?courseId=${courseId}`);
+    const handleConfirmSelection = async () => {
+        if (!profileId) {
+            setError('Profile ID is missing. Please try again.');
+            return;
         }
-        onClose();
+
+        try {
+            setIsGenerating(true);
+            setError(null);
+
+            // Use course rank as courseId (convert to string)
+            const courseId = course.rank.toString();
+
+            // Generate or get existing roadmap
+            const roadmap = await diagramService.getOrGenerateRoadmap(profileId, courseId);
+
+            // Navigate to diagram page with roadmap ID
+            router.push(`/diagram?id=${roadmap._id}`);
+            onClose();
+        } catch (err: any) {
+            console.error('Error generating roadmap:', err);
+            setError(err.message || 'Failed to generate roadmap. Please try again.');
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
     return (
@@ -71,18 +95,33 @@ export default function CourseSelectionModal({ isOpen, onClose, course }: Course
                         </div>
                     </div>
 
+                    {error && (
+                        <div className="w-full mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <p className="text-sm text-red-600">{error}</p>
+                        </div>
+                    )}
+
                     <div className="flex gap-3 w-full">
                         <button
                             onClick={onClose}
-                            className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                            disabled={isGenerating}
+                            className="flex-1 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleConfirmSelection}
-                            className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium shadow-md hover:shadow-lg"
+                            disabled={isGenerating}
+                            className="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
-                            Confirm Selection
+                            {isGenerating ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Generating Roadmap...
+                                </>
+                            ) : (
+                                'Confirm Selection'
+                            )}
                         </button>
                     </div>
                 </div>

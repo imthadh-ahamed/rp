@@ -1,16 +1,27 @@
 'use client';
 
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { CheckCircle2, ChevronDown, ChevronUp, Clock, Flag, Library, ListTodo, Trophy, ExternalLink } from 'lucide-react';
+import { CheckCircle2, ChevronDown, ChevronUp, Clock, Flag, Library, ListTodo, Trophy, ExternalLink, BookOpen, Target, GraduationCap, Briefcase, LineChart, Rocket } from 'lucide-react';
 import { useRef } from 'react';
-import { ROADMAP_STEPS } from './constants';
+import { RoadmapStep } from '@/types/diagram.types';
+
+// Icon mapping for dynamic icon names
+const iconMap: Record<string, any> = {
+    BookOpen,
+    Target,
+    GraduationCap,
+    Briefcase,
+    LineChart,
+    Rocket
+};
 
 interface VisualRoadmapProps {
     expandedStep: number | null;
     toggleStep: (id: number) => void;
+    roadmapSteps: RoadmapStep[];
 }
 
-export default function VisualRoadmap({ expandedStep, toggleStep }: VisualRoadmapProps) {
+export default function VisualRoadmap({ expandedStep, toggleStep, roadmapSteps }: VisualRoadmapProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -35,9 +46,11 @@ export default function VisualRoadmap({ expandedStep, toggleStep }: VisualRoadma
             />
 
             <div className="space-y-12 md:space-y-24">
-                {ROADMAP_STEPS.map((step, index) => {
+                {roadmapSteps.map((step, index) => {
                     const isEven = index % 2 === 0;
                     const isExpanded = expandedStep === step.id;
+                    // Get icon component from map or use default
+                    const IconComponent = (typeof step.icon === 'string' && iconMap[step.icon]) || iconMap.BookOpen;
 
                     return (
                         <motion.div
@@ -169,8 +182,8 @@ export default function VisualRoadmap({ expandedStep, toggleStep }: VisualRoadma
 
                             {/* Center Icon */}
                             <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 flex items-center justify-center mt-8 md:mt-0">
-                                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${step.color} border-4 border-white shadow-lg flex items-center justify-center z-10 transition-transform duration-300 ${isExpanded ? 'scale-110' : ''}`}>
-                                    <step.icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${step.color || 'bg-purple-500'} border-4 border-white shadow-lg flex items-center justify-center z-10 transition-transform duration-300 ${isExpanded ? 'scale-110' : ''}`}>
+                                    <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-white" />
                                 </div>
                             </div>
 
