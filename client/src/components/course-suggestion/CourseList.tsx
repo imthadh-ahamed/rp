@@ -11,6 +11,7 @@ import Link from 'next/link';
 
 export default function CourseList() {
     const [courses, setCourses] = useState<Recommendation[]>([]);
+    const [profileId, setProfileId] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -39,6 +40,11 @@ export default function CourseList() {
                 );
 
                 const latestProfile = sortedProfiles[0];
+                
+                // Store the profile ID for roadmap generation
+                if (latestProfile._id) {
+                    setProfileId(latestProfile._id);
+                }
                 
                 // Check if the recommendations contain validation errors
                 if (latestProfile.recommendations && Array.isArray(latestProfile.recommendations)) {
@@ -272,6 +278,7 @@ export default function CourseList() {
                 isOpen={isConfirmModalOpen}
                 onClose={cancelSelectCourse}
                 course={courseToSelect}
+                profileId={profileId}
             />
         </>
     );
