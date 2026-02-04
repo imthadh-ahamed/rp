@@ -5,19 +5,51 @@ import {
     DiagramHeader,
     ExplanationSection,
     QuickNavigation,
-    VisualRoadmap,
-    ROADMAP_STEPS
+    VisualRoadmap
 } from '@/components/diagram';
 import { clearMilestones, getMilestones, Milestone, saveMilestones } from '@/utils/milestoneStorage';
 import { motion } from 'framer-motion';
-import { Rocket } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Rocket, Loader2, AlertCircle } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import diagramService from '@/services/diagram.service';
+import { Roadmap, RoadmapStep } from '@/types/diagram.types';
 
 export default function DiagramPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const roadmapId = searchParams.get('id');
+    
+    const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
+    const [roadmapSteps, setRoadmapSteps] = useState<RoadmapStep[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [expandedStep, setExpandedStep] = useState<number | null>(null);
     const [generating, setGenerating] = useState(false);
+
+    useEffect(() => {
+        if (roadmapId) {
+            fetchRoadmap();
+        } else {
+            setError('No roadmap ID provided');
+            setIsLoading(false);
+        }
+    }, [roadmapId]);
+
+    const fetchRoadmap = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+            const data = await diagramService.getRoadmapById(roadmapId!);
+            setRoadmap(data);
+            setRoadmapSteps(data.roadmap || []);
+        } catch (err: any) {
+            console.error('Error fetching roadmap:', err);
+            setError(err.message || 'Failed to load roadmap');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const toggleStep = (id: number) => {
         setExpandedStep(expandedStep === id ? null : id);
@@ -46,7 +78,7 @@ export default function DiagramPage() {
 
         // Generate only the first 2 milestones from roadmap steps
         const newMilestones: Milestone[] = [];
-        ROADMAP_STEPS.slice(0, 2).forEach((step, index) => {
+        roadmapSteps.slice(0, 2).forEach((step, index) => {
             const milestone: Milestone = {
                 id: `milestone-${step.id}-${Date.now()}-${index}`,
                 title: step.title,
@@ -57,8 +89,8 @@ export default function DiagramPage() {
                 resources: step.resources.map((r) => r.title),
                 successCriteria: step.successCriteria,
                 status: 'pending',
-                color: step.color,
-                icon: step.icon.name
+                color: step.color || 'bg-purple-500',
+                icon: step.icon
             };
             newMilestones.push(milestone);
         });
@@ -72,6 +104,41 @@ export default function DiagramPage() {
         }, 1000);
     };
 
+    if (isLoading) {
+        return (
+            <AppShell>
+                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                    <div className="text-center">
+                        <Loader2 className="w-12 h-12 text-purple-600 animate-spin mx-auto mb-4" />
+                        <p className="text-gray-600 font-medium">Loading your personalized roadmap...</p>
+                    </div>
+                </div>
+            </AppShell>
+        );
+    }
+
+    if (error || !roadmap) {
+        return (
+            <AppShell>
+                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                    <div className="text-center p-6">
+                        <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <AlertCircle className="w-10 h-10 text-red-500" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-3">Failed to Load Roadmap</h3>
+                        <p className="text-gray-600 mb-6">{error || 'Roadmap not found'}</p>
+                        <button
+                            onClick={() => router.push('/milestones?tab=courses')}
+                            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+                        >
+                            Back to Courses
+                        </button>
+                    </div>
+                </div>
+            </AppShell>
+        );
+    }
+
     return (
         <AppShell>
             <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -79,11 +146,13 @@ export default function DiagramPage() {
                     <QuickNavigation
                         expandedStep={expandedStep}
                         scrollToStep={scrollToStep}
+                        roadmapSteps={roadmapSteps}
                     />
-                    <DiagramHeader />
+                    <DiagramHeader roadmap={roadmap} />
                     <VisualRoadmap
                         expandedStep={expandedStep}
                         toggleStep={toggleStep}
+                        roadmapSteps={roadmapSteps}
                     />
 
                     {/* Generate Milestones Button */}
