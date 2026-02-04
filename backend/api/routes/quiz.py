@@ -43,9 +43,19 @@ async def generate_quiz(request: QuizRequest):
     if request.num_questions < 1 or request.num_questions > 20:
         raise HTTPException(status_code=400, detail="Number of questions must be between 1 and 20")
     
+    # Normalize stream name to match database
+    stream_mapping = {
+        'arts': 'art',
+        'biological science': 'biological_science',
+        'physical science': 'physical_science',
+    }
+    
+    normalized_stream = request.stream.lower().strip()
+    normalized_stream = stream_mapping.get(normalized_stream, normalized_stream)
+    
     try:
         mcqs = quiz_rag_service.generate_mcqs_for_stream(
-            stream=request.stream,
+            stream=normalized_stream,
             questions_per_stream=request.num_questions
         )
         
