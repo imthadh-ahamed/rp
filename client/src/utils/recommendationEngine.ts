@@ -104,12 +104,28 @@ export function calculateRecommendations(
             overallScore: Math.round(overallScore * 100) / 100,
             category,
             requiresAptitudeTest: course.requiresAptitudeTest,
+            aptitudeTests: course.requiresAptitudeTest ? getAptitudeTests(course.courseName) : [],
             matchingInterests: matchingInterests.map(i => interestLabels[i] || i)
         };
     });
 
     // Sort by overall score descending
     return recommendations.sort((a, b) => b.overallScore - a.overallScore);
+}
+
+function getAptitudeTests(courseName: string): string[] {
+    const upperName = courseName.toUpperCase();
+    const commonTests = ['Logical Reasoning', 'Problem Solving'];
+
+    if (upperName.includes('COMPUTER') ||
+        upperName.includes('SOFTWARE') ||
+        upperName.includes('INFORMATION') ||
+        upperName.includes('DATA') ||
+        upperName.includes('ICT')) {
+        return [...commonTests, 'Data Structures'];
+    }
+
+    return commonTests;
 }
 
 export function getTopRecommendations(
