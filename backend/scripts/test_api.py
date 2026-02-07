@@ -5,20 +5,21 @@ url = "http://localhost:8000/recommend"
 
 payload = {
     "age": "20",
-    "native_language": "Sinhala",
+    "native_language": "Tamil",
     "preferred_language": "English",
-    "ol_results": "8A 1B",
+    "ol_results": "Maths: A, Science: B, English: A, ICT: B",
     "al_stream": "Physical Science",
-    "al_results": "3B",
-    "ielts": "6.5",
-    "interest_area": "Software Engineering",
-    "career_goal": "Software Engineer",
-    "income": "50000",
-    "study_method": "Full Time",
+    "al_results": "Combined Maths: B, Chemistry: C, Physics: C",
+    "other_qualifications": "None",
+    "ielts": "6.0",
+    "interest_area": "Information Technology",
+    "career_goal": "Software Engineer, Data Scientist",
+    "income": "45000 LKR",
+    "study_method": "Onsite",
     "availability": "Weekdays",
-    "completion_period": "4 Years",
+    "completion_period": "3-4 years",
     "current_location": "Colombo",
-    "preferred_locations": "Colombo"
+    "preferred_locations": "Colombo",
 }
 
 try:

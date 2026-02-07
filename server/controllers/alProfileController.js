@@ -37,12 +37,21 @@ class ALProfileController {
     }
 
     /**
-     * Get all profiles
+     * Get all profiles for the logged-in user
      * GET /api/profiles
      */
     async getAllProfiles(req, res, next) {
         try {
-            const profiles = await alProfileService.getAllProfiles();
+            const userId = req.user.id;
+            const profiles = await alProfileService.getAllProfiles(userId);
+            
+            // Set cache-control headers to return 200 instead of 304
+            res.set({
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            });
+            
             ok(res, { profiles, count: profiles.length }, 'Profiles fetched successfully');
         } catch (error) {
             next(error);

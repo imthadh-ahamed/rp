@@ -156,9 +156,8 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
         saveUserData(localData);
 
         onClose();
-        if (!profileId) {
-          router.push('/course-suggestion');
-        }
+        // Navigate to course-suggestion page for both create and update
+        router.push('/course-suggestion');
       } catch (error: any) {
         console.error('Error saving profile:', error);
         toast.error(error.message || 'Failed to save profile');

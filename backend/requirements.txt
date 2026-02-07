@@ -12,3 +12,7 @@ faiss-cpu
 pandas
 numpy
 scikit-learn
+sentence-transformers
+torch
+transformers<4.49
+einops

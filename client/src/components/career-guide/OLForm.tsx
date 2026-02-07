@@ -115,7 +115,8 @@ export default function OLForm({ isOpen, onClose, onBack, initialData, profileId
           nativeLanguage: formData.nativeLanguage as 'English' | 'Sinhala' | 'Tamil',
           preferredLanguage: formData.preferredLanguage as 'English' | 'Sinhala' | 'Tamil',
           olResults: formData.olResults,
-          // OL form doesn't have A/L stream and results
+          alStream: undefined,
+          alResults: undefined,
           otherQualifications: formData.otherQualifications,
           ieltsScore: formData.ieltsScore,
           interestArea: formData.interestArea as any,
@@ -150,9 +151,8 @@ export default function OLForm({ isOpen, onClose, onBack, initialData, profileId
         saveUserData(localData);
 
         onClose();
-        if (!profileId) {
-          router.push('/course-suggestion');
-        }
+        // Navigate to course-suggestion page for both create and update
+        router.push('/course-suggestion');
       } catch (error: any) {
         console.error('Error saving profile:', error);
         toast.error(error.message || 'Failed to save profile');

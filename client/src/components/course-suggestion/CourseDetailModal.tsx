@@ -93,7 +93,9 @@ export default function CourseDetailModal({ isOpen, onClose, course }: CourseDet
                                     <DollarSign className="w-4 h-4" />
                                     <span className="text-xs font-bold uppercase">Fees</span>
                                 </div>
-                                <p className="font-semibold text-gray-900">{course.course_fee}</p>
+                                <p className="font-semibold text-gray-900">
+                                    {course.course_fee === 'None' || !course.course_fee ? 'Not Available' : course.course_fee}
+                                </p>
                             </div>
                             <div className="p-4 bg-yellow-50 rounded-xl border border-yellow-100">
                                 <div className="flex items-center gap-2 mb-1 text-yellow-600">

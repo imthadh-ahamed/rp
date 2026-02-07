@@ -116,9 +116,9 @@ async def recommend_courses(user_input: Dict[str, Any],
     # -------------------------
     # 6. LLM EXPLANATIONS
     # -------------------------
-    # print(f"\n💡 Step 5: Generating AI-powered explanations for top {explain_top_n} courses...")
+    print(f"\n💡 Step 5: Generating AI-powered explanations for top {explain_top_n} courses...")
     # Pass full 'ranked' list. add_explanations handles LLM for top_n and fallback for others.
-    # final_results = await add_explanations(user_input, ranked, top_n=explain_top_n)
+    final_results = await add_explanations(user_input, ranked, top_n=explain_top_n)
     
     print("="*80)
     print("✅ RECOMMENDATION PIPELINE COMPLETE")
@@ -126,6 +126,6 @@ async def recommend_courses(user_input: Dict[str, Any],
     
     return {
         "status": "success",
-        "results": ranked,
+        "results": final_results,
         "warnings": warnings
     }
