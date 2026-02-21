@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import { BookOpen, AlertCircle, Loader2 } from 'lucide-react';
 import { RecommendedCourse } from '@/utils/recommendationEngine';
-import { PredictionResult } from '@/hooks/usePrediction';
+import { PredictionResult } from '@/hooks/usePredictions';
 
 interface CourseRecommendationsProps {
     courses: RecommendedCourse[];
