@@ -3,14 +3,25 @@
 import { motion } from 'framer-motion';
 import { BookOpen, AlertCircle, Loader2 } from 'lucide-react';
 import { RecommendedCourse } from '@/utils/recommendationEngine';
+import { PredictionResult } from '@/hooks/usePrediction';
 
 interface CourseRecommendationsProps {
     courses: RecommendedCourse[];
     onSelectCourse: (course: RecommendedCourse) => void;
     isLoading?: boolean;
+    predicting?: boolean;
+    predictionResult?: PredictionResult | null;
+    predictionError?: string | null;
 }
 
-export default function CourseRecommendations({ courses, onSelectCourse, isLoading = false }: CourseRecommendationsProps) {
+export default function CourseRecommendations({
+    courses,
+    onSelectCourse,
+    isLoading = false,
+    predicting = false,
+    predictionResult = null,
+    predictionError = null,
+}: CourseRecommendationsProps) {
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px]">
@@ -45,32 +56,29 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
             whileHover={{ y: -5 }}
             className="bg-white rounded-2xl shadow-lg overflow-hidden border-l-4"
             style={{
-                borderLeftColor: category === 'highly-recommended' ? '#10b981' : category === 'moderately-recommended' ? '#f59e0b' : '#6b7280'
+                borderLeftColor:
+                    category === 'highly-recommended' ? '#10b981'
+                    : category === 'moderately-recommended' ? '#f59e0b'
+                    : '#6b7280'
             }}
         >
             <div className="p-6">
-                {/* Header */}
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <h3 className="text-xl font-bold text-gray-900 mb-1">{course.courseName}</h3>
                         <p className="text-sm text-gray-600">{course.university}</p>
                     </div>
-                    <span
-                        className={`px-3 py-1 rounded-full text-sm font-bold text-white ${category === 'highly-recommended'
-                                ? 'bg-green-500'
-                                : category === 'moderately-recommended'
-                                    ? 'bg-amber-500'
-                                    : 'bg-gray-500'
-                            }`}
-                    >
-                        {category === 'highly-recommended' ? '✓ Recommended' : category === 'moderately-recommended' ? '◐ Moderate' : '? Conditional'}
+                    <span className={`px-3 py-1 rounded-full text-sm font-bold text-white ${
+                        category === 'highly-recommended' ? 'bg-green-500'
+                        : category === 'moderately-recommended' ? 'bg-amber-500'
+                        : 'bg-gray-500'
+                    }`}>
+                        {category === 'highly-recommended' ? '✓ Recommended'
+                         : category === 'moderately-recommended' ? '◐ Moderate'
+                         : '? Conditional'}
                     </span>
                 </div>
 
-                {/* Description */}
-                {/* Description placeholder - can be added to RecommendedCourse interface if needed */}
-
-                {/* Scores */}
                 <div className="grid grid-cols-3 gap-3 mb-6 p-4 bg-gray-50 rounded-lg">
                     <div className="text-center">
                         <p className="text-xs text-gray-600 mb-1">Academic</p>
@@ -86,7 +94,6 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
                     </div>
                 </div>
 
-                {/* Progress Bar */}
                 <div className="mb-6">
                     <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
                         <motion.div
@@ -98,7 +105,6 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
                     </div>
                 </div>
 
-                {/* Aptitude Test Button */}
                 {course.requiresAptitudeTest && (
                     <motion.button
                         whileHover={{ scale: 1.02 }}
@@ -116,7 +122,66 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
 
     return (
         <div className="space-y-12">
-            {/* Highly Recommended */}
+
+            {/* ── AI Prediction Banner ─────────────────────────────────── */}
+            {predicting && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-sm"
+                >
+                    <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                    <span>Getting AI university predictions...</span>
+                </motion.div>
+            )}
+
+            {predictionError && !predicting && (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm"
+                >
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>AI prediction unavailable: {predictionError}</span>
+                </motion.div>
+            )}
+{predictionResult && !predicting && (
+    <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="p-6 rounded-xl bg-gradient-to-r from-green-50 to-teal-50 border border-green-200"
+    >
+        <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-3">
+            🎓 AI Recommended Course
+        </p>
+        <p className="text-2xl font-bold text-gray-900 mb-4">
+            {predictionResult.course}
+        </p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="bg-white rounded-lg p-3 text-center shadow-sm">
+                <p className="text-xs text-gray-500 mb-1">Stream</p>
+                <p className="text-sm font-semibold text-gray-800">{predictionResult.input_summary.stream}</p>
+            </div>
+            <div className="bg-white rounded-lg p-3 text-center shadow-sm">
+                <p className="text-xs text-gray-500 mb-1">Z-Score</p>
+                <p className="text-sm font-semibold text-cyan-700">{predictionResult.input_summary.z_score}</p>
+            </div>
+            <div className="bg-white rounded-lg p-3 text-center shadow-sm">
+                <p className="text-xs text-gray-500 mb-1">Island Rank</p>
+                <p className="text-sm font-semibold text-cyan-700">{predictionResult.input_summary.island_rank}</p>
+            </div>
+            <div className="bg-white rounded-lg p-3 text-center shadow-sm">
+                <p className="text-xs text-gray-500 mb-1">District</p>
+                <p className="text-sm font-semibold text-gray-800">{predictionResult.input_summary.district}</p>
+            </div>
+        </div>
+        <p className="text-xs text-gray-400 mt-3">
+            Based on your academic profile and career interests
+        </p>
+    </motion.div>
+)}
+
+            {/* ── Highly Recommended ───────────────────────────────────── */}
             {highlyRecommended.length > 0 && (
                 <div>
                     <div className="flex items-center gap-3 mb-6">
@@ -132,7 +197,7 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
                 </div>
             )}
 
-            {/* Moderately Recommended */}
+            {/* ── Moderately Recommended ───────────────────────────────── */}
             {moderatelyRecommended.length > 0 && (
                 <div>
                     <div className="flex items-center gap-3 mb-6">
@@ -148,7 +213,7 @@ export default function CourseRecommendations({ courses, onSelectCourse, isLoadi
                 </div>
             )}
 
-            {/* Conditionally Eligible */}
+            {/* ── Conditionally Eligible ────────────────────────────────── */}
             {conditionallyEligible.length > 0 && (
                 <div>
                     <div className="flex items-center gap-3 mb-6">

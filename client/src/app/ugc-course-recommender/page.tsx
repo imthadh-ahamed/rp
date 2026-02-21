@@ -16,7 +16,7 @@ import { StudentInfoData } from '@/components/ugc-course-recommender/StudentInfo
 import { ALResultsData } from '@/components/ugc-course-recommender/ALResultsForm';
 import { CareerQuizAnswer, quizQuestions } from '@/components/ugc-course-recommender/CareerQuiz';
 import { calculateRecommendations, RecommendedCourse } from '@/utils/recommendationEngine';
-
+import { usePrediction } from '@/hooks/usePredictions';
 type Step = 'student-info' | 'al-results' | 'career-quiz' | 'recommendations' | 'aptitude-list' | 'aptitude-quiz';
 
 const steps = ['Student Info', 'A/L Results', 'Career Quiz', 'Recommendations', 'Aptitude Tests'];
@@ -31,6 +31,8 @@ export default function UGCCourseSelectorPage() {
     const [selectedCourse, setSelectedCourse] = useState<RecommendedCourse | null>(null);
     const [selectedTest, setSelectedTest] = useState<string | null>(null);
 
+    const { predict, result: predictionResult, loading: predicting, error: predictionError } = usePrediction();
+
     const handleStudentInfoSubmit = (data: StudentInfoData) => {
         setStudentInfo(data);
         setCurrentStep('al-results');
@@ -43,7 +45,7 @@ export default function UGCCourseSelectorPage() {
         setCurrentQuizQuestion(1);
     };
 
-    const handleQuizAnswer = (answer: string | number) => {
+    const handleQuizAnswer = async (answer: string | number) => {
         const newAnswers = [...quizAnswers];
         newAnswers[currentQuizQuestion - 1] = {
             questionId: quizQuestions[currentQuizQuestion - 1].id,
@@ -54,11 +56,59 @@ export default function UGCCourseSelectorPage() {
         if (currentQuizQuestion < 10) {
             setCurrentQuizQuestion(prev => prev + 1);
         } else {
-            // All quiz questions answered, generate recommendations
             if (alResults && newAnswers.length === 10) {
                 const generatedRecommendations = calculateRecommendations(alResults, newAnswers);
                 setRecommendations(generatedRecommendations);
                 setCurrentStep('recommendations');
+
+                if (generatedRecommendations.length > 0 && studentInfo) {
+                    const topCourse = generatedRecommendations[0];
+
+                    // ── Map ALResultsData fields correctly ───────────────
+                    // subjects is an array: [{ name, code, grade }, ...]
+                    const s = alResults.subjects;
+                    const ol = alResults.olResults;
+                    // olResults: [0]=Sinhala/Tamil, [1]=English, [2]=Maths, [3]=Science
+
+                    await predict({
+                        Year: studentInfo.examYear,
+                        Stream: alResults.stream,
+
+                        Subject_1: s[0]?.name ?? '',
+                        Grade_1:   s[0]?.grade ?? '',
+                        Subject_2: s[1]?.name ?? '',
+                        Grade_2:   s[1]?.grade ?? '',
+                        Subject_3: s[2]?.name ?? '',
+                        Grade_3:   s[2]?.grade ?? '',
+
+                        Z_Score:     alResults.zScore ?? 0,
+                        Island_Rank: alResults.islandRank ?? 0,
+                        District:    studentInfo.district,
+                        Gen_Test:    0, // not collected in the form
+
+                        'Sinhala/Tamil': ol[0]?.grade ?? '', // Sinhala/Tamil language grade
+                        English:         ol[1]?.grade ?? '',
+                        Maths:           ol[2]?.grade ?? '',
+                        Science:         ol[3]?.grade ?? '',
+
+                        // Quiz has 10 questions mapped to q1–q10
+                        // q11 and q12 are not in the quiz, default to 0
+                        q1_science_tech:    newAnswers[0]?.answer ?? 0,
+                        q2_healthcare:      newAnswers[1]?.answer ?? 0,
+                        q3_design:          newAnswers[2]?.answer ?? 0,
+                        q4_data:            newAnswers[3]?.answer ?? 0,
+                        q5_business:        newAnswers[4]?.answer ?? 0,
+                        q6_arts_culture:    newAnswers[5]?.answer ?? 0,
+                        q7_nature_env:      newAnswers[6]?.answer ?? 0,
+                        q8_hands_on:        newAnswers[7]?.answer ?? 0,
+                        q9_innovation:      newAnswers[8]?.answer ?? 0,
+                        q10_people_social:  newAnswers[9]?.answer ?? 0,
+                        q11_urban_corporate: 0,
+                        q12_flexible_path:   0,
+
+                        Course: topCourse.courseName,
+                    });
+                }
             }
         }
     };
@@ -95,25 +145,20 @@ export default function UGCCourseSelectorPage() {
 
     const getStepIndex = (): number => {
         switch (currentStep) {
-            case 'student-info': return 0;
-            case 'al-results': return 1;
-            case 'career-quiz': return 2;
+            case 'student-info':   return 0;
+            case 'al-results':     return 1;
+            case 'career-quiz':    return 2;
             case 'recommendations': return 3;
             case 'aptitude-list':
-            case 'aptitude-quiz': return 4;
+            case 'aptitude-quiz':  return 4;
             default: return 0;
         }
     };
 
     const handleStepNav = (index: number) => {
-        // Only allow unlocking steps if previous steps are complete
         if (index === 0) setCurrentStep('student-info');
         if (index === 1 && studentInfo) setCurrentStep('al-results');
-        if (index === 2 && alResults) {
-            setCurrentStep('career-quiz');
-            // If returning to quiz, start from question 1 or keep last state?
-            // Usually simpler to just show the quiz.
-        }
+        if (index === 2 && alResults) setCurrentStep('career-quiz');
         if (index === 3 && recommendations.length > 0) setCurrentStep('recommendations');
         if (index === 4 && selectedCourse) setCurrentStep('aptitude-list');
     };
@@ -140,7 +185,6 @@ export default function UGCCourseSelectorPage() {
                     />
                 </div>
 
-                {/* Step 1: Student Information */}
                 {currentStep === 'student-info' && (
                     <StudentInfoForm
                         onSubmit={handleStudentInfoSubmit}
@@ -148,7 +192,6 @@ export default function UGCCourseSelectorPage() {
                     />
                 )}
 
-                {/* Step 2: A/L Results */}
                 {currentStep === 'al-results' && (
                     <ALResultsForm
                         onSubmit={handleALResultsSubmit}
@@ -156,26 +199,28 @@ export default function UGCCourseSelectorPage() {
                     />
                 )}
 
-                {/* Step 3: Career Quiz */}
                 {currentStep === 'career-quiz' && (
                     <CareerQuiz
                         questionNumber={currentQuizQuestion}
                         totalQuestions={10}
                         onNext={handleQuizAnswer}
                         onPrevious={handleQuizPrevious}
-                        currentAnswer={quizAnswers.find(a => a.questionId === quizQuestions[currentQuizQuestion - 1].id)?.answer}
+                        currentAnswer={quizAnswers.find(
+                            a => a.questionId === quizQuestions[currentQuizQuestion - 1].id
+                        )?.answer}
                     />
                 )}
 
-                {/* Step 4: Course Recommendations */}
                 {currentStep === 'recommendations' && (
                     <CourseRecommendations
                         courses={recommendations}
                         onSelectCourse={handleSelectCourse}
+                        predicting={predicting}
+                        predictionResult={predictionResult}
+                        predictionError={predictionError}
                     />
                 )}
 
-                {/* Step 5: Aptitude Test List */}
                 {currentStep === 'aptitude-list' && selectedCourse && (
                     <AptitudeTestList
                         course={selectedCourse}
@@ -184,7 +229,6 @@ export default function UGCCourseSelectorPage() {
                     />
                 )}
 
-                {/* Step 6: Aptitude Test Quiz */}
                 {currentStep === 'aptitude-quiz' && selectedCourse && selectedTest && (
                     <AptitudeTestQuiz
                         course={selectedCourse}

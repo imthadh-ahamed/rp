@@ -74,7 +74,7 @@ const aptitudeQuestions: Record<string, AptitudeQuestion[]> = {
             type: 'multiple-choice'
         },
         {
-            id: 3,
+            id: 3, 
             question: 'A rectangle has a length of 10 cm and width of 5 cm. What is its area?',
             options: ['15 cm²', '30 cm²', '50 cm²', '75 cm²'],
             correctAnswer: '50 cm²',
