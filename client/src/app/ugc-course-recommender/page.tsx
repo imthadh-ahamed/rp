@@ -16,7 +16,8 @@ import { StudentInfoData } from '@/components/ugc-course-recommender/StudentInfo
 import { ALResultsData } from '@/components/ugc-course-recommender/ALResultsForm';
 import { CareerQuizAnswer, quizQuestions } from '@/components/ugc-course-recommender/CareerQuiz';
 import { calculateRecommendations, RecommendedCourse } from '@/utils/recommendationEngine';
-import { usePrediction } from '@/hooks/usePredictions';
+import { useCombinedPrediction } from '@/hooks/usePredictions';
+
 type Step = 'student-info' | 'al-results' | 'career-quiz' | 'recommendations' | 'aptitude-list' | 'aptitude-quiz';
 
 const steps = ['Student Info', 'A/L Results', 'Career Quiz', 'Recommendations', 'Aptitude Tests'];
@@ -31,7 +32,12 @@ export default function UGCCourseSelectorPage() {
     const [selectedCourse, setSelectedCourse] = useState<RecommendedCourse | null>(null);
     const [selectedTest, setSelectedTest] = useState<string | null>(null);
 
-    const { predict, result: predictionResult, loading: predicting, error: predictionError } = usePrediction();
+    const {
+        predict,
+        result: predictionResult,
+        loading: predicting,
+        error: predictionError,
+    } = useCombinedPrediction();
 
     const handleStudentInfoSubmit = (data: StudentInfoData) => {
         setStudentInfo(data);
@@ -49,7 +55,7 @@ export default function UGCCourseSelectorPage() {
         const newAnswers = [...quizAnswers];
         newAnswers[currentQuizQuestion - 1] = {
             questionId: quizQuestions[currentQuizQuestion - 1].id,
-            answer: Number(answer)
+            answer: Number(answer),
         };
         setQuizAnswers(newAnswers);
 
@@ -61,52 +67,47 @@ export default function UGCCourseSelectorPage() {
                 setRecommendations(generatedRecommendations);
                 setCurrentStep('recommendations');
 
-                if (generatedRecommendations.length > 0 && studentInfo) {
-                    const topCourse = generatedRecommendations[0];
-
-                    // ── Map ALResultsData fields correctly ───────────────
-                    // subjects is an array: [{ name, code, grade }, ...]
+                if (studentInfo) {
                     const s = alResults.subjects;
                     const ol = alResults.olResults;
-                    // olResults: [0]=Sinhala/Tamil, [1]=English, [2]=Maths, [3]=Science
 
+                    // ── Fire combined prediction: course model picks top N courses,
+                    //    university model ranks admission chances for each ──────────
                     await predict({
-                        Year: studentInfo.examYear,
-                        Stream: alResults.stream,
+                        Year:        studentInfo.examYear,
+                        Stream:      alResults.stream,
 
-                        Subject_1: s[0]?.name ?? '',
+                        Subject_1: s[0]?.name  ?? '',
                         Grade_1:   s[0]?.grade ?? '',
-                        Subject_2: s[1]?.name ?? '',
+                        Subject_2: s[1]?.name  ?? '',
                         Grade_2:   s[1]?.grade ?? '',
-                        Subject_3: s[2]?.name ?? '',
+                        Subject_3: s[2]?.name  ?? '',
                         Grade_3:   s[2]?.grade ?? '',
 
-                        Z_Score:     alResults.zScore ?? 0,
+                        Z_Score:     alResults.zScore     ?? 0,
                         Island_Rank: alResults.islandRank ?? 0,
                         District:    studentInfo.district,
-                        Gen_Test:    0, // not collected in the form
+                        Gen_Test:    0,
 
-                        'Sinhala/Tamil': ol[0]?.grade ?? '', // Sinhala/Tamil language grade
+                        'Sinhala/Tamil': ol[0]?.grade ?? '',
                         English:         ol[1]?.grade ?? '',
                         Maths:           ol[2]?.grade ?? '',
                         Science:         ol[3]?.grade ?? '',
 
-                        // Quiz has 10 questions mapped to q1–q10
-                        // q11 and q12 are not in the quiz, default to 0
-                        q1_science_tech:    newAnswers[0]?.answer ?? 0,
-                        q2_healthcare:      newAnswers[1]?.answer ?? 0,
-                        q3_design:          newAnswers[2]?.answer ?? 0,
-                        q4_data:            newAnswers[3]?.answer ?? 0,
-                        q5_business:        newAnswers[4]?.answer ?? 0,
-                        q6_arts_culture:    newAnswers[5]?.answer ?? 0,
-                        q7_nature_env:      newAnswers[6]?.answer ?? 0,
-                        q8_hands_on:        newAnswers[7]?.answer ?? 0,
-                        q9_innovation:      newAnswers[8]?.answer ?? 0,
-                        q10_people_social:  newAnswers[9]?.answer ?? 0,
+                        q1_science_tech:     newAnswers[0]?.answer ?? 0,
+                        q2_healthcare:       newAnswers[1]?.answer ?? 0,
+                        q3_design:           newAnswers[2]?.answer ?? 0,
+                        q4_data:             newAnswers[3]?.answer ?? 0,
+                        q5_business:         newAnswers[4]?.answer ?? 0,
+                        q6_arts_culture:     newAnswers[5]?.answer ?? 0,
+                        q7_nature_env:       newAnswers[6]?.answer ?? 0,
+                        q8_hands_on:         newAnswers[7]?.answer ?? 0,
+                        q9_innovation:       newAnswers[8]?.answer ?? 0,
+                        q10_people_social:   newAnswers[9]?.answer ?? 0,
                         q11_urban_corporate: 0,
                         q12_flexible_path:   0,
 
-                        Course: topCourse.courseName,
+                        top_n_courses: 10, // show top 5 AI-recommended courses
                     });
                 }
             }
@@ -145,12 +146,12 @@ export default function UGCCourseSelectorPage() {
 
     const getStepIndex = (): number => {
         switch (currentStep) {
-            case 'student-info':   return 0;
-            case 'al-results':     return 1;
-            case 'career-quiz':    return 2;
+            case 'student-info':    return 0;
+            case 'al-results':      return 1;
+            case 'career-quiz':     return 2;
             case 'recommendations': return 3;
             case 'aptitude-list':
-            case 'aptitude-quiz':  return 4;
+            case 'aptitude-quiz':   return 4;
             default: return 0;
         }
     };
@@ -186,17 +187,11 @@ export default function UGCCourseSelectorPage() {
                 </div>
 
                 {currentStep === 'student-info' && (
-                    <StudentInfoForm
-                        onSubmit={handleStudentInfoSubmit}
-                        initialData={studentInfo}
-                    />
+                    <StudentInfoForm onSubmit={handleStudentInfoSubmit} initialData={studentInfo} />
                 )}
 
                 {currentStep === 'al-results' && (
-                    <ALResultsForm
-                        onSubmit={handleALResultsSubmit}
-                        initialData={alResults}
-                    />
+                    <ALResultsForm onSubmit={handleALResultsSubmit} initialData={alResults} />
                 )}
 
                 {currentStep === 'career-quiz' && (

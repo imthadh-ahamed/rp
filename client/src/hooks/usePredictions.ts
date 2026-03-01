@@ -1,106 +1,181 @@
-import { useState } from 'react';
+// hooks/usePrediction.ts
+import { useState, useCallback } from "react";
+import {
+  getCombinedPredictions,
+  getCourseRecommendations,
+  getMultiCoursePredictions,
+  checkApiHealth,
+  type CombinedPredictionInput,
+  type CombinedPredictionResult,
+  type CourseWithUniversities,
+  type StudentProfile,
+  type CourseRecommendationResult,
+  type MultiCoursePredictionInput,
+  type MultiCoursePredictionResult,
+} from "@/lib/predict";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-export interface PredictionInput {
-  Year: number;
-  Stream: string;
-  Subject_1: string; Grade_1: string;
-  Subject_2: string; Grade_2: string;
-  Subject_3: string; Grade_3: string;
-  Z_Score: number;
-  Island_Rank: number;
-  District: string;
-  Gen_Test: number;
-  'Sinhala/Tamil': string;
-  English: string;
-  Maths: string;
-  Science: string;
-  q1_science_tech: number;
-  q2_healthcare: number;
-  q3_design: number;
-  q4_data: number;
-  q5_business: number;
-  q6_arts_culture: number;
-  q7_nature_env: number;
-  q8_hands_on: number;
-  q9_innovation: number;
-  q10_people_social: number;
-  q11_urban_corporate: number;
-  q12_flexible_path: number;
-  Course: string;
-}
+// ─── Combined Hook (primary — course model + university model) ────────────────
+//
+// Usage:
+//   const { predict, result, loading, error } = useCombinedPrediction();
+//   await predict({ ...studentProfile, top_n_courses: 5 });
+//
+// result.results[i] contains:
+//   - course name, course_score, university, uni_code, aptitude_required
+//   - top_university_predictions: [{ university, probability }]
 
-export interface PredictionResult {
-  predicted_university: string;
-  course: string;
-  input_summary: {
-    stream: string;
-    z_score: number;
-    island_rank: number;
-    district: string;
-  };
-}
-
-// ─── Hook ─────────────────────────────────────────────────────────────────────
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
-
-export function usePrediction() {
-  const [result, setResult] = useState<PredictionResult | null>(null);
+export function useCombinedPrediction() {
+  const [result, setResult] = useState<CombinedPredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const predict = async (input: PredictionInput): Promise<PredictionResult | null> => {
-    setLoading(true);
-    setError(null);
-    setResult(null);
+  const predict = useCallback(
+    async (input: CombinedPredictionInput): Promise<CombinedPredictionResult | null> => {
+      setLoading(true);
+      setError(null);
+      setResult(null);
 
-    // Log payload so we can catch field mismatches early
-    console.log('📤 Prediction payload:', JSON.stringify(input, null, 2));
+      console.log("📤 Combined prediction payload:", JSON.stringify(input, null, 2));
 
-    try {
-      const res = await fetch(`${API_BASE}/predict`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input),
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        console.error('❌ API error response:', err);
-
-        // FastAPI 422 returns { detail: [ { loc, msg, type }, ... ] }
-        // FastAPI 500 returns { detail: "string" }
-        let message: string;
-        if (typeof err.detail === 'string') {
-          message = err.detail;
-        } else if (Array.isArray(err.detail)) {
-          // Extract human-readable field errors
-          message = err.detail
-            .map((e: any) => `${e.loc?.slice(1).join(' → ')}: ${e.msg}`)
-            .join(' | ');
-        } else {
-          message = 'Prediction failed';
-        }
-
-        throw new Error(message);
+      try {
+        const data = await getCombinedPredictions(input);
+        console.log("✅ Combined result:", data);
+        setResult(data);
+        return data;
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Something went wrong";
+        console.error("❌ Combined prediction error:", message);
+        setError(message);
+        return null;
+      } finally {
+        setLoading(false);
       }
+    },
+    []
+  );
 
-      const data: PredictionResult = await res.json();
-      console.log('✅ Prediction result:', data);
-      setResult(data);
-      return data;
-    } catch (err: any) {
-      setError(err.message ?? 'Something went wrong');
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const reset = () => {
+  const reset = useCallback(() => {
     setResult(null);
     setError(null);
-  };
+  }, []);
 
-  return { predict, result, loading, error, reset };
+  // ── Derived helpers ──────────────────────────────────────────────────────
+
+  /** All results that have at least one university prediction */
+  const resultsWithUniversities: CourseWithUniversities[] =
+    result?.results.filter((r) => r.top_university_predictions.length > 0) ?? [];
+
+  /** Results where university prediction was empty (course model worked, uni model didn't) */
+  const resultsWithoutUniversities: CourseWithUniversities[] =
+    result?.results.filter((r) => r.top_university_predictions.length === 0) ?? [];
+
+  /** The single top recommended course */
+  const topCourse: CourseWithUniversities | null = result?.results[0] ?? null;
+
+  return {
+    predict,
+    reset,
+    result,
+    loading,
+    error,
+    resultsWithUniversities,
+    resultsWithoutUniversities,
+    topCourse,
+  };
+}
+
+// ─── Course-only Hook ─────────────────────────────────────────────────────────
+//
+// Use when you only need course recommendations without university probabilities.
+
+export function useCourseRecommendations() {
+  const [result, setResult] = useState<CourseRecommendationResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const recommend = useCallback(
+    async (profile: StudentProfile, topN = 10): Promise<CourseRecommendationResult | null> => {
+      setLoading(true);
+      setError(null);
+      setResult(null);
+
+      try {
+        const data = await getCourseRecommendations(profile, topN);
+        setResult(data);
+        return data;
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Something went wrong";
+        setError(message);
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  const reset = useCallback(() => {
+    setResult(null);
+    setError(null);
+  }, []);
+
+  return { recommend, result, loading, error, reset };
+}
+
+// ─── Manual Multi-Course Hook ─────────────────────────────────────────────────
+//
+// Use when the user manually picks courses and you want university predictions.
+
+export function useMultiCoursePrediction() {
+  const [result, setResult] = useState<MultiCoursePredictionResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const predict = useCallback(
+    async (input: MultiCoursePredictionInput): Promise<MultiCoursePredictionResult | null> => {
+      setLoading(true);
+      setError(null);
+      setResult(null);
+
+      try {
+        const data = await getMultiCoursePredictions(input);
+        setResult(data);
+        return data;
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Something went wrong";
+        setError(message);
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  const reset = useCallback(() => {
+    setResult(null);
+    setError(null);
+  }, []);
+
+  const successfulPredictions =
+    result?.predictions.filter((p) => p.error === null && p.top_predictions !== null) ?? [];
+
+  const failedCourses =
+    result?.predictions.filter((p) => p.error !== null) ?? [];
+
+  return { predict, result, loading, error, reset, successfulPredictions, failedCourses };
+}
+
+// ─── Health Hook ──────────────────────────────────────────────────────────────
+
+export function useApiHealth() {
+  const [healthy, setHealthy] = useState<boolean | null>(null);
+
+  const check = useCallback(async () => {
+    const ok = await checkApiHealth();
+    setHealthy(ok);
+    return ok;
+  }, []);
+
+  return { healthy, check };
 }

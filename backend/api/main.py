@@ -11,7 +11,7 @@ import traceback
 
 app = FastAPI(title="UGC Admission Forecasting API", version="1.0.0")
 
-# ─── CORS ───────────────────────────────────────────────────────────────────
+# ─── CORS ────────────────────────────────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
@@ -20,7 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ─── Load model & artifacts ──────────────────────────────────────────────────
+# ─── Load university prediction artifacts ────────────────────────────────────
 MODEL_DIR = Path(__file__).parent / "models"
 
 with open(MODEL_DIR / "ugc_admission_forecasting_pipeline.pkl", "rb") as f:
@@ -39,22 +39,39 @@ with open(MODEL_DIR / "feature_cols.pkl", "rb") as f:
     feature_cols = pickle.load(f)
 
 expected_features = loaded_model.feature_names_in_
-print("✅ Model expects these features:", list(expected_features))
-print("✅ Feature count:", len(expected_features))
-print("📏 Scaler trained on:", scaler.feature_names_in_)
+print("✅ University model expects:", list(expected_features))
 
-# ─── Column config ───────────────────────────────────────────────────────────
+# ─── Load course recommendation artifacts ────────────────────────────────────
+with open(MODEL_DIR / "course_prediction_model.pkl", "rb") as f:
+    course_model = pickle.load(f)
+
+with open(MODEL_DIR / "label_encoders_course.pkl", "rb") as f:
+    label_encoders_course = pickle.load(f)
+
+with open(MODEL_DIR / "scaler_course.pkl", "rb") as f:
+    scaler_course = pickle.load(f)
+
+with open(MODEL_DIR / "feature_cols_course.pkl", "rb") as f:
+    feature_cols_course = pickle.load(f)
+
+with open(MODEL_DIR / "course_attribute_map.pkl", "rb") as f:
+    course_attribute_map = pickle.load(f)
+
+print("✅ Course model loaded. Features:", feature_cols_course)
+
+# ─── Column config ────────────────────────────────────────────────────────────
 cat_cols = [
     "Stream", "Subject_1", "Grade_1", "Subject_2", "Grade_2",
     "Subject_3", "Grade_3", "District", "Sinhala/Tamil",
     "English", "Maths", "Science", "Course"
 ]
-
 num_cols = ["Z_Score", "Island_Rank", "Gen_Test"]
 
 
-# ─── Request / Response Schemas ──────────────────────────────────────────────
-class PredictionRequest(BaseModel):
+# ─── Schemas ──────────────────────────────────────────────────────────────────
+
+class StudentProfileRequest(BaseModel):
+    """Shared student profile — used by both models."""
     Year: float = Field(..., example=2024.0)
     Stream: str = Field(..., example="Physical Science")
     Subject_1: str = Field(..., example="Physics")
@@ -83,15 +100,19 @@ class PredictionRequest(BaseModel):
     q10_people_social: float = Field(..., example=2.0)
     q11_urban_corporate: float = Field(..., example=4.0)
     q12_flexible_path: float = Field(..., example=5.0)
-    Course: str = Field(..., example="Computer Science")
 
     class Config:
         populate_by_name = True
 
 
+class PredictionRequest(StudentProfileRequest):
+    """University prediction — extends profile with a specific Course."""
+    Course: str = Field(..., example="Computer Science")
+
+
 class UniversityPrediction(BaseModel):
     university: str
-    probability: float  # percentage e.g. 34.5
+    probability: float
 
 
 class PredictionResponse(BaseModel):
@@ -100,8 +121,43 @@ class PredictionResponse(BaseModel):
     input_summary: dict
 
 
-# ─── Preprocessing ───────────────────────────────────────────────────────────
-def preprocess(req: PredictionRequest) -> pd.DataFrame:
+class CourseRecommendation(BaseModel):
+    rank: int
+    course: str
+    score: float
+    university: str
+    uni_code: str
+    aptitude_required: str
+
+
+class CourseRecommendationResponse(BaseModel):
+    recommendations: list[CourseRecommendation]
+    input_summary: dict
+
+
+class CombinedPredictionRequest(StudentProfileRequest):
+    """Combined request — course model picks courses, university model ranks unis."""
+    top_n_courses: int = Field(default=5, ge=1, le=20, example=5)
+
+
+class CourseWithUniversities(BaseModel):
+    rank: int
+    course: str
+    course_score: float
+    university: str
+    uni_code: str
+    aptitude_required: str
+    top_university_predictions: list[UniversityPrediction]
+
+
+class CombinedPredictionResponse(BaseModel):
+    results: list[CourseWithUniversities]
+    input_summary: dict
+
+
+# ─── Preprocessing: University model ─────────────────────────────────────────
+
+def preprocess_university(req: PredictionRequest) -> pd.DataFrame:
     raw = req.model_dump(by_alias=True)
     df = pd.DataFrame([raw])
 
@@ -126,16 +182,66 @@ def preprocess(req: PredictionRequest) -> pd.DataFrame:
     df["Prophet_Z"] = prophet_z
     df["Z_Score"] = prophet_z
 
-    missing = [c for c in expected_features if c not in df.columns]
-    extra   = [c for c in df.columns if c not in list(expected_features)]
-    if missing: print("⚠️  Missing from df:", missing)
-    if extra:   print("➕ Extra in df (will be dropped):", extra)
-
     df = df[[c for c in expected_features if c in df.columns]]
     return df
 
 
-# ─── Routes ──────────────────────────────────────────────────────────────────
+# ─── Preprocessing: Course model ─────────────────────────────────────────────
+
+def preprocess_course(req: StudentProfileRequest) -> pd.DataFrame:
+    raw = req.model_dump(by_alias=True)
+    df = pd.DataFrame([raw])
+
+    for col, le in label_encoders_course.items():
+        if col in df.columns and pd.api.types.is_string_dtype(df[col].dtype):
+            try:
+                df[col] = le.transform(df[col])
+            except ValueError:
+                print(f"⚠️  Unseen label in course model col '{col}', defaulting to 0")
+                df[col] = 0
+
+    num_to_scale = [c for c in num_cols if c in df.columns]
+    if num_to_scale:
+        df[num_to_scale] = scaler_course.transform(df[num_to_scale])
+
+    df = df[feature_cols_course]
+    return df
+
+
+def run_course_model(req: StudentProfileRequest, top_n: int) -> list[CourseRecommendation]:
+    processed = preprocess_course(req)
+    probas = course_model.predict_proba(processed)[0]
+    sorted_indices = np.argsort(probas)[::-1]
+
+    results = []
+    for rank, encoded_id in enumerate(sorted_indices[:top_n], start=1):
+        score = probas[encoded_id]
+        attrs = course_attribute_map[course_attribute_map["Course"] == encoded_id]
+
+        decoded_course = label_encoders_course["Course"].inverse_transform([encoded_id])[0]
+
+        if not attrs.empty:
+            row = attrs.iloc[0]
+            university  = label_encoders_course["University"].inverse_transform([row["University"]])[0]
+            uni_code    = label_encoders_course["Uni Code"].inverse_transform([row["Uni Code"]])[0]
+            aptitude    = label_encoders_course["aptitude_required"].inverse_transform([row["aptitude_required"]])[0]
+        else:
+            university = uni_code = aptitude = "Unknown"
+
+        results.append(CourseRecommendation(
+            rank=rank,
+            course=decoded_course,
+            score=round(float(score), 4),
+            university=university,
+            uni_code=uni_code,
+            aptitude_required=aptitude,
+        ))
+
+    return results
+
+
+# ─── Routes ───────────────────────────────────────────────────────────────────
+
 @app.get("/")
 def root():
     return {"status": "UGC Admission Forecasting API is running"}
@@ -149,39 +255,45 @@ def health():
 @app.get("/debug/features")
 def debug_features():
     return {
-        "model_expects": list(expected_features),
-        "scaler_cols": list(scaler.feature_names_in_),
-        "count": len(expected_features)
+        "university_model_features": list(expected_features),
+        "course_model_features": list(feature_cols_course),
     }
 
 
+@app.get("/debug/model-info")
+def debug_model_info():
+    return {
+        "university_model": {
+            "type": str(type(loaded_model)),
+            "classes": [str(c) for c in loaded_model.classes_],
+            "label_encoder_keys": list(label_encoders.keys()),
+        },
+        "course_model": {
+            "type": str(type(course_model)),
+            "label_encoder_keys": list(label_encoders_course.keys()),
+        },
+    }
+
+
+# ── University prediction (single) ────────────────────────────────────────────
 @app.post("/predict", response_model=PredictionResponse)
 def predict(req: PredictionRequest):
     try:
-        processed = preprocess(req)
+        processed = preprocess_university(req)
         target_le = label_encoders["University Selected"]
-
-        # predict_proba returns probabilities for all classes
         probas = loaded_model.predict_proba(processed)[0]
+        scored = sorted(zip(loaded_model.classes_, probas), key=lambda x: x[1], reverse=True)
 
-        # Pair each university with its probability, sort descending
-        scored = sorted(
-            zip(target_le.classes_, probas),
-            key=lambda x: x[1],
-            reverse=True
-        )
-
-        top_20 = [
+        top_predictions = [
             UniversityPrediction(
-                university=uni,
-                probability=round(float(prob) * 100, 2)
+                university=str(target_le.inverse_transform([int(cls)])[0]),
+                probability=round(float(prob) * 100, 2),
             )
-            for uni, prob in scored[:20]
-            if prob > 0  # skip zero-probability entries
+            for cls, prob in scored[:10]
         ]
 
         return PredictionResponse(
-            top_predictions=top_20,
+            top_predictions=top_predictions,
             course=req.Course,
             input_summary={
                 "stream": req.Stream,
@@ -191,27 +303,116 @@ def predict(req: PredictionRequest):
             },
         )
     except Exception as e:
-        print(f"❌ ERROR in /predict: {e}")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ── University prediction (batch) ─────────────────────────────────────────────
 @app.post("/predict/batch")
 def predict_batch(requests: list[PredictionRequest]):
     results = []
     for req in requests:
         try:
-            processed = preprocess(req)
+            processed = preprocess_university(req)
             target_le = label_encoders["University Selected"]
             probas = loaded_model.predict_proba(processed)[0]
-            scored = sorted(zip(target_le.classes_, probas), key=lambda x: x[1], reverse=True)
-            top_5 = [{"university": u, "probability": round(float(p) * 100, 2)} for u, p in scored[:5]]
+            scored = sorted(zip(loaded_model.classes_, probas), key=lambda x: x[1], reverse=True)
+            top_5 = [
+                {
+                    "university": str(target_le.inverse_transform([int(cls)])[0]),
+                    "probability": round(float(prob) * 100, 2),
+                }
+                for cls, prob in scored[:10]
+            ]
             results.append({"course": req.Course, "top_predictions": top_5, "error": None})
         except Exception as e:
-            print(f"❌ ERROR in /predict/batch for {req.Course}: {e}")
             traceback.print_exc()
             results.append({"course": req.Course, "top_predictions": None, "error": str(e)})
     return {"predictions": results}
+
+
+# ── Course recommendation ──────────────────────────────────────────────────────
+@app.post("/predict/courses", response_model=CourseRecommendationResponse)
+def predict_courses(req: StudentProfileRequest, top_n: int = 10):
+    try:
+        recommendations = run_course_model(req, top_n)
+        return CourseRecommendationResponse(
+            recommendations=recommendations,
+            input_summary={
+                "stream": req.Stream,
+                "z_score": req.Z_Score,
+                "island_rank": req.Island_Rank,
+                "district": req.District,
+            },
+        )
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Combined: course recommendations + university probabilities ───────────────
+@app.post("/predict/combined", response_model=CombinedPredictionResponse)
+def predict_combined(req: CombinedPredictionRequest):
+    """
+    Single endpoint that:
+    1. Runs the course model to find the top N best-fit courses.
+    2. Runs the university model for each of those courses.
+    Returns both course scores and university admission probabilities together.
+    """
+    try:
+        # Step 1 — course recommendations
+        course_recs = run_course_model(req, req.top_n_courses)
+
+        # Step 2 — university predictions for each recommended course
+        target_le = label_encoders["University Selected"]
+        combined_results = []
+
+        for rec in course_recs:
+            # Build a full PredictionRequest by injecting the course name
+            uni_req = PredictionRequest(
+                **req.model_dump(by_alias=True),
+                Course=rec.course,
+            )
+
+            try:
+                processed = preprocess_university(uni_req)
+                probas = loaded_model.predict_proba(processed)[0]
+                scored = sorted(
+                    zip(loaded_model.classes_, probas), key=lambda x: x[1], reverse=True
+                )
+                top_unis = [
+                    UniversityPrediction(
+                        university=str(target_le.inverse_transform([int(cls)])[0]),
+                        probability=round(float(prob) * 100, 2),
+                    )
+                    for cls, prob in scored[:5]
+                ]
+            except Exception as uni_err:
+                print(f"⚠️  University prediction failed for '{rec.course}': {uni_err}")
+                top_unis = []
+
+            combined_results.append(CourseWithUniversities(
+                rank=rec.rank,
+                course=rec.course,
+                course_score=rec.score,
+                university=rec.university,
+                uni_code=rec.uni_code,
+                aptitude_required=rec.aptitude_required,
+                top_university_predictions=top_unis,
+            ))
+
+        return CombinedPredictionResponse(
+            results=combined_results,
+            input_summary={
+                "stream": req.Stream,
+                "z_score": req.Z_Score,
+                "island_rank": req.Island_Rank,
+                "district": req.District,
+            },
+        )
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":

@@ -1,16 +1,16 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { BookOpen, AlertCircle, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BookOpen, AlertCircle, Loader2, ChevronDown, ChevronUp, GraduationCap } from 'lucide-react';
+import { useState } from 'react';
 import { RecommendedCourse } from '@/utils/recommendationEngine';
-import { PredictionResult } from '@/hooks/usePredictions';
-
+import { CombinedPredictionResult } from '@/lib/predict';
 interface CourseRecommendationsProps {
     courses: RecommendedCourse[];
     onSelectCourse: (course: RecommendedCourse) => void;
     isLoading?: boolean;
     predicting?: boolean;
-    predictionResult?: PredictionResult | null;
+    predictionResult?: CombinedPredictionResult | null;
     predictionError?: string | null;
 }
 
@@ -22,18 +22,22 @@ export default function CourseRecommendations({
     predictionResult = null,
     predictionError = null,
 }: CourseRecommendationsProps) {
+
+    // Track which AI course cards are expanded
+    const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
+
     if (isLoading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[400px]">
                 <Loader2 className="w-12 h-12 text-cyan-600 animate-spin mb-4" />
-                <p className="text-gray-600 font-medium">Analyzing your profile and generating recommendations...</p>
+                <p className="text-gray-600 font-medium">Analyzing your profile...</p>
             </div>
         );
     }
 
-    const highlyRecommended = courses.filter(c => c.category === 'highly-recommended');
-    const moderatelyRecommended = courses.filter(c => c.category === 'moderately-recommended');
-    const conditionallyEligible = courses.filter(c => c.category === 'conditionally-eligible');
+    const highlyRecommended      = courses.filter(c => c.category === 'highly-recommended');
+    const moderatelyRecommended  = courses.filter(c => c.category === 'moderately-recommended');
+    const conditionallyEligible  = courses.filter(c => c.category === 'conditionally-eligible');
 
     if (courses.length === 0) {
         return (
@@ -49,6 +53,178 @@ export default function CourseRecommendations({
         );
     }
 
+    // ── Rank badge colour ──────────────────────────────────────────────────────
+    const rankColor = (i: number) =>
+        i === 0 ? 'bg-green-500'
+        : i === 1 ? 'bg-cyan-500'
+        : i === 2 ? 'bg-blue-400'
+        : 'bg-gray-400';
+
+    const barColor = (i: number) =>
+        i === 0 ? 'from-green-400 to-green-600'
+        : i === 1 ? 'from-cyan-400 to-cyan-600'
+        : i === 2 ? 'from-blue-400 to-blue-500'
+        : 'from-gray-300 to-gray-400';
+
+    // ── AI Results Section ─────────────────────────────────────────────────────
+    const AISection = () => {
+        if (predicting) {
+            return (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-sm"
+                >
+                    <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                    <span>AI is analysing your profile and predicting top courses + universities...</span>
+                </motion.div>
+            );
+        }
+
+        if (predictionError) {
+            return (
+                <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-3 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm"
+                >
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>AI prediction unavailable: {predictionError}</span>
+                </motion.div>
+            );
+        }
+
+        if (!predictionResult) return null;
+
+        const { results, input_summary } = predictionResult;
+
+        return (
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="rounded-2xl bg-gradient-to-br from-green-50 to-teal-50 border border-green-200 overflow-hidden"
+            >
+                {/* ── Header ── */}
+                <div className="px-6 pt-6 pb-4 border-b border-green-100">
+                    <div className="flex items-center gap-2 mb-1">
+                        <GraduationCap className="w-5 h-5 text-green-600" />
+                        <p className="text-xs font-semibold text-green-700 uppercase tracking-wide">
+                            AI Course & University Predictions
+                        </p>
+                    </div>
+                    <p className="text-sm text-gray-500">
+                        Based on your academic profile and career interests
+                    </p>
+
+                    {/* Input summary pills */}
+                    <div className="flex flex-wrap gap-2 mt-3">
+                        {[
+                            { label: 'Stream',       value: input_summary.stream },
+                            { label: 'Z-Score',      value: input_summary.z_score },
+                            { label: 'Island Rank',  value: input_summary.island_rank },
+                            { label: 'District',     value: input_summary.district },
+                        ].map(({ label, value }) => (
+                            <span key={label} className="text-xs bg-white border border-green-200 rounded-full px-3 py-1 text-gray-600">
+                                <span className="font-semibold text-gray-800">{label}:</span> {value}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
+                {/* ── Course cards ── */}
+                <div className="divide-y divide-green-100">
+                    {results.map((item, idx) => (
+                        <div key={item.course} className="bg-white/60 hover:bg-white/90 transition-colors">
+
+                            {/* Course header row — always visible */}
+                            <button
+                                onClick={() => setExpandedIndex(expandedIndex === idx ? null : idx)}
+                                className="w-full flex items-center gap-4 px-6 py-4 text-left"
+                            >
+                                {/* Rank */}
+                                <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 ${rankColor(idx)}`}>
+                                    {item.rank}
+                                </span>
+
+                                {/* Course + university */}
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-semibold text-gray-900 truncate">{item.course}</p>
+                                    <p className="text-xs text-gray-500 truncate">{item.university} · {item.uni_code}</p>
+                                </div>
+
+                                {/* Score badge */}
+                                <span className="text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 rounded-full px-2 py-0.5 shrink-0">
+                                    Score: {(item.course_score * 100).toFixed(1)}%
+                                </span>
+
+                                {/* Aptitude badge */}
+                                {item.aptitude_required === 'Yes' && (
+                                    <span className="text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-2 py-0.5 shrink-0">
+                                        Aptitude
+                                    </span>
+                                )}
+
+                                {/* Expand toggle */}
+                                {expandedIndex === idx
+                                    ? <ChevronUp className="w-4 h-4 text-gray-400 shrink-0" />
+                                    : <ChevronDown className="w-4 h-4 text-gray-400 shrink-0" />
+                                }
+                            </button>
+
+                            {/* University predictions — expandable */}
+                            <AnimatePresence>
+                                {expandedIndex === idx && item.top_university_predictions.length > 0 && (
+                                    <motion.div
+                                        key="uni-list"
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.25 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="px-6 pb-5 space-y-2">
+                                            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+                                                University Admission Chances
+                                            </p>
+                                            {item.top_university_predictions.map((pred, uIdx) => (
+                                                <div key={pred.university} className="flex items-center gap-3 bg-white rounded-lg px-4 py-3 shadow-sm">
+                                                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 ${rankColor(uIdx)}`}>
+                                                        {uIdx + 1}
+                                                    </span>
+                                                    <span className="flex-1 text-sm font-medium text-gray-800 truncate">
+                                                        {pred.university}
+                                                    </span>
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+                                                            <motion.div
+                                                                initial={{ width: 0 }}
+                                                                animate={{ width: `${pred.probability}%` }}
+                                                                transition={{ duration: 0.5, delay: uIdx * 0.04 }}
+                                                                className={`h-full rounded-full bg-gradient-to-r ${barColor(uIdx)}`}
+                                                            />
+                                                        </div>
+                                                        <span className="text-sm font-bold text-gray-700 w-12 text-right">
+                                                            {pred.probability}%
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    ))}
+                </div>
+
+                <p className="text-xs text-gray-400 text-center py-3">
+                    Tap a course to expand university admission probabilities
+                </p>
+            </motion.div>
+        );
+    };
+
+    // ── Course card (existing rule-based recommendations) ─────────────────────
     const CourseCard = ({ course, category }: { course: RecommendedCourse; category: string }) => (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -123,69 +299,14 @@ export default function CourseRecommendations({
     return (
         <div className="space-y-12">
 
-            {/* ── AI Prediction Banner ─────────────────────────────────── */}
-            {predicting && (
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-3 p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-sm"
-                >
-                    <Loader2 className="w-4 h-4 animate-spin shrink-0" />
-                    <span>Getting AI university predictions...</span>
-                </motion.div>
-            )}
+            {/* ── AI Section (top N courses + universities) ── */}
+            <AISection />
 
-            {predictionError && !predicting && (
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-3 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm"
-                >
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    <span>AI prediction unavailable: {predictionError}</span>
-                </motion.div>
-            )}
-{predictionResult && !predicting && (
-    <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="p-6 rounded-xl bg-gradient-to-r from-green-50 to-teal-50 border border-green-200"
-    >
-        <p className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-3">
-            🎓 AI Recommended Course
-        </p>
-        <p className="text-2xl font-bold text-gray-900 mb-4">
-            {predictionResult.course}
-        </p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-                <p className="text-xs text-gray-500 mb-1">Stream</p>
-                <p className="text-sm font-semibold text-gray-800">{predictionResult.input_summary.stream}</p>
-            </div>
-            <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-                <p className="text-xs text-gray-500 mb-1">Z-Score</p>
-                <p className="text-sm font-semibold text-cyan-700">{predictionResult.input_summary.z_score}</p>
-            </div>
-            <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-                <p className="text-xs text-gray-500 mb-1">Island Rank</p>
-                <p className="text-sm font-semibold text-cyan-700">{predictionResult.input_summary.island_rank}</p>
-            </div>
-            <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-                <p className="text-xs text-gray-500 mb-1">District</p>
-                <p className="text-sm font-semibold text-gray-800">{predictionResult.input_summary.district}</p>
-            </div>
-        </div>
-        <p className="text-xs text-gray-400 mt-3">
-            Based on your academic profile and career interests
-        </p>
-    </motion.div>
-)}
-
-            {/* ── Highly Recommended ───────────────────────────────────── */}
+            {/* ── Highly Recommended ── */}
             {highlyRecommended.length > 0 && (
                 <div>
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-1 h-8 bg-green-500 rounded"></div>
+                        <div className="w-1 h-8 bg-green-500 rounded" />
                         <h2 className="text-2xl font-bold text-gray-900">Highly Recommended Courses</h2>
                         <span className="text-lg font-bold text-green-600">({highlyRecommended.length})</span>
                     </div>
@@ -197,11 +318,11 @@ export default function CourseRecommendations({
                 </div>
             )}
 
-            {/* ── Moderately Recommended ───────────────────────────────── */}
+            {/* ── Moderately Recommended ── */}
             {moderatelyRecommended.length > 0 && (
                 <div>
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-1 h-8 bg-amber-500 rounded"></div>
+                        <div className="w-1 h-8 bg-amber-500 rounded" />
                         <h2 className="text-2xl font-bold text-gray-900">Moderately Recommended Courses</h2>
                         <span className="text-lg font-bold text-amber-600">({moderatelyRecommended.length})</span>
                     </div>
@@ -213,11 +334,11 @@ export default function CourseRecommendations({
                 </div>
             )}
 
-            {/* ── Conditionally Eligible ────────────────────────────────── */}
+            {/* ── Conditionally Eligible ── */}
             {conditionallyEligible.length > 0 && (
                 <div>
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-1 h-8 bg-gray-500 rounded"></div>
+                        <div className="w-1 h-8 bg-gray-500 rounded" />
                         <h2 className="text-2xl font-bold text-gray-900">Conditionally Eligible Courses</h2>
                         <span className="text-lg font-bold text-gray-600">({conditionallyEligible.length})</span>
                     </div>
