@@ -199,3 +199,32 @@ export async function checkApiHealth(): Promise<boolean> {
     return false;
   }
 }
+
+// ─── Rule-Based Recommendation (/predict/rule-based) ─────────────────────────
+
+/**
+ * Rule-based course recommendation — no ML model.
+ * Uses stream eligibility, Z-score, island rank, and Q-score bias.
+ *
+ * @param profile  Full student profile
+ * @param topN     Number of results to return (1–30, default 10)
+ * @param diversity  Limit 2 courses per university (default true)
+ */
+export async function getRuleBasedRecommendations(
+  profile: StudentProfile,
+  topN = 10,
+  diversity = true
+): Promise<CourseRecommendationResult> {
+  return apiFetch<CourseRecommendationResult>(
+    `/predict/rule-based?top_n=${topN}&diversity=${diversity}`,
+    profile
+  );
+}
+
+/** Fetch the list of streams supported by the rule-based engine. */
+export async function getEligibleStreams(): Promise<string[]> {
+  const res = await fetch(`${API_BASE}/predict/rule-based/streams`);
+  if (!res.ok) throw new Error("Failed to fetch eligible streams");
+  const data = (await res.json()) as { streams: string[] };
+  return data.streams;
+}
