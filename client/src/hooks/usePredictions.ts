@@ -4,6 +4,7 @@ import {
   getCombinedPredictions,
   getCourseRecommendations,
   getMultiCoursePredictions,
+  getRuleBasedRecommendations,
   checkApiHealth,
   type CombinedPredictionInput,
   type CombinedPredictionResult,
@@ -164,6 +165,53 @@ export function useMultiCoursePrediction() {
     result?.predictions.filter((p) => p.error !== null) ?? [];
 
   return { predict, result, loading, error, reset, successfulPredictions, failedCourses };
+}
+
+// ─── Rule-Based Recommendation Hook ─────────────────────────────────────────
+//
+// Calls POST /predict/rule-based — no ML model required.
+// Usage:
+//   const { recommend, result, loading, error } = useRuleBasedRecommendation();
+//   await recommend(studentProfile, 10);
+
+export function useRuleBasedRecommendation() {
+  const [result, setResult] = useState<CourseRecommendationResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const recommend = useCallback(
+    async (
+      profile: StudentProfile,
+      topN = 10,
+      diversity = true
+    ): Promise<CourseRecommendationResult | null> => {
+      setLoading(true);
+      setError(null);
+      setResult(null);
+
+      try {
+        const data = await getRuleBasedRecommendations(profile, topN, diversity);
+        setResult(data);
+        return data;
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Something went wrong";
+        setError(message);
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  const reset = useCallback(() => {
+    setResult(null);
+    setError(null);
+  }, []);
+
+  const topCourse = result?.recommendations[0] ?? null;
+
+  return { recommend, result, loading, error, reset, topCourse };
 }
 
 // ─── Health Hook ──────────────────────────────────────────────────────────────
