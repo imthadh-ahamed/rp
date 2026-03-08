@@ -1,7 +1,7 @@
 'use client';
 
 import ConfirmModal from '@/components/common/ConfirmModal';
-import { Milestone } from '@/utils/mockMilestones';
+import { Milestone } from '@/types/milestone.types';
 import { motion } from 'framer-motion';
 import { CheckCircle2, Eye, Target, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -15,12 +15,11 @@ interface MilestoneCardProps {
 export default function MilestoneCard({ milestone, onDelete }: MilestoneCardProps) {
     const router = useRouter();
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const progress = milestone.totalSteps > 0
-        ? (milestone.completedSteps / milestone.totalSteps) * 100
-        : 0;
+    const totalSteps = milestone.stages?.length ?? 0;
+    const progress = totalSteps > 0 ? milestone.progressPercentage : 0;
 
     const handleView = () => {
-        router.push(`/milestones?milestoneId=${milestone.id}`);
+        router.push(`/milestones?milestoneId=${milestone._id}`);
     };
 
     const handleDelete = () => {
@@ -28,7 +27,7 @@ export default function MilestoneCard({ milestone, onDelete }: MilestoneCardProp
     };
 
     const confirmDelete = () => {
-        onDelete(milestone.id);
+        onDelete(milestone._id);
     };
 
     return (
@@ -57,7 +56,7 @@ export default function MilestoneCard({ milestone, onDelete }: MilestoneCardProp
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-sm font-medium text-gray-700">Progress</span>
                             <span className="text-sm font-semibold text-purple-600">
-                                {milestone.completedSteps} / {milestone.totalSteps} steps
+                                {milestone.completedStages} / {totalSteps} steps
                             </span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -72,11 +71,11 @@ export default function MilestoneCard({ milestone, onDelete }: MilestoneCardProp
                     <div className="flex items-center gap-4 mb-4">
                         <div className="flex items-center gap-2 text-sm">
                             <CheckCircle2 className="w-4 h-4 text-green-500" />
-                            <span className="text-gray-600">{milestone.completedSteps} Completed</span>
+                            <span className="text-gray-600">{milestone.completedStages} Completed</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                             <div className="w-4 h-4 rounded-full border-2 border-gray-400" />
-                            <span className="text-gray-600">{milestone.totalSteps - milestone.completedSteps} Pending</span>
+                            <span className="text-gray-600">{totalSteps - milestone.completedStages} Pending</span>
                         </div>
                     </div>
 

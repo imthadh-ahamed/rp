@@ -62,7 +62,7 @@ export default function FeedbackModal({ isOpen, onClose, onSubmit, milestoneTitl
                                 rows={5}
                                 required
                                 placeholder="Describe what you learned, challenges faced, and key achievements..."
-                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-black"
                             />
 
                             <div className="flex gap-4 mt-6">

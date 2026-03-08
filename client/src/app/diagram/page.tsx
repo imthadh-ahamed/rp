@@ -7,13 +7,14 @@ import {
     QuickNavigation,
     VisualRoadmap
 } from '@/components/diagram';
-import { clearMilestones, getMilestones, Milestone, saveMilestones } from '@/utils/milestoneStorage';
 import { motion } from 'framer-motion';
 import { Rocket, Loader2, AlertCircle } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import diagramService from '@/services/diagram.service';
+import milestoneService from '@/services/milestone.service';
 import { Roadmap, RoadmapStep } from '@/types/diagram.types';
+import { CreateMilestoneRequest } from '@/types/milestone.types';
 
 function DiagramContent() {
     const router = useRouter();
@@ -41,6 +42,7 @@ function DiagramContent() {
             setIsLoading(true);
             setError(null);
             const data = await diagramService.getRoadmapById(roadmapId!);
+            console.log('Fetched roadmap data:', data);
             setRoadmap(data);
             setRoadmapSteps(data.roadmap || []);
         } catch (err: any) {
@@ -62,46 +64,79 @@ function DiagramContent() {
         }
     };
 
-    const handleGenerateMilestones = () => {
-        setGenerating(true);
-
-        // Check if milestones already exist
-        const existing = getMilestones();
-        if (existing.length > 0) {
-            if (!confirm('You already have milestones. Do you want to replace them with new ones?')) {
-                setGenerating(false);
-                return;
-            }
-            // Clear existing milestones before creating new ones
-            clearMilestones();
+    const handleGenerateMilestones = async () => {
+        if (!roadmap) {
+            alert('Roadmap data is not available');
+            return;
         }
 
-        // Generate only the first 2 milestones from roadmap steps
-        const newMilestones: Milestone[] = [];
-        roadmapSteps.slice(0, 2).forEach((step, index) => {
-            const milestone: Milestone = {
-                id: `milestone-${step.id}-${Date.now()}-${index}`,
-                title: step.title,
+        try {
+            setGenerating(true);
+
+            // Validate required fields
+            if (!roadmap._id) {
+                throw new Error('Roadmap ID is missing');
+            }
+            if (!roadmap.profileId) {
+                throw new Error('Profile ID is missing');
+            }
+            if (!roadmap.courseId) {
+                throw new Error('Course ID is missing');
+            }
+
+            // Map roadmap steps to milestone stages format (all 6 stages)
+            const stages = roadmapSteps.map((step) => ({
+                stepId: step.id,
+                stepTitle: step.title,
+                stepGoal: step.goal,
                 description: step.description,
-                goal: step.goal,
                 duration: step.duration,
-                actionPlan: step.actionPlan,
-                resources: step.resources.map((r) => r.title),
-                successCriteria: step.successCriteria,
-                status: 'pending',
+                icon: step.icon || 'BookOpen',
                 color: step.color || 'bg-purple-500',
-                icon: step.icon
+                actionPlan: step.actionPlan || [],
+                resources: step.resources?.map((r) => typeof r === 'string' ? r : r.title) || [],
+                successCriteria: step.successCriteria || [],
+            }));
+
+            // Create milestone data
+            const milestoneData: CreateMilestoneRequest = {
+                profileId: roadmap.profileId,
+                roadmapId: roadmap._id,
+                courseId: roadmap.courseId,
+                courseName: roadmap.courseName || 'Unknown Course',
+                university: roadmap.university || 'Unknown University',
+                careerGoal: roadmap.careerGoal || 'Unknown Career Goal',
+                title: `Learn-to-Earn Career Pathway for ${roadmap.courseName || 'Your Course'}`,
+                description: `Complete all stages to master ${roadmap.courseName || 'this course'} and achieve your goal of becoming a ${roadmap.careerGoal || 'professional'}`,
+                stages,
             };
-            newMilestones.push(milestone);
-        });
 
-        // Save all milestones at once
-        saveMilestones(newMilestones);
+            console.log('Creating milestone with data:', milestoneData);
 
-        setTimeout(() => {
+            // Create milestone using API
+            const createdMilestone = await milestoneService.createMilestone(milestoneData);
+
+            console.log('Milestone created successfully:', createdMilestone);
+            console.log('Full milestone object:', JSON.stringify(createdMilestone, null, 2));
+
+            // Check for _id in different possible locations
+            const milestoneId = createdMilestone?._id;
+            
+            console.log('Milestone ID:', milestoneId);
+
+            if (!milestoneId) {
+                console.error('Response structure issue. Expected _id field not found.');
+                throw new Error('Milestone created but ID is missing from response');
+            }
+
+            // Navigate to milestone page with milestone ID
+            console.log('Navigating to:', `/milestones?milestoneId=${milestoneId}`);
+            router.push(`/milestones?milestoneId=${milestoneId}`);
+        } catch (error: any) {
+            console.error('Error creating milestone:', error);
+            alert(error.message || 'Failed to create milestone. Please try again.');
             setGenerating(false);
-            router.push('/milestones');
-        }, 1000);
+        }
     };
 
     if (isLoading) {
@@ -172,7 +207,7 @@ function DiagramContent() {
                             {generating ? 'Generating Milestones...' : 'Generate My Milestones'}
                         </motion.button>
                         <p className="text-gray-500 text-sm mt-3">
-                            Create 2 personalized milestones based on this roadmap
+                            Create a personalized milestones based on this roadmap
                         </p>
                     </motion.div>
 

@@ -1,18 +1,66 @@
 'use client';
 
 import MilestoneCard from '@/components/milestones/MilestoneCard';
-import { MOCK_MILESTONES } from '@/utils/mockMilestones';
+import milestoneService from '@/services/milestone.service';
+import { Milestone } from '@/types/milestone.types';
 import { motion } from 'framer-motion';
-import { Plus, Target } from 'lucide-react';
+import { Loader2, Plus, Target } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function MilestonesTab() {
-    const [milestones, setMilestones] = useState(MOCK_MILESTONES);
+    const [milestones, setMilestones] = useState<Milestone[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleDelete = (id: string) => {
-        setMilestones(milestones.filter(m => m.id !== id));
+    const fetchMilestones = useCallback(async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const data = await milestoneService.getAllMilestones();
+            setMilestones(data);
+        } catch (err: any) {
+            setError(err.message || 'Failed to load milestones');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchMilestones();
+    }, [fetchMilestones]);
+
+    const handleDelete = async (id: string) => {
+        try {
+            await milestoneService.deleteMilestone(id);
+            setMilestones(prev => prev.filter(m => m._id !== id));
+        } catch (err: any) {
+            setError(err.message || 'Failed to delete milestone');
+        }
     };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-purple-600" />
+                <span className="ml-3 text-gray-500 text-lg">Loading milestones...</span>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+                <p className="text-red-600 font-medium mb-4">{error}</p>
+                <button
+                    onClick={fetchMilestones}
+                    className="px-6 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-medium"
+                >
+                    Retry
+                </button>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -20,7 +68,7 @@ export default function MilestonesTab() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {milestones.map((milestone) => (
                         <MilestoneCard
-                            key={milestone.id}
+                            key={milestone._id}
                             milestone={milestone}
                             onDelete={handleDelete}
                         />

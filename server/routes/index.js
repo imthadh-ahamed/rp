@@ -2,6 +2,7 @@ import express from 'express';
 import authRoutes from './authRoutes.js';
 import profileRoutes from './profileRoutes.js';
 import diagramRoutes from './diagramRoutes.js';
+import milestoneRoutes from './milestoneRoutes.js';
 
 const router = express.Router();
 
@@ -18,5 +19,6 @@ router.get('/health', (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/profiles', profileRoutes);
 router.use('/diagram', diagramRoutes);
+router.use('/milestones', milestoneRoutes);
 
 export default router;
