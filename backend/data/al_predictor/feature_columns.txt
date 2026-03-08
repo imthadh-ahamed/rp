@@ -1,0 +1,27 @@
+first_language
+english
+mathematics
+science
+history
+religion
+Geography
+Civic Education
+Business and Accounting Studies
+Second Language
+ICT
+Agriculture and Food Technology
+Health and Physical Education
+Art
+Music
+Dance
+Drama
+Literature
+al_subject_1_numeric
+al_subject_2_numeric
+al_subject_3_numeric
+al_average
+math_science_avg
+language_avg
+social_avg
+stem_aptitude
+humanities_aptitude
