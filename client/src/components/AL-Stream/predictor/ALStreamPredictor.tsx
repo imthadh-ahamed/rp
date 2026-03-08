@@ -31,17 +31,17 @@ export default function ALStreamPredictor({ onTakeQuiz, setPredictorResults }: A
     const fetchBaskets = async () => {
         try {
             const response = await fetch(`${API_URL}/predict/baskets`);
-            const data = await response.json();
+            const data: BasketConfig = await response.json();
             setBaskets(data);
 
             const initialData: FormData = {};
-            Object.values(data).forEach((basket: any) => {
+            Object.values(data).forEach((basket) => {
                 basket.subjects.forEach((subject: string) => {
                     initialData[subject] = 0;
                 });
             });
             setFormData(initialData);
-        } catch (err) {
+        } catch {
             setError("Failed to load subject configuration");
         }
     };
@@ -124,7 +124,7 @@ export default function ALStreamPredictor({ onTakeQuiz, setPredictorResults }: A
             } else {
                 setError(data.error || "Prediction failed");
             }
-        } catch (err) {
+        } catch {
             setError("Failed to connect to prediction service");
         } finally {
             setLoading(false);

@@ -1,6 +1,6 @@
 import React from "react";
 import { BasketSelectorProps } from "../../../types/predictor.types";
-import { CheckCircle2, Circle } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 export default function BasketSelector({
     basket,
@@ -9,7 +9,6 @@ export default function BasketSelector({
     onSelectSubject,
     formData,
     onMarkChange,
-    color,
 }: BasketSelectorProps) {
     // We'll use a consistent teal theme for all, but maybe slight variations if needed.
     // For professional look, unified accent color is often better than rainbow.
