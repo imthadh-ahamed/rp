@@ -15,7 +15,7 @@ app = FastAPI(
 # and Frontend (localhost:3000)
 origins = [
     "http://localhost:3000",
-    "http://localhost:5000",
+    "http://localhost:8080",
     "*" # For development, allow all. Restrict in production.
 ]
 
