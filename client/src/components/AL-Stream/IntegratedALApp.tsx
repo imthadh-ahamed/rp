@@ -62,7 +62,6 @@ export default function IntegratedALApp() {
           onBackToPredictor={handleBackToPredictor}
           predictorResults={predictorResults}
           onCustomQuizComplete={handleCustomQuizComplete}
-          customQuizResults={customQuizResults}
         />
       )}
     </div>
