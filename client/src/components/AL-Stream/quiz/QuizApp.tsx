@@ -38,7 +38,6 @@ interface QuizAppProps {
     onBackToPredictor: () => void;
     predictorResults: PredictionResult | null;
     onCustomQuizComplete: (results: QuizResultsData, streamName: string) => void;
-    customQuizResults: { results: QuizResultsData; streamName: string } | null;
 }
 
 export default function QuizApp({
@@ -46,7 +45,6 @@ export default function QuizApp({
     onBackToPredictor,
     predictorResults,
     onCustomQuizComplete,
-    customQuizResults,
 }: QuizAppProps) {
     const [streams, setStreams] = useState<string[]>([]);
     const [customStream, setCustomStream] = useState("");
@@ -112,9 +110,9 @@ export default function QuizApp({
             setUserAnswers({});
             setResults(null);
             setCurrentQuestion(0);
-        } catch (error: any) {
+        } catch (error) {
             console.error("Error generating quiz:", error);
-            setError(error.message || "Failed to generate quiz");
+            setError(error instanceof Error ? error.message : "Failed to generate quiz");
         } finally {
             setLoading(false);
         }
