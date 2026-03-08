@@ -18,3 +18,7 @@ requests
 psutil
 torch
 huggingface_hub
+sentence-transformers
+torch
+transformers<4.49
+einops

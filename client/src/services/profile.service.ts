@@ -64,8 +64,8 @@ class ProfileService {
     };
 
     /**
-     * Get all AL profiles
-     * @returns Array of profiles and count
+     * Get all AL profiles for the logged-in user
+     * @returns Array of user's profiles and count
      */
     getAllProfiles = async (): Promise<{ profiles: ALProfile[]; count: number }> => {
         try {

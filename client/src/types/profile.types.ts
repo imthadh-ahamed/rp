@@ -36,6 +36,28 @@ export interface ALProfile {
     // Timestamps
     createdAt: string;
     updatedAt: string;
+    recommendations?: Recommendation[];
+}
+
+export interface Recommendation {
+    id?: string;
+    _id?: string;
+    rank: number;
+    course_name: string;
+    university: string;
+    location: string;
+    match_score: number;
+    explanation: string;
+    url: string;
+    career_opportunities: string;
+    study_language: string;
+    study_method: string;
+    duration: string;
+    requirements: string;
+    course_fee: string;
+    department: string;
+    tags: string[];
+    isSelected: boolean;
 }
 
 export interface CreateALProfileRequest {

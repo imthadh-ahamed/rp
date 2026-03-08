@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routes import recommend, al_predictor, quiz
+from api.routes import recommend, roadmap
 import uvicorn
 import os
 
@@ -15,7 +16,7 @@ app = FastAPI(
 # and Frontend (localhost:3000)
 origins = [
     "http://localhost:3000",
-    "http://localhost:5000",
+    "http://localhost:8080",
     "*" # For development, allow all. Restrict in production.
 ]
 
@@ -31,7 +32,7 @@ app.add_middleware(
 app.include_router(recommend.router, tags=["Recommendations"])
 app.include_router(al_predictor.router)
 app.include_router(quiz.router)
-
+app.include_router(roadmap.router, prefix="/roadmap", tags=["Roadmap"])
 @app.get("/")
 async def root():
     return {"message": "Agentic Course Recommendation API is running 🚀"}

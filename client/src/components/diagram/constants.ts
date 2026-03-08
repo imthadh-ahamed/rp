@@ -17,9 +17,9 @@ export const ROADMAP_STEPS = [
             'Build a simple static website or console application'
         ],
         resources: [
-            'MDN Web Docs / W3Schools',
-            'freeCodeCamp - Responsive Web Design',
-            'GitHub - Git Handbook'
+            { title: 'MDN Web Docs / W3Schools', url: 'https://developer.mozilla.org/en-US/' },
+            { title: 'freeCodeCamp - Responsive Web Design', url: 'https://www.freecodecamp.org/learn/responsive-web-design/' },
+            { title: 'GitHub - Git Handbook', url: 'https://guides.github.com/introduction/git-handbook/' }
         ],
         successCriteria: [
             'Understand variables, loops, functions, and data types',
@@ -43,9 +43,9 @@ export const ROADMAP_STEPS = [
             'Learn state management (Redux, Context API)'
         ],
         resources: [
-            'React Official Documentation',
-            'Full Stack Open (University of Helsinki)',
-            'YouTube: Traversy Media / Net Ninja'
+            { title: 'React Official Documentation', url: 'https://react.dev/' },
+            { title: 'Full Stack Open (University of Helsinki)', url: 'https://fullstackopen.com/' },
+            { title: 'YouTube: Traversy Media / Net Ninja', url: 'https://www.youtube.com/c/TraversyMedia' }
         ],
         successCriteria: [
             'Build and deploy a dynamic single-page application',
@@ -69,9 +69,9 @@ export const ROADMAP_STEPS = [
             'Participate in a hackathon'
         ],
         resources: [
-            'Upwork / Fiverr (for freelancing)',
-            'Good First Issue (for open source)',
-            'Devpost (for hackathons)'
+            { title: 'Upwork / Fiverr (for freelancing)', url: 'https://www.upwork.com/' },
+            { title: 'Good First Issue (for open source)', url: 'https://goodfirstissue.dev/' },
+            { title: 'Devpost (for hackathons)', url: 'https://devpost.com/' }
         ],
         successCriteria: [
             'Merge a pull request into an external codebase',
@@ -95,9 +95,9 @@ export const ROADMAP_STEPS = [
             'Automate repetitive tasks with scripts'
         ],
         resources: [
-            'Book: "Atomic Habits" by James Clear',
-            'VS Code Keybinding Reference',
-            'Zapier / IFTTT'
+            { title: 'Book: "Atomic Habits" by James Clear', url: 'https://www.amazon.com/Atomic-Habits-Tiny-Changes-Remarkable-Results/dp/0735211299' },
+            { title: 'VS Code Keybinding Reference', url: 'https://code.visualstudio.com/docs/getstarted/keybindings' },
+            { title: 'Zapier / IFTTT', url: 'https://zapier.com/' }
         ],
         successCriteria: [
             'Reduce development time for routine tasks',
@@ -121,9 +121,9 @@ export const ROADMAP_STEPS = [
             'Read engineering blogs (Netflix, Uber, etc.)'
         ],
         resources: [
-            'AWS Certified Cloud Practitioner',
-            'Coursera - AI for Everyone',
-            'Hacker News / TechCrunch'
+            { title: 'AWS Certified Cloud Practitioner', url: 'https://aws.amazon.com/certification/certified-cloud-practitioner/' },
+            { title: 'Coursera - AI for Everyone', url: 'https://www.coursera.org/learn/ai-for-everyone' },
+            { title: 'Hacker News / TechCrunch', url: 'https://news.ycombinator.com/' }
         ],
         successCriteria: [
             'Pass a recognized certification exam',
@@ -147,9 +147,9 @@ export const ROADMAP_STEPS = [
             'Conduct mock interviews'
         ],
         resources: [
-            'LinkedIn Learning - Career Development',
-            'Pramp / Interviewing.io',
-            'Canva (for resume design)'
+            { title: 'LinkedIn Learning - Career Development', url: 'https://www.linkedin.com/learning/topics/career-development' },
+            { title: 'Pramp / Interviewing.io', url: 'https://www.pramp.com/' },
+            { title: 'Canva (for resume design)', url: 'https://www.canva.com/' }
         ],
         successCriteria: [
             'Receive interview invitations',

@@ -37,11 +37,12 @@ router.get(
 
 /**
  * @route   GET /api/profiles
- * @desc    Get all AL profiles
- * @access  Public
+ * @desc    Get all AL profiles for logged-in user
+ * @access  Private
  */
 router.get(
     '/',
+    authenticate,
     alProfileController.getAllProfiles
 );
 

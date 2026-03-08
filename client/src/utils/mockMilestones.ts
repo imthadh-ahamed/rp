@@ -40,7 +40,7 @@ export const MOCK_MILESTONES: Milestone[] = [
             goal: step.goal,
             duration: step.duration,
             actionPlan: step.actionPlan,
-            resources: step.resources,
+            resources: step.resources.map((r) => typeof r === 'string' ? r : r.title),
             successCriteria: step.successCriteria,
             status: 'pending' as const,
             color: step.color,

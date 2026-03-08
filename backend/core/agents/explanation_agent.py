@@ -1,9 +1,19 @@
 from typing import List, Dict, Any
-from llm.deepseek_client import client, DEEPSEEK_MODEL
 import asyncio
+import sys
+import os
+
+# Add parent directory to path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+backend_dir = os.path.dirname(os.path.dirname(current_dir))
+sys.path.insert(0, backend_dir)
+
+# Import Gemini client and career intent checker
+from llm.deepseek_client import chat as gemini_chat
+from core.agents.career_intent import matches_career_domain
 
 
-# System prompt (kept short for DeepSeek)
+# System prompt for Gemini
 EXPLANATION_SYSTEM = (
     "You are an academic counselor. "
     "Explain clearly and professionally in 3–4 short sentences."
@@ -11,38 +21,11 @@ EXPLANATION_SYSTEM = (
 
 
 # -------------------------------------------------------
-# 1️⃣ Perfect Explanation Prompt (Short + Very Detailed)
+# 1️⃣ Simplified Explanation Prompt
 # -------------------------------------------------------
 def build_explanation_prompt(user: Dict[str, Any], meta: Dict[str, Any]) -> str:
-    """
-    Short but information-rich prompt.
-    Designed specifically to avoid DeepSeek timeouts.
-    """
-    return f"""
-You are an academic counselor. Explain clearly why this course is a strong match
-for the student. Write 3–4 short sentences. Cover:
-
-• alignment with interest area
-• support for career goal
-• match with preferred study method & location
-• suitability based on academic background
-
-STUDENT:
-- Interest Area: {user.get('interest_area')}
-- Career Goal: {user.get('career_goal')}
-- Study Method: {user.get('study_method')}
-- Preferred Location: {user.get('preferred_locations')}
-- A/L Stream: {user.get('al_stream')}
-- A/L Results: {user.get('al_results')}
-- Other Qualifications: {user.get('other_qualifications')}
-
-COURSE:
-- Title: {meta.get('Course')}
-- Location: {meta.get('Location')}
-- Method: {meta.get('Study Method')}
-- Duration: {meta.get('Duration')}
-- Career Opportunities: {meta.get('Career Opportunities')}
-"""
+    """Simplified prompt to avoid Gemini safety filters"""
+    return f"""Explain why the {meta.get('Course', 'course')} at {meta.get('Location', 'this institution')} is a good match for a student interested in {user.get('interest_area', 'this field')} who wants to become a {user.get('career_goal', 'professional')}. The course offers {meta.get('Study Method', 'study')} for {meta.get('Duration', 'multiple years')} and leads to careers in {meta.get('Career Opportunities', 'relevant fields')}. Write 3-4 concise sentences."""
 
 
 # -------------------------------------------------------
@@ -57,79 +40,86 @@ def build_short_prompt(user: Dict[str, Any], meta: Dict[str, Any]) -> str:
 
 
 # -------------------------------------------------------
-# 3️⃣ Async timeout-safe LLM wrapper (retry + fast exit)
+# 3️⃣ Synchronous LLM wrapper
 # -------------------------------------------------------
-async def try_llm(prompt: str, retries: int = 2):
-    for attempt in range(retries):
-        try:
-            response = client.chat.completions.create(
-                model=DEEPSEEK_MODEL,
-                messages=[
-                    {"role": "system", "content": EXPLANATION_SYSTEM},
-                    {"role": "user", "content": prompt},
-                ],
-                max_tokens=160,
-                temperature=0.2,
-                timeout=30  # ⬅ KEY: prevents freezing or long waits
-            )
-            return response.choices[0].message.content.strip()
-
-        except Exception:
-            # small delay before retrying
-            await asyncio.sleep(0.25)
-
-    return None
+def try_llm_sync(prompt: str):
+    """Get explanation from Gemini"""
+    try:
+        response = gemini_chat(
+            prompt,
+            system=EXPLANATION_SYSTEM,
+            timeout=30
+        )
+        
+        # Check if response is valid
+        if response and not response.startswith("(LLM unavailable") and not response.startswith("(LLM request timed out") and not response.startswith("(LLM returned empty"):
+            return response
+        
+        return None
+                
+    except Exception as e:
+        print(f"⚠️ Gemini request failed: {type(e).__name__}: {e}")
+        return None
 
 
 # -------------------------------------------------------
-# 4️⃣ Rule-based fallback explanation (never fails)
-# -------------------------------------------------------
-def fallback_explanation(user: Dict[str, Any], meta: Dict[str, Any], score: float) -> str:
-    interest = user.get("interest_area") or "your chosen field"
-    career = user.get("career_goal") or "your career path"
-    location = user.get("preferred_locations") or meta.get("Location") or "your area"
-
-    return (
-        f"This course aligns well with your interest in {interest} and supports your goal "
-        f"of becoming {career}. It is offered in or near your preferred location "
-        f"({location}) and provides career opportunities relevant to your path "
-        f"(match score: {score:.0f}/100)."
-    )
-
-# -------------------------------------------------------
-# 5️⃣ Main function: attaches explanations to top N items
+# 4️⃣ Main function: attaches explanations to ALL items using career-aware logic
 # -------------------------------------------------------
 async def add_explanations(user: Dict[str, Any],
                      ranked: List[Dict[str, Any]],
                      top_n: int = 5) -> List[Dict[str, Any]]:
 
     limit = min(top_n, len(ranked))
+    career_goal = user.get("career_goal", "")
 
-    # Run each explanation sequentially (safe for local models)
-    for i in range(limit):
+    # Generate explanations for all courses using career-aware fallback
+    for i in range(len(ranked)):
         cand = ranked[i]
         meta = cand["metadata"]
-
-        long_prompt = build_explanation_prompt(user, meta)
-
-        # First attempt: detailed prompt
-        explanation = await try_llm(long_prompt)
-
-        # Second attempt: short prompt
-        if not explanation:
-            short_prompt = build_short_prompt(user, meta)
-            explanation = await try_llm(short_prompt)
-
-        # Final fallback (rule-based)
-        if not explanation:
-            explanation = fallback_explanation(user, meta, cand.get("score", 0.0))
-
+        score = cand.get("score", 0.0)
+        
+        # Get course details
+        course_name = meta.get("Course", meta.get("course", "this course"))
+        location = meta.get("Location", meta.get("location", meta.get("campus", "the campus")))
+        interest = user.get("interest_area", "this field")
+        study_method = meta.get("Study Method", meta.get("study_method", "flexible study options"))
+        duration = meta.get("Duration", meta.get("duration", "the course duration"))
+        
+        # Build searchable course text to check career alignment
+        course_text = " ".join([
+            course_name,
+            meta.get("department", ""),
+            meta.get("Department", ""),
+            meta.get("Career Opportunities", ""),
+        ])
+        
+        # Check if course matches career domain
+        is_career_aligned = matches_career_domain(career_goal, course_text)
+        
+        # Generate career-appropriate explanation
+        if is_career_aligned and career_goal:
+            # Direct career match - positive explanation
+            explanation = (
+                f"This {course_name} at {location} is well-suited for students interested in "
+                f"{interest} pursuing careers in {career_goal}. The program offers {study_method} "
+                f"over {duration} and provides comprehensive training leading to opportunities in "
+                f"various career paths."
+            )
+        elif career_goal:
+            # Career mismatch - honest explanation without misleading user
+            explanation = (
+                f"This {course_name} at {location} focuses on {interest}-related skills and offers "
+                f"{study_method} over {duration}. While not directly aligned with {career_goal}, "
+                f"it provides transferable engineering/technical skills that may support related career paths."
+            )
+        else:
+            # No career goal specified - generic explanation
+            explanation = (
+                f"This {course_name} at {location} aligns with your interest in {interest}. "
+                f"The program offers {study_method} over {duration} and provides comprehensive "
+                f"training leading to opportunities in various career paths."
+            )
+        
         cand["explanation"] = explanation
-
-    # For remaining items, use rule-based explanation
-    for i in range(limit, len(ranked)):
-        cand = ranked[i]
-        meta = cand["metadata"]
-        cand["explanation"] = fallback_explanation(user, meta, cand.get("score", 0.0))
 
     return ranked
