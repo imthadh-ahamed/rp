@@ -17,6 +17,7 @@ import { ALResultsData } from '@/components/ugc-course-recommender/ALResultsForm
 import { CareerQuizAnswer, quizQuestions } from '@/components/ugc-course-recommender/CareerQuiz';
 import { calculateRecommendations, RecommendedCourse } from '@/utils/recommendationEngine';
 import { useCombinedPrediction } from '@/hooks/usePredictions';
+import { AnyQuestion, QuestionType } from '@/services/aptitudeApi';
 
 type Step = 'student-info' | 'al-results' | 'career-quiz' | 'recommendations' | 'aptitude-list' | 'aptitude-quiz';
 
@@ -31,6 +32,8 @@ export default function UGCCourseSelectorPage() {
     const [recommendations, setRecommendations] = useState<RecommendedCourse[]>([]);
     const [selectedCourse, setSelectedCourse] = useState<RecommendedCourse | null>(null);
     const [selectedTest, setSelectedTest] = useState<string | null>(null);
+    const [aiGeneratedQuestions, setAiGeneratedQuestions] = useState<AnyQuestion[]>([]);
+    const [aiGeneratedType, setAiGeneratedType] = useState<QuestionType>('structured');
 
     const {
         predict,
@@ -142,6 +145,7 @@ export default function UGCCourseSelectorPage() {
     const handleBackToTests = () => {
         setCurrentStep('aptitude-list');
         setSelectedTest(null);
+        setAiGeneratedQuestions([]);
     };
 
     const getStepIndex = (): number => {
@@ -221,14 +225,22 @@ export default function UGCCourseSelectorPage() {
                         course={selectedCourse}
                         onSelectTest={handleSelectTest}
                         onBack={handleBackToRecommendations}
+                        onStartAIQuiz={(questions, type) => {
+                            setAiGeneratedQuestions(questions);
+                            setAiGeneratedType(type);
+                            setSelectedTest(null);
+                            setCurrentStep('aptitude-quiz');
+                        }}
                     />
                 )}
 
-                {currentStep === 'aptitude-quiz' && selectedCourse && selectedTest && (
+                {currentStep === 'aptitude-quiz' && selectedCourse && (selectedTest || aiGeneratedQuestions.length > 0) && (
                     <AptitudeTestQuiz
                         course={selectedCourse}
-                        testName={selectedTest}
+                        testName={selectedTest ?? undefined}
                         onBack={handleBackToTests}
+                        aiQuestions={aiGeneratedQuestions.length > 0 ? aiGeneratedQuestions : undefined}
+                        aiQuestionType={aiGeneratedQuestions.length > 0 ? aiGeneratedType : undefined}
                     />
                 )}
             </div>

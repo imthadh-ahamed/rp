@@ -6,18 +6,27 @@ import json
 import os
 from typing import List, Dict
 
+# Map legacy type names from raw source data to current API type names
+_TYPE_MAP = {
+    "mcq": "structured",
+    "multiple_choice": "structured",
+    "structured": "structured",
+    "mini_structured": "mini_structured",
+    "essay": "essay",
+}
+
 
 def build_qa_dataset(raw_questions: List[Dict], output_path: str) -> int:
     """
     Normalise raw question dicts into a standard schema and write as JSONL.
 
     Expected input dict keys (flexible):
-        question | q     → question text
+        question | q                 → question text
         correct_answer | answer | a  → correct answer
         options | choices            → list of option strings
         explanation                  → optional rationale
-        topic | subject | category   → optional topic label
-        type                        → "mcq" | "essay" (default: "mcq")
+        type                        → "structured" | "mini_structured" | "essay"
+                                       (legacy "mcq" is mapped to "structured")
 
     Returns the number of records written.
     """
@@ -34,6 +43,7 @@ def build_qa_dataset(raw_questions: List[Dict], output_path: str) -> int:
                 continue
             seen.add(question)
 
+            raw_type = item.get("type") or "structured"
             record = {
                 "question": question,
                 "correct_answer": (
@@ -41,8 +51,7 @@ def build_qa_dataset(raw_questions: List[Dict], output_path: str) -> int:
                 ).strip(),
                 "options": item.get("options") or item.get("choices") or [],
                 "explanation": item.get("explanation") or "",
-                "topic": item.get("topic") or item.get("subject") or item.get("category") or "General",
-                "type": item.get("type") or "mcq",
+                "type": _TYPE_MAP.get(raw_type, "structured"),
             }
             fh.write(json.dumps(record, ensure_ascii=False) + "\n")
             written += 1

@@ -77,6 +77,9 @@ num_cols = ["Z_Score", "Island_Rank", "Gen_Test"]
 # ─── Preprocessing: University model ──────────────────────────────────────────
 
 def preprocess_university(req: PredictionRequest) -> pd.DataFrame:
+    if loaded_model is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=503, detail="University ML model not loaded.")
     raw = req.model_dump(by_alias=True)
     df = pd.DataFrame([raw])
 
@@ -91,15 +94,16 @@ def preprocess_university(req: PredictionRequest) -> pd.DataFrame:
                 )
             )
 
-    df[num_cols] = scaler.transform(df[num_cols].values)
+    if scaler is not None:
+        df[num_cols] = scaler.transform(df[num_cols].values)
 
-    prophet_lookup = prophet_values.set_index("Course")["Prophet_Z"]
-    prophet_z = prophet_lookup.get(req.Course, None)
-    if prophet_z is None:
-        prophet_z = prophet_values["Prophet_Z"].median()
-
-    df["Prophet_Z"] = prophet_z
-    df["Z_Score"] = prophet_z
+    if prophet_values is not None:
+        prophet_lookup = prophet_values.set_index("Course")["Prophet_Z"]
+        prophet_z = prophet_lookup.get(req.Course, None)
+        if prophet_z is None:
+            prophet_z = prophet_values["Prophet_Z"].median()
+        df["Prophet_Z"] = prophet_z
+        df["Z_Score"] = prophet_z
 
     df = df[[c for c in expected_features if c in df.columns]]
     return df
@@ -120,14 +124,18 @@ def preprocess_course(req: StudentProfileRequest) -> pd.DataFrame:
                 df[col] = 0
 
     num_to_scale = [c for c in num_cols if c in df.columns]
-    if num_to_scale:
+    if num_to_scale and scaler_course is not None:
         df[num_to_scale] = scaler_course.transform(df[num_to_scale])
 
-    df = df[feature_cols_course]
+    if feature_cols_course is not None:
+        df = df[feature_cols_course]
     return df
 
 
 def run_course_model(req: StudentProfileRequest, top_n: int) -> list[CourseRecommendation]:
+    if course_model is None:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=503, detail="Course ML model not loaded.")
     processed = preprocess_course(req)
     probas = course_model.predict_proba(processed)[0]
     sorted_indices = np.argsort(probas)[::-1]

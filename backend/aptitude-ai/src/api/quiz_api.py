@@ -45,7 +45,7 @@ def _vector_store_ready() -> bool:
 
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(
-    title="Aptitude AI Quiz Generator",
+    title="Aptitude AI Aptitude Quiz Generator",
     description="RAG-powered aptitude quiz generation with Groq (Llama 3)",
     version="2.0.0",
 )
@@ -74,11 +74,10 @@ QuestionTypeEnum = Literal["structured", "mini_structured", "essay"]
 
 class GenerateRequest(BaseModel):
     question_type: QuestionTypeEnum = Field(
-        ...,
         description="Type of questions to generate: structured | mini_structured | essay",
-        example="structured",
+        examples=["structured"],
     )
-    num_questions: int = Field(5, ge=1, le=20)
+    num_questions: int = Field(5, ge=1, le=10)
     session_id: Optional[str] = Field(
         None,
         description="Pass the session_id from a previous response to avoid repeat questions.",
@@ -233,9 +232,10 @@ async def generate(req: GenerateRequest):
 
     elif req.question_type == "essay":
         from src.generation.groq_generator import generate_essay_questions
-
+        # Essays are long — cap at 5 to stay within the 8000-token budget
+        n_essays = min(req.num_questions, 5)
         raw = await asyncio.to_thread(
-            generate_essay_questions, req.num_questions, context, previously_asked
+            generate_essay_questions, n_essays, context, previously_asked
         )
         raw = DuplicateChecker().filter_unique(raw)
 

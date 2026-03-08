@@ -1,7 +1,8 @@
 ﻿'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Sparkles, Loader2, AlertCircle } from 'lucide-react';
+import { BookOpen, Sparkles, Loader2, AlertCircle, ClipboardList, Zap, PenLine } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { RecommendedCourse } from '@/utils/recommendationEngine';
 import {
@@ -25,23 +26,23 @@ interface AptitudeTestListProps {
 
 const COUNT_OPTIONS = [3, 5, 10] as const;
 
-const QUESTION_TYPES: { value: QuestionType; label: string; icon: string; desc: string }[] = [
+const QUESTION_TYPES: { value: QuestionType; label: string; Icon: LucideIcon; desc: string }[] = [
     {
         value: 'structured',
         label: 'Structured',
-        icon: 'ðŸ“',
+        Icon: ClipboardList,
         desc: '4-option MCQ with full explanation',
     },
     {
         value: 'mini_structured',
         label: 'Mini Structured',
-        icon: 'âš¡',
-        desc: 'Short 2â€“4 option quick-reasoning check',
+        Icon: Zap,
+        desc: 'Short 2–4 option quick-reasoning check',
     },
     {
         value: 'essay',
         label: 'Essay',
-        icon: 'âœï¸',
+        Icon: PenLine,
         desc: 'Open-ended written response with model answer',
     },
 ];
@@ -52,9 +53,15 @@ export default function AptitudeTestList({
     onBack,
     onStartAIQuiz,
 }: AptitudeTestListProps) {
-    // â”€â”€ AI panel state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // â”€â”€ AI panel state 
     const [qType, setQType]           = useState<QuestionType>('structured');
-    const [count, setCount]           = useState<3 | 5 | 10>(5);
+    const [count, setCount]           = useState<number>(5);
+
+    const handleSetQType = (type: QuestionType) => {
+        setQType(type);
+        // ensure count stays within allowed range for the type
+        if (type === 'essay' && count > 5) setCount(5);
+    };
     const [generating, setGenerating] = useState(false);
     const [error, setError]           = useState<string | null>(null);
     const [apiAvailable, setApiAvailable] = useState<boolean | null>(null);
@@ -95,7 +102,7 @@ export default function AptitudeTestList({
                     onClick={onBack}
                     className="inline-flex items-center text-cyan-600 hover:text-cyan-700 transition-colors mb-6 font-medium text-sm"
                 >
-                    â† Back to Recommendations
+                    ← Back to Recommendations
                 </button>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Aptitude Test Practice</h2>
                 <p className="text-gray-600">
@@ -116,12 +123,12 @@ export default function AptitudeTestList({
                     <h3 className="text-lg font-bold text-violet-900">AI Quiz Generator</h3>
                     {apiAvailable === false && (
                         <span className="ml-auto text-xs text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">
-                            API offline â€” start aptitude-ai server on :8001
+                            API offline – start aptitude-ai server on :8001
                         </span>
                     )}
                     {apiAvailable === true && (
                         <span className="ml-auto text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
-                            âœ“ Connected
+                            ✓ Connected
                         </span>
                     )}
                 </div>
@@ -137,10 +144,10 @@ export default function AptitudeTestList({
                         Question Type
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        {QUESTION_TYPES.map(({ value, label, icon, desc }) => (
+                        {QUESTION_TYPES.map(({ value, label, Icon, desc }) => (
                             <button
                                 key={value}
-                                onClick={() => setQType(value)}
+                                onClick={() => handleSetQType(value)}
                                 disabled={!apiAvailable || generating}
                                 className={`flex flex-col items-start gap-1 px-4 py-3 rounded-xl border-2 font-semibold text-sm transition-all disabled:opacity-50 text-left ${
                                     qType === value
@@ -148,7 +155,10 @@ export default function AptitudeTestList({
                                         : 'border-violet-200 bg-white text-violet-700 hover:border-violet-400'
                                 }`}
                             >
-                                <span className="text-base">{icon} {label}</span>
+                                <span className="flex items-center gap-1.5">
+                                    <Icon className={`w-4 h-4 ${qType === value ? 'text-white' : 'text-violet-500'}`} />
+                                    {label}
+                                </span>
                                 <span className={`text-xs font-normal leading-tight ${qType === value ? 'text-violet-100' : 'text-gray-500'}`}>
                                     {desc}
                                 </span>
@@ -202,9 +212,9 @@ export default function AptitudeTestList({
                     className="w-full py-3 px-6 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-lg font-semibold text-sm hover:from-violet-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all"
                 >
                     {generating ? (
-                        <><Loader2 className="w-4 h-4 animate-spin" /> Generating with AIâ€¦</>
+                        <><Loader2 className="w-4 h-4 animate-spin" /> Generating with AI…</>
                     ) : (
-                        <><Sparkles className="w-4 h-4" /> âœ¨ Generate AI Quiz</>
+                        <><Sparkles className="w-4 h-4" /> Generate AI Quiz</>
                     )}
                 </motion.button>
             </div>
@@ -228,10 +238,10 @@ export default function AptitudeTestList({
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-gray-900">{test}</h4>
-                                        <p className="text-sm text-gray-600">Mock Test Â· Timed Assessment</p>
+                                        <p className="text-sm text-gray-600">Mock Test · Timed Assessment</p>
                                     </div>
                                 </div>
-                                <span className="text-cyan-600 font-bold group-hover:translate-x-2 transition-transform">â†’</span>
+                                <span className="text-cyan-600 font-bold group-hover:translate-x-2 transition-transform">→</span>
                             </motion.button>
                         ))}
                     </div>

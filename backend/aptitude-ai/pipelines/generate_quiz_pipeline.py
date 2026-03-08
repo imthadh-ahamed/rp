@@ -4,7 +4,6 @@ Pipeline: Run a test quiz generation end-to-end.
     python pipelines/generate_quiz_pipeline.py
 """
 import sys
-import json
 import logging
 from pathlib import Path
 
@@ -22,34 +21,47 @@ logger = logging.getLogger(__name__)
 def main():
     logger.info("=== Generate Quiz Pipeline ===")
 
-    # MCQ test
-    from src.generation.groq_generator import generate_mcq_questions, generate_essay_questions
+    from src.generation.groq_generator import (
+        generate_structured_questions,
+        generate_mini_structured_questions,
+        generate_essay_questions,
+    )
     from src.validation.duplicate_checker import DuplicateChecker
     from src.utils.randomizer import shuffle_all_options
 
-    topic = "Logical Reasoning"
-    logger.info(f"Generating 3 MCQ for: {topic}")
-    mcq_questions = generate_mcq_questions(topic=topic, num_questions=3)
-    checker = DuplicateChecker()
-    unique  = checker.filter_unique(mcq_questions)
+    # Structured questions test
+    logger.info("Generating 3 structured questions")
+    structured = generate_structured_questions(num_questions=3)
+    checker  = DuplicateChecker()
+    unique   = checker.filter_unique(structured)
     shuffled = shuffle_all_options(unique)
 
-    print("\n── MCQ Questions ─────────────────────────────")
+    print("\n── Structured Questions ──────────────────────")
     for i, q in enumerate(shuffled, 1):
         print(f"\nQ{i}: {q['question']}")
         for j, opt in enumerate(q.get("options", []), 1):
             print(f"   {j}. {opt}")
-        print(f"   ✓ {q['correct_answer']}")
-        print(f"   💡 {q.get('explanation', '')}")
+        print(f"   [ANSWER] {q['correct_answer']}")
+        print(f"   [EXPLAIN] {q.get('explanation', '')}")
 
-    # Essay test
-    logger.info(f"Generating 2 essay Qs for: {topic}")
-    essay_questions = generate_essay_questions(topic=topic, num_questions=2)
+    # Mini-structured questions test
+    logger.info("Generating 2 mini-structured questions")
+    mini = generate_mini_structured_questions(num_questions=2)
+    print("\n── Mini-Structured Questions ─────────────────")
+    for i, q in enumerate(mini, 1):
+        print(f"\nQ{i}: {q['question']}")
+        for j, opt in enumerate(q.get("options", []), 1):
+            print(f"   {j}. {opt}")
+        print(f"   [ANSWER] {q['correct_answer']}")
+
+    # Essay questions test
+    logger.info("Generating 2 essay questions")
+    essay_questions = generate_essay_questions(num_questions=2)
     print("\n── Essay Questions ───────────────────────────")
     for i, q in enumerate(essay_questions, 1):
         print(f"\nQ{i}: {q['question']}")
         print(f"   Key points: {q.get('key_points', [])}")
-        print(f"   Model answer: {q.get('model_answer', '')[:200]}…")
+        print(f"   Model answer: {q.get('model_answer', '')[:200]}...")
 
 
 if __name__ == "__main__":

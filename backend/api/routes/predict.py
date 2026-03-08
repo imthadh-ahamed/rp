@@ -11,9 +11,16 @@ from api.schemas.prediction import (
 
 router = APIRouter(prefix="/predict", tags=["University Prediction"])
 
+_MODEL_UNAVAILABLE = (
+    "University ML model is not loaded (pkl files missing). "
+    "Use /predict/combined or /predict/rule-based instead."
+)
+
 
 @router.post("", response_model=PredictionResponse)
 def predict(req: PredictionRequest):
+    if loaded_model is None or not label_encoders.get("University Selected"):
+        raise HTTPException(status_code=503, detail=_MODEL_UNAVAILABLE)
     try:
         processed = preprocess_university(req)
         target_le = label_encoders["University Selected"]
@@ -38,6 +45,8 @@ def predict(req: PredictionRequest):
                 "district": req.District,
             },
         )
+    except HTTPException:
+        raise
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
@@ -45,6 +54,11 @@ def predict(req: PredictionRequest):
 
 @router.post("/batch")
 def predict_batch(requests: list[PredictionRequest]):
+    if loaded_model is None or not label_encoders.get("University Selected"):
+        return {"predictions": [
+            {"course": req.Course, "top_predictions": None, "error": _MODEL_UNAVAILABLE}
+            for req in requests
+        ]}
     results = []
     for req in requests:
         try:

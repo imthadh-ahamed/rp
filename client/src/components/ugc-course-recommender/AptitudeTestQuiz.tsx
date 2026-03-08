@@ -1,9 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { CheckCircle, XCircle, BarChart3 } from 'lucide-react';
+import { CheckCircle, XCircle, BarChart3, BookOpen } from 'lucide-react';
 import { useState } from 'react';
 import { RecommendedCourse } from '@/utils/recommendationEngine';
+import { AnyQuestion, QuestionType } from '@/services/aptitudeApi';
 
 interface AptitudeQuestion {
     id: number;
@@ -15,8 +16,36 @@ interface AptitudeQuestion {
 
 interface AptitudeTestQuizProps {
     course: RecommendedCourse;
-    testName: string;
+    testName?: string;
     onBack: () => void;
+    aiQuestions?: AnyQuestion[];
+    aiQuestionType?: QuestionType;
+}
+
+// Strip any LLM-generated label prefix like "option A: ", "A. ", "A) " from option text
+function cleanOption(text: string): string {
+    return text.replace(/^(option\s+)?[A-Da-d][.):]\s*/i, '').trim();
+}
+
+function mapAiQuestion(q: AnyQuestion, idx: number): AptitudeQuestion {
+    if (q.type === 'essay') {
+        return {
+            id: idx + 1,
+            question: q.question,
+            options: [],
+            correctAnswer: q.model_answer,
+            type: 'text',
+        };
+    }
+    const cleanedOptions = q.options.map(cleanOption);
+    const cleanedCorrect = cleanOption(q.correct_answer);
+    return {
+        id: idx + 1,
+        question: q.question,
+        options: cleanedOptions,
+        correctAnswer: cleanedCorrect,
+        type: 'multiple-choice',
+    };
 }
 
 // Mock aptitude test questions
@@ -134,8 +163,11 @@ const aptitudeQuestions: Record<string, AptitudeQuestion[]> = {
     ]
 };
 
-export default function AptitudeTestQuiz({ course, testName, onBack }: AptitudeTestQuizProps) {
-    const questions = aptitudeQuestions[testName] || [];
+export default function AptitudeTestQuiz({ course, testName, onBack, aiQuestions, aiQuestionType }: AptitudeTestQuizProps) {
+    const isAiMode = aiQuestions && aiQuestions.length > 0;
+    const questions: AptitudeQuestion[] = isAiMode
+        ? aiQuestions!.map(mapAiQuestion)
+        : (aptitudeQuestions[testName ?? ''] || []);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState<Record<number, string>>({});
     const [submitted, setSubmitted] = useState(false);
@@ -147,6 +179,8 @@ export default function AptitudeTestQuiz({ course, testName, onBack }: AptitudeT
     const handleSelectAnswer = (answer: string) => {
         setAnswers(prev => ({ ...prev, [currentQuestion]: answer }));
     };
+
+    const isEssayQuestion = (q: AptitudeQuestion) => q.type === 'text';
 
     const handleNext = () => {
         if (currentQuestion < totalQuestions - 1) {
@@ -162,15 +196,18 @@ export default function AptitudeTestQuiz({ course, testName, onBack }: AptitudeT
         }
     };
 
-    // Calculate results
+    // Calculate results — essays are excluded from scoring
     const calculateResults = () => {
         let correct = 0;
+        let scoreable = 0;
         questions.forEach((q, idx) => {
-            if (answers[idx] === q.correctAnswer) {
-                correct++;
+            if (!isEssayQuestion(q)) {
+                scoreable++;
+                if (answers[idx] === q.correctAnswer) correct++;
             }
         });
-        return { correct, total: totalQuestions, percentage: Math.round((correct / totalQuestions) * 100) };
+        const percentage = scoreable > 0 ? Math.round((correct / scoreable) * 100) : 0;
+        return { correct, total: scoreable, percentage };
     };
 
     if (submitted) {
@@ -189,10 +226,16 @@ export default function AptitudeTestQuiz({ course, testName, onBack }: AptitudeT
                         <h3 className="text-lg font-bold text-gray-900">Overall Performance</h3>
                         <div className="flex items-center gap-2">
                             <BarChart3 className="w-5 h-5 text-cyan-600" />
-                            <span className="text-3xl font-bold text-cyan-600">{results.percentage}%</span>
+                            <span className="text-3xl font-bold text-cyan-600">
+                                {results.total > 0 ? `${results.percentage}%` : 'N/A'}
+                            </span>
                         </div>
                     </div>
-                    <p className="text-gray-600">You answered {results.correct} out of {results.total} questions correctly.</p>
+                    <p className="text-gray-600">
+                        {results.total > 0
+                            ? `You answered ${results.correct} out of ${results.total} MCQ questions correctly.`
+                            : 'Essay responses submitted. Review your writing against the model answers below.'}
+                    </p>
                 </div>
 
                 {/* Answer Review */}
@@ -204,29 +247,53 @@ export default function AptitudeTestQuiz({ course, testName, onBack }: AptitudeT
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.05 }}
-                            className={`p-4 rounded-lg border-2 ${answers[idx] === q.correctAnswer
-                                ? 'bg-green-50 border-green-200'
-                                : 'bg-red-50 border-red-200'
+                            className={`p-4 rounded-lg border-2 ${
+                                isEssayQuestion(q)
+                                    ? 'bg-violet-50 border-violet-200'
+                                    : answers[idx] === q.correctAnswer
+                                    ? 'bg-green-50 border-green-200'
+                                    : 'bg-red-50 border-red-200'
                                 }`}
                         >
                             <div className="flex items-start gap-3">
-                                {answers[idx] === q.correctAnswer ? (
+                                {isEssayQuestion(q) ? (
+                                    <BookOpen className="w-5 h-5 text-violet-600 mt-1 flex-shrink-0" />
+                                ) : answers[idx] === q.correctAnswer ? (
                                     <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
                                 ) : (
                                     <XCircle className="w-5 h-5 text-red-600 mt-1 flex-shrink-0" />
                                 )}
                                 <div className="flex-1">
                                     <p className="font-medium text-gray-900 mb-2">{q.question}</p>
-                                    <div className="space-y-1 text-sm">
-                                        <p className={answers[idx] === q.correctAnswer ? 'text-green-700' : 'text-red-700'}>
-                                            Your answer: <strong>{answers[idx] || 'Not answered'}</strong>
-                                        </p>
-                                        {answers[idx] !== q.correctAnswer && (
-                                            <p className="text-green-700">
-                                                Correct answer: <strong>{q.correctAnswer}</strong>
+                                    {isEssayQuestion(q) ? (
+                                        <div className="space-y-2 text-sm">
+                                            {answers[idx] && (
+                                                <div>
+                                                    <p className="text-gray-500 font-medium">Your response:</p>
+                                                    <p className="text-gray-700 mt-1 whitespace-pre-wrap">{answers[idx]}</p>
+                                                </div>
+                                            )}
+                                            <div className="mt-2 p-3 bg-violet-100 rounded">
+                                                <p className="text-violet-800 font-medium">Model Answer:</p>
+                                                <p className="text-violet-700 mt-1 text-xs">{q.correctAnswer}</p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-1 text-sm">
+                                            <p className={answers[idx] === q.correctAnswer ? 'text-green-700' : 'text-red-700'}>
+                                                Your answer: <strong>
+                                                    {answers[idx]
+                                                        ? `${String.fromCharCode(65 + q.options.indexOf(answers[idx]))}. ${answers[idx]}`
+                                                        : 'Not answered'}
+                                                </strong>
                                             </p>
-                                        )}
-                                    </div>
+                                            {answers[idx] !== q.correctAnswer && (
+                                                <p className="text-green-700">
+                                                    Correct answer: <strong>{`${String.fromCharCode(65 + q.options.indexOf(q.correctAnswer))}. ${q.correctAnswer}`}</strong>
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
@@ -292,22 +359,32 @@ export default function AptitudeTestQuiz({ course, testName, onBack }: AptitudeT
             {currentQ && (
                 <div className="mb-12">
                     <h3 className="text-lg font-bold text-gray-900 mb-6">{currentQ.question}</h3>
-                    <div className="space-y-3">
-                        {currentQ.options.map((option, idx) => (
-                            <motion.button
-                                key={idx}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => handleSelectAnswer(option)}
-                                className={`w-full text-left p-4 rounded-lg border-2 transition-all ${answers[currentQuestion] === option
-                                    ? 'bg-cyan-500 border-cyan-600 text-white'
-                                    : 'bg-white border-gray-300 text-gray-700 hover:border-cyan-400'
-                                    }`}
-                            >
-                                {option}
-                            </motion.button>
-                        ))}
-                    </div>
+                    {isEssayQuestion(currentQ) ? (
+                        <textarea
+                            className="w-full min-h-[200px] p-4 border-2 border-gray-300 rounded-lg text-gray-800 text-sm focus:outline-none focus:border-violet-400 resize-y"
+                            placeholder="Write your response here…"
+                            value={answers[currentQuestion] ?? ''}
+                            onChange={(e) => handleSelectAnswer(e.target.value)}
+                        />
+                    ) : (
+                        <div className="space-y-3">
+                            {currentQ.options.map((option, idx) => (
+                                <motion.button
+                                    key={idx}
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => handleSelectAnswer(option)}
+                                    className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                                        answers[currentQuestion] === option
+                                            ? 'bg-cyan-500 border-cyan-600 text-white'
+                                            : 'bg-white border-gray-300 text-gray-700 hover:border-cyan-400'
+                                        }`}
+                                >
+                                    <span className="font-semibold mr-2">{String.fromCharCode(65 + idx)}.</span>{option}
+                                </motion.button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 
