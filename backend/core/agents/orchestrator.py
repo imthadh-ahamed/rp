@@ -96,10 +96,24 @@ async def recommend_courses(user_input: Dict[str, Any],
     filtered = filter_candidates(user_input, eligible)
     print(f"   {len(filtered)} candidates match user preferences")
     
-    # Fallback: if filters are too strict, use eligible results (or raw RAG)
+    # Handle empty results from strict eligibility filtering
+    if not eligible:
+        print("\n🚫 No courses meet academic eligibility requirements.")
+        return {
+            "status": "blocked",
+            "reason": "Academic eligibility not met",
+            "message": "All recommended programs require completed G.C.E. A/L results. Since A/L results were not provided, degree programs cannot be recommended at this time.",
+            "suggestions": [
+                "Complete G.C.E. A/L (in the relevant stream for your career goal)",
+                "Consider Foundation or Diploma programs that accept O/L qualifications"
+            ],
+            "recommendations": []
+        }
+    
+    # Fallback: if preference filters are too strict, use eligible results
     if not filtered:
-        print("   ⚠️ Filters too strict - using eligible results as fallback")
-        filtered = eligible if eligible else rag_results[:final_k]
+        print("   ⚠️ Preference filters too strict - using eligible results as fallback")
+        filtered = eligible[:final_k]
         warnings.append("No courses matched all your preferences exactly, so we're showing the best available alternatives.")
     
     # -------------------------

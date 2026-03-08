@@ -4,8 +4,7 @@ const alProfileSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, 'User ID is required'],
-        index: true
+        required: [true, 'User ID is required']
     },
     qualificationType: {
         type: String,
@@ -41,13 +40,13 @@ const alProfileSchema = new mongoose.Schema({
     },
     alStream: {
         type: String,
-        required: [true, 'A/L stream is required'],
-        enum: ['Bio Science', 'Physical Science', 'Commerce', 'Arts', 'Engineering Technology', 'Bio-systems Technology']
+        enum: ['Bio Science', 'Physical Science', 'Commerce', 'Arts', 'Engineering Technology', 'Bio-systems Technology'],
+        default: null
     },
     alResults: {
         type: String,
-        required: [true, 'A/L results are required'],
-        trim: true
+        trim: true,
+        default: null
     },
     otherQualifications: {
         type: String,

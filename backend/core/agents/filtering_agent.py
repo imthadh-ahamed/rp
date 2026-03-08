@@ -132,11 +132,18 @@ def matches_career_domain_filter(user: Dict[str, Any], course_meta: Dict[str, An
 def filter_candidates(user: Dict[str, Any],
                       candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
-    Filter candidates based on user preferences (location, study method, duration, career domain).
+    Filter candidates based on user preferences.
+    
+    FILTER ORDER (CRITICAL):
+    1. Career Domain (HARD constraint)
+    2. Location, Study Method, Duration (SOFT constraints - lenient fallback)
+    
+    NOTE: Academic eligibility (A/L) should be applied BEFORE this function
+          in the main recommendation pipeline.
     
     Args:
         user: User profile
-        candidates: List of course candidates
+        candidates: List of course candidates (already eligibility-filtered)
         
     Returns:
         Filtered list of candidates matching user preferences
@@ -168,12 +175,12 @@ def filter_candidates(user: Dict[str, Any],
         print(f"🎯 Career Domain Filter: Excluded {len(excluded_by_domain)} courses not matching '{career_goal}'")
         print(f"   Examples: {', '.join([c.get('metadata', {}).get('course', 'Unknown')[:50] for c in excluded_by_domain[:3]])}")
     
-    # If filters are too strict and nothing passes, return career-filtered results only
+    # If location/study filters are too strict, return career-filtered results
     if not filtered and excluded_by_domain:
         print("⚠️ Location/study filters too strict. Returning career-relevant courses only.")
         return [c for c in candidates if matches_career_domain_filter(user, c.get("metadata", {}))]
     
-    # If even career filter removed everything, return original (failsafe)
+    # If even career filter removed everything, return original as failsafe
     if not filtered:
         print("⚠️ All candidates filtered out. Returning original list as failsafe.")
         return candidates
