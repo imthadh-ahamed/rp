@@ -7,7 +7,7 @@ google-cloud-aiplatform
 anthropic
 pinecone-client
 qdrant-client
-chromadb
+chromadb==1.0.15
 faiss-cpu
 pandas
 numpy
