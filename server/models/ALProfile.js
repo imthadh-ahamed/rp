@@ -4,8 +4,7 @@ const alProfileSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, 'User ID is required'],
-        index: true
+        required: [true, 'User ID is required']
     },
     qualificationType: {
         type: String,
