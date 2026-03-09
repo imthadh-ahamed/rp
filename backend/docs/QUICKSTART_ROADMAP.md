@@ -202,7 +202,7 @@ The script now includes path setup automatically. Make sure to run from the `bac
 
 If port 8000 is busy:
 ```bash
-python -m uvicorn api.main:app --reload --port 8001
+python -m uvicorn api.main:app --reload --port 8000
 ```
 
 ### LLM Not Connected

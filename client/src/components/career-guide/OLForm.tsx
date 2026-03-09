@@ -20,12 +20,18 @@ interface OLFormProps {
 
 export default function OLForm({ isOpen, onClose, onBack, initialData, profileId }: OLFormProps) {
   const router = useRouter();
+  const OL_GRADES = ['A', 'B', 'C', 'S', 'F'] as const;
+
   const initialState = {
     age: '',
     gender: '',
     nativeLanguage: '',
     preferredLanguage: '',
-    olResults: '',
+    olMaths: '',
+    olEnglish: '',
+    olScience: '',
+    olICT: '',
+    olResults: '',         // computed from the 4 fields above before submit
     otherQualifications: '',
     ieltsScore: '',
     interestArea: '',
@@ -52,6 +58,10 @@ export default function OLForm({ isOpen, onClose, onBack, initialData, profileId
           gender: initialData.gender || '',
           nativeLanguage: initialData.nativeLanguage || '',
           preferredLanguage: initialData.preferredLanguage || '',
+          olMaths:   (() => { const m = (initialData.olResults || '').match(/Maths:\s*(\w+)/);   return m ? m[1] : ''; })(),
+          olEnglish: (() => { const m = (initialData.olResults || '').match(/English:\s*(\w+)/); return m ? m[1] : ''; })(),
+          olScience: (() => { const m = (initialData.olResults || '').match(/Science:\s*(\w+)/); return m ? m[1] : ''; })(),
+          olICT:     (() => { const m = (initialData.olResults || '').match(/ICT:\s*(\w+)/);     return m ? m[1] : ''; })(),
           olResults: initialData.olResults || '',
           otherQualifications: initialData.otherQualifications || '',
           ieltsScore: initialData.ieltsScore || '',
@@ -88,7 +98,9 @@ export default function OLForm({ isOpen, onClose, onBack, initialData, profileId
     checkRequired('gender', 'Gender');
     checkRequired('nativeLanguage', 'Native Language');
     checkRequired('preferredLanguage', 'Preferred Language');
-    checkRequired('olResults', 'O/L Results');
+    if (!formData.olMaths)   { newErrors.olMaths   = 'Maths grade is required';   isValid = false; }
+    if (!formData.olEnglish) { newErrors.olEnglish = 'English grade is required'; isValid = false; }
+    if (!formData.olScience) { newErrors.olScience = 'Science grade is required'; isValid = false; }
     checkRequired('interestArea', 'Interest Area');
     checkRequired('careerGoal', 'Career Goal');
     checkRequired('monthlyIncome', 'Monthly Income');
@@ -109,12 +121,21 @@ export default function OLForm({ isOpen, onClose, onBack, initialData, profileId
       setIsSubmitting(true);
 
       try {
+        // Build the combined O/L results string from individual dropdowns
+        const olParts = [
+          `Maths: ${formData.olMaths}`,
+          `English: ${formData.olEnglish}`,
+          `Science: ${formData.olScience}`,
+          ...(formData.olICT ? [`ICT: ${formData.olICT}`] : []),
+        ];
+        const computedOLResults = olParts.join(', ');
+
         const submissionData: CreateALProfileRequest = {
           age: formData.age,
           gender: formData.gender as 'Male' | 'Female' | 'Other',
           nativeLanguage: formData.nativeLanguage as 'English' | 'Sinhala' | 'Tamil',
           preferredLanguage: formData.preferredLanguage as 'English' | 'Sinhala' | 'Tamil',
-          olResults: formData.olResults,
+          olResults: computedOLResults,
           alStream: undefined,
           alResults: undefined,
           otherQualifications: formData.otherQualifications,
@@ -144,6 +165,7 @@ export default function OLForm({ isOpen, onClose, onBack, initialData, profileId
         // Also save to local storage for backward compatibility
         const localData: UserData = {
           ...formData,
+          olResults: computedOLResults,
           alStream: null,
           alResults: null,
           qualificationType: 'OL'
@@ -277,9 +299,44 @@ export default function OLForm({ isOpen, onClose, onBack, initialData, profileId
 
             {/* O/L Results */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">O/L Results (Maths, English, Science, ICT) <span className="text-red-500">*</span></label>
-              <textarea name="olResults" value={formData.olResults} onChange={handleChange} className={inputClass(errors.olResults)} rows={2} placeholder="e.g., Maths: A, English: B..." />
-              <ErrorMsg error={errors.olResults} />
+              <label className="block text-sm font-medium text-gray-700 mb-1">O/L Results</label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {/* Maths */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Maths <span className="text-red-500">*</span></label>
+                  <select name="olMaths" value={formData.olMaths} onChange={handleChange} className={inputClass(errors.olMaths)}>
+                    <option value="" disabled>Select</option>
+                    {OL_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                  <ErrorMsg error={errors.olMaths} />
+                </div>
+                {/* English */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">English <span className="text-red-500">*</span></label>
+                  <select name="olEnglish" value={formData.olEnglish} onChange={handleChange} className={inputClass(errors.olEnglish)}>
+                    <option value="" disabled>Select</option>
+                    {OL_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                  <ErrorMsg error={errors.olEnglish} />
+                </div>
+                {/* Science */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Science <span className="text-red-500">*</span></label>
+                  <select name="olScience" value={formData.olScience} onChange={handleChange} className={inputClass(errors.olScience)}>
+                    <option value="" disabled>Select</option>
+                    {OL_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                  <ErrorMsg error={errors.olScience} />
+                </div>
+                {/* ICT */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">ICT</label>
+                  <select name="olICT" value={formData.olICT} onChange={handleChange} className={inputClass()}>
+                    <option value="">None</option>
+                    {OL_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
