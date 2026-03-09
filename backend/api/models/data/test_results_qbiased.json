@@ -1,0 +1,1018 @@
+[
+  {
+    "test_id": 1,
+    "name": "Physical Science - Top Performer",
+    "category": "Good",
+    "stream": "Physical Science",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "Engineering",
+        "score": 0.9376,
+        "university": "University of Peradeniya",
+        "uni_code": "013B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "ENGINEERING (EM)",
+        "score": 0.9351,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "009G",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 3,
+        "course": "ENGINEERING (TM)",
+        "score": 0.9351,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "010G",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 4,
+        "course": "Computer Science",
+        "score": 0.9201,
+        "university": "University of Kelaniya",
+        "uni_code": "022D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "PHYSICAL SCIENCE",
+        "score": 0.8726,
+        "university": "EASTERN UNIVERSITY SRI LANKA",
+        "uni_code": "013H",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "APPLIED SCIENCES (PHYSICAL SC.)",
+        "score": 0.8276,
+        "university": "RAJARATA UNIVERSITY OF SRI LANKA",
+        "uni_code": "015K",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "SURVEYING SCIENCE",
+        "score": 0.8251,
+        "university": "SABARAGAMUWA UNIVERSITY OF SRI LANKA",
+        "uni_code": "014L",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "QUANTITY SURVEYING",
+        "score": 0.9176,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "011G",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 2,
+    "name": "Biological Science - Medical Aspirant",
+    "category": "Good",
+    "stream": "Biological Science",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "UNANI MEDICINE AND SURGERY",
+        "score": 0.9384,
+        "university": "UNIVERSITY OF COLOMBO",
+        "uni_code": "033A",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "Dental Surgery",
+        "score": 0.9309,
+        "university": "University of Peradeniya",
+        "uni_code": "003B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 3,
+        "course": "NURSING",
+        "score": 0.9209,
+        "university": "UNIVERSITY OF COLOMBO",
+        "uni_code": "037A",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 4,
+        "course": "PHYSIOTHERAPY",
+        "score": 0.9134,
+        "university": "UNIVERSITY OF PERADENIYA",
+        "uni_code": "054B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "PHARMACY",
+        "score": 0.9109,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "051C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "SIDDHA MEDICINE AND SURGERY",
+        "score": 0.9084,
+        "university": "UNIVERSITY OF JAFFNA",
+        "uni_code": "036E",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "Biological Science",
+        "score": 0.9034,
+        "university": "University of Colombo",
+        "uni_code": "006A",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "Biological Science",
+        "score": 0.8984,
+        "university": "University of Peradeniya",
+        "uni_code": "006B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 9,
+        "course": "Biological Science",
+        "score": 0.8909,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "006C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 10,
+        "course": "Ayurveda Medicine and Surgery",
+        "score": 0.8834,
+        "university": "Gampaha Wickramarachchi University",
+        "uni_code": "120P",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 3,
+    "name": "Commerce - Top Management",
+    "category": "Good",
+    "stream": "Commerce",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "MANAGEMENT STUDIES (TV)",
+        "score": 0.901,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "023G",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "MANAGEMENT AND PUBLIC POLICY",
+        "score": 0.896,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "028C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 3,
+        "course": "Real Estate Management and Valuation",
+        "score": 0.896,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "028C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 4,
+        "course": "COMMERCE",
+        "score": 0.861,
+        "university": "UNIVERSITY OF JAFFNA",
+        "uni_code": "018E",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "BUSINESS INFORMATION SYSTEMS (HONOURS) (BIS)",
+        "score": 0.846,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "077C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "MANAGEMENT",
+        "score": 0.8435,
+        "university": "UNIVERSITY OF VAVUNIYA",
+        "uni_code": "022R",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "Accounting Information Systems",
+        "score": 0.8385,
+        "university": "University of Kelaniya",
+        "uni_code": "127D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "Service Management",
+        "score": 0.8335,
+        "university": "Gampa ha Wickramarachchi University",
+        "uni_code": "140P",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 9,
+        "course": "Banking and Insurance",
+        "score": 0.7935,
+        "university": "University of Vavuniya",
+        "uni_code": "133R",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 4,
+    "name": "Arts - Top Humanities",
+    "category": "Good",
+    "stream": "Arts",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "Arts - Information Technology",
+        "score": 0.8986,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "128C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "ARTS (SP) - MASS MEDIA",
+        "score": 0.8836,
+        "university": "SRIPALEE CAMPUS UNIVERSITY OF COLOMBO",
+        "uni_code": "020S",
+        "aptitude_required": "Yes"
+      },
+      {
+        "rank": 3,
+        "course": "ARTS (SP) - PERFORMING ARTS",
+        "score": 0.8836,
+        "university": "SRIPALEE CAMPUS UNIVERSITY OF COLOMBO",
+        "uni_code": "041S",
+        "aptitude_required": "Yes"
+      },
+      {
+        "rank": 4,
+        "course": "ARTS",
+        "score": 0.8711,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "019C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "Social Work",
+        "score": 0.8436,
+        "university": "University of Peradeniya",
+        "uni_code": "112B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "ARTS (SAB)",
+        "score": 0.8361,
+        "university": "SABARAGAMUWA UNIVERSITY OF SRI LANKA",
+        "uni_code": "021L",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "Social Work",
+        "score": 0.8361,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "112C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "Peace & Conflict Resolution",
+        "score": 0.8286,
+        "university": "University of Kelaniya",
+        "uni_code": "031D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 9,
+        "course": "Teaching English as a Second Language (TESL)",
+        "score": 0.8286,
+        "university": "University of Kelaniya",
+        "uni_code": "105D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 10,
+        "course": "COMMUNICATION STUDIES",
+        "score": 0.8111,
+        "university": "TRINCOMALEE CAMPUS EASTERN UNIVERSITY SRI LANKA",
+        "uni_code": "029W",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 5,
+    "name": "Engineering Technology - Top Engineer",
+    "category": "Good",
+    "stream": "Engineering Technology",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "ENGINEERING TECHNOLOGY (ET)",
+        "score": 0.8761,
+        "university": "SABARAGAMUWA UNIVERSITY OF SRI LANKA",
+        "uni_code": "102L",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 6,
+    "name": "Physical Science - Above Average",
+    "category": "Above Average",
+    "stream": "Physical Science",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "Engineering",
+        "score": 0.8977,
+        "university": "University of Peradeniya",
+        "uni_code": "013B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "ENGINEERING (EM)",
+        "score": 0.8952,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "009G",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 3,
+        "course": "ENGINEERING (TM)",
+        "score": 0.8952,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "010G",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 4,
+        "course": "Computer Science",
+        "score": 0.8802,
+        "university": "University of Kelaniya",
+        "uni_code": "022D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "PHYSICAL SCIENCE",
+        "score": 0.8327,
+        "university": "EASTERN UNIVERSITY SRI LANKA",
+        "uni_code": "013H",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "APPLIED SCIENCES (PHYSICAL SC.)",
+        "score": 0.7877,
+        "university": "RAJARATA UNIVERSITY OF SRI LANKA",
+        "uni_code": "015K",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "SURVEYING SCIENCE",
+        "score": 0.7852,
+        "university": "SABARAGAMUWA UNIVERSITY OF SRI LANKA",
+        "uni_code": "014L",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "QUANTITY SURVEYING",
+        "score": 0.8777,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "011G",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 7,
+    "name": "Biological Science - Above Average",
+    "category": "Above Average",
+    "stream": "Biological Science",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "UNANI MEDICINE AND SURGERY",
+        "score": 0.9022,
+        "university": "UNIVERSITY OF COLOMBO",
+        "uni_code": "033A",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "Dental Surgery",
+        "score": 0.8947,
+        "university": "University of Peradeniya",
+        "uni_code": "003B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 3,
+        "course": "NURSING",
+        "score": 0.8847,
+        "university": "UNIVERSITY OF COLOMBO",
+        "uni_code": "037A",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 4,
+        "course": "PHYSIOTHERAPY",
+        "score": 0.8772,
+        "university": "UNIVERSITY OF PERADENIYA",
+        "uni_code": "054B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "PHARMACY",
+        "score": 0.8747,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "051C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "SIDDHA MEDICINE AND SURGERY",
+        "score": 0.8722,
+        "university": "UNIVERSITY OF JAFFNA",
+        "uni_code": "036E",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "Biological Science",
+        "score": 0.8672,
+        "university": "University of Colombo",
+        "uni_code": "006A",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "Biological Science",
+        "score": 0.8622,
+        "university": "University of Peradeniya",
+        "uni_code": "006B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 9,
+        "course": "Biological Science",
+        "score": 0.8547,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "006C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 10,
+        "course": "Biological Science",
+        "score": 0.8472,
+        "university": "University of Kelaniya",
+        "uni_code": "006D",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 8,
+    "name": "Commerce - Above Average",
+    "category": "Above Average",
+    "stream": "Commerce",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "MANAGEMENT STUDIES (TV)",
+        "score": 0.8638,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "023G",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "MANAGEMENT AND PUBLIC POLICY",
+        "score": 0.8588,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "028C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 3,
+        "course": "Real Estate Management and Valuation",
+        "score": 0.8588,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "028C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 4,
+        "course": "COMMERCE",
+        "score": 0.8238,
+        "university": "UNIVERSITY OF JAFFNA",
+        "uni_code": "018E",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "BUSINESS INFORMATION SYSTEMS (HONOURS) (BIS)",
+        "score": 0.8088,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "077C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "MANAGEMENT",
+        "score": 0.8063,
+        "university": "UNIVERSITY OF VAVUNIYA",
+        "uni_code": "022R",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "Accounting Information Systems",
+        "score": 0.8013,
+        "university": "University of Kelaniya",
+        "uni_code": "127D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "Service Management",
+        "score": 0.7963,
+        "university": "Gampa ha Wickramarachchi University",
+        "uni_code": "140P",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 9,
+        "course": "Banking and Insurance",
+        "score": 0.7563,
+        "university": "University of Vavuniya",
+        "uni_code": "133R",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 9,
+    "name": "Arts - Average",
+    "category": "Average",
+    "stream": "Arts",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "Arts - Information Technology",
+        "score": 0.8268,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "128C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "ARTS (SP) - MASS MEDIA",
+        "score": 0.8118,
+        "university": "SRIPALEE CAMPUS UNIVERSITY OF COLOMBO",
+        "uni_code": "020S",
+        "aptitude_required": "Yes"
+      },
+      {
+        "rank": 3,
+        "course": "ARTS (SP) - PERFORMING ARTS",
+        "score": 0.8118,
+        "university": "SRIPALEE CAMPUS UNIVERSITY OF COLOMBO",
+        "uni_code": "041S",
+        "aptitude_required": "Yes"
+      },
+      {
+        "rank": 4,
+        "course": "ARTS",
+        "score": 0.7993,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "019C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "Social Work",
+        "score": 0.7718,
+        "university": "University of Peradeniya",
+        "uni_code": "112B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "ARTS (SAB)",
+        "score": 0.7643,
+        "university": "SABARAGAMUWA UNIVERSITY OF SRI LANKA",
+        "uni_code": "021L",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "Social Work",
+        "score": 0.7643,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "112C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "Peace & Conflict Resolution",
+        "score": 0.7568,
+        "university": "University of Kelaniya",
+        "uni_code": "031D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 9,
+        "course": "Teaching English as a Second Language (TESL)",
+        "score": 0.7568,
+        "university": "University of Kelaniya",
+        "uni_code": "105D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 10,
+        "course": "COMMUNICATION STUDIES",
+        "score": 0.7393,
+        "university": "TRINCOMALEE CAMPUS EASTERN UNIVERSITY SRI LANKA",
+        "uni_code": "029W",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 10,
+    "name": "Engineering Technology - Average",
+    "category": "Average",
+    "stream": "Engineering Technology",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "ENGINEERING TECHNOLOGY (ET)",
+        "score": 0.8055,
+        "university": "SABARAGAMUWA UNIVERSITY OF SRI LANKA",
+        "uni_code": "102L",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 11,
+    "name": "Physical Science - Below Average",
+    "category": "Below Average",
+    "stream": "Physical Science",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "Engineering",
+        "score": 0.8192,
+        "university": "University of Peradeniya",
+        "uni_code": "013B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "ENGINEERING (EM)",
+        "score": 0.8167,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "009G",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 3,
+        "course": "ENGINEERING (TM)",
+        "score": 0.8167,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "010G",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 4,
+        "course": "Computer Science",
+        "score": 0.8017,
+        "university": "University of Kelaniya",
+        "uni_code": "022D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "PHYSICAL SCIENCE",
+        "score": 0.7542,
+        "university": "EASTERN UNIVERSITY SRI LANKA",
+        "uni_code": "013H",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "APPLIED SCIENCES (PHYSICAL SC.)",
+        "score": 0.7092,
+        "university": "RAJARATA UNIVERSITY OF SRI LANKA",
+        "uni_code": "015K",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "SURVEYING SCIENCE",
+        "score": 0.7067,
+        "university": "SABARAGAMUWA UNIVERSITY OF SRI LANKA",
+        "uni_code": "014L",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "QUANTITY SURVEYING",
+        "score": 0.7992,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "011G",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 12,
+    "name": "Biological Science - Below Average",
+    "category": "Below Average",
+    "stream": "Biological Science",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "UNANI MEDICINE AND SURGERY",
+        "score": 0.8211,
+        "university": "UNIVERSITY OF COLOMBO",
+        "uni_code": "033A",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "Dental Surgery",
+        "score": 0.8136,
+        "university": "University of Peradeniya",
+        "uni_code": "003B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 3,
+        "course": "NURSING",
+        "score": 0.8036,
+        "university": "UNIVERSITY OF COLOMBO",
+        "uni_code": "037A",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 4,
+        "course": "PHYSIOTHERAPY",
+        "score": 0.7961,
+        "university": "UNIVERSITY OF PERADENIYA",
+        "uni_code": "054B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "PHARMACY",
+        "score": 0.7936,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "051C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "SIDDHA MEDICINE AND SURGERY",
+        "score": 0.7911,
+        "university": "UNIVERSITY OF JAFFNA",
+        "uni_code": "036E",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "Biological Science",
+        "score": 0.7861,
+        "university": "University of Colombo",
+        "uni_code": "006A",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "Biological Science",
+        "score": 0.7811,
+        "university": "University of Peradeniya",
+        "uni_code": "006B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 9,
+        "course": "Biological Science",
+        "score": 0.7736,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "006C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 10,
+        "course": "Biological Science",
+        "score": 0.7661,
+        "university": "University of Kelaniya",
+        "uni_code": "006D",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 13,
+    "name": "Commerce - Below Average",
+    "category": "Below Average",
+    "stream": "Commerce",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "MANAGEMENT STUDIES (TV)",
+        "score": 0.7805,
+        "university": "UNIVERSITY OF MORATUWA",
+        "uni_code": "023G",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "MANAGEMENT AND PUBLIC POLICY",
+        "score": 0.7755,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "028C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 3,
+        "course": "Real Estate Management and Valuation",
+        "score": 0.7755,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "028C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 4,
+        "course": "COMMERCE",
+        "score": 0.7405,
+        "university": "UNIVERSITY OF JAFFNA",
+        "uni_code": "018E",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "BUSINESS INFORMATION SYSTEMS (HONOURS) (BIS)",
+        "score": 0.7255,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "077C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "MANAGEMENT",
+        "score": 0.723,
+        "university": "UNIVERSITY OF VAVUNIYA",
+        "uni_code": "022R",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "Accounting Information Systems",
+        "score": 0.718,
+        "university": "University of Kelaniya",
+        "uni_code": "127D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "Service Management",
+        "score": 0.713,
+        "university": "Gampa ha Wickramarachchi University",
+        "uni_code": "140P",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 9,
+        "course": "Banking and Insurance",
+        "score": 0.673,
+        "university": "University of Vavuniya",
+        "uni_code": "133R",
+        "aptitude_required": "No"
+      }
+    ]
+  },
+  {
+    "test_id": 14,
+    "name": "Arts - Below Average",
+    "category": "Below Average",
+    "stream": "Arts",
+    "recommendations": [
+      {
+        "rank": 1,
+        "course": "Arts - Information Technology",
+        "score": 0.7799,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "128C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 2,
+        "course": "ARTS (SP) - MASS MEDIA",
+        "score": 0.7649,
+        "university": "SRIPALEE CAMPUS UNIVERSITY OF COLOMBO",
+        "uni_code": "020S",
+        "aptitude_required": "Yes"
+      },
+      {
+        "rank": 3,
+        "course": "ARTS (SP) - PERFORMING ARTS",
+        "score": 0.7649,
+        "university": "SRIPALEE CAMPUS UNIVERSITY OF COLOMBO",
+        "uni_code": "041S",
+        "aptitude_required": "Yes"
+      },
+      {
+        "rank": 4,
+        "course": "ARTS",
+        "score": 0.7524,
+        "university": "UNIVERSITY OF SRI JAYEWARDENEPURA",
+        "uni_code": "019C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 5,
+        "course": "Social Work",
+        "score": 0.7249,
+        "university": "University of Peradeniya",
+        "uni_code": "112B",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 6,
+        "course": "ARTS (SAB)",
+        "score": 0.7174,
+        "university": "SABARAGAMUWA UNIVERSITY OF SRI LANKA",
+        "uni_code": "021L",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 7,
+        "course": "Social Work",
+        "score": 0.7174,
+        "university": "University of Sri Jayewardenepura",
+        "uni_code": "112C",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 8,
+        "course": "Peace & Conflict Resolution",
+        "score": 0.7099,
+        "university": "University of Kelaniya",
+        "uni_code": "031D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 9,
+        "course": "Teaching English as a Second Language (TESL)",
+        "score": 0.7099,
+        "university": "University of Kelaniya",
+        "uni_code": "105D",
+        "aptitude_required": "No"
+      },
+      {
+        "rank": 10,
+        "course": "COMMUNICATION STUDIES",
+        "score": 0.6924,
+        "university": "TRINCOMALEE CAMPUS EASTERN UNIVERSITY SRI LANKA",
+        "uni_code": "029W",
+        "aptitude_required": "No"
+      }
+    ]
+  }
+]
