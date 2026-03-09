@@ -20,12 +20,45 @@ interface ALFormProps {
 
 export default function ALForm({ isOpen, onClose, onBack, initialData, profileId }: ALFormProps) {
   const router = useRouter();
+  const OL_GRADES = ['A', 'B', 'C', 'S', 'F'] as const;
+
+  const STREAM_SUBJECTS: Record<string, { mandatory: string[]; optional: string[] }> = {
+    'Bio Science': {
+      mandatory: ['Biology', 'Chemistry'],
+      optional: ['Physics', 'Agricultural Science'],
+    },
+    'Physical Science': {
+      mandatory: ['Combined Mathematics', 'Physics'],
+      optional: ['Chemistry', 'ICT'],
+    },
+    'Commerce': {
+      mandatory: [],
+      optional: ['Accounting', 'Business Studies', 'Economics', 'Business Statistics', 'ICT'],
+    },
+    'Arts': {
+      mandatory: [],
+      optional: ['History', 'Geography', 'Political Science', 'Logic', 'Media Studies', 'ICT', 'Languages', 'Religion', 'Aesthetic Subjects', 'Home Economics'],
+    },
+    'Engineering Technology': {
+      mandatory: ['Engineering Technology', 'Science for Technology'],
+      optional: ['ICT', 'Mathematics', 'Economics', 'Business Studies', 'Geography', 'Media Studies', 'Art', 'Agricultural Science', 'Home Economics'],
+    },
+    'Bio-systems Technology': {
+      mandatory: ['Bio-systems Technology', 'Science for Technology'],
+      optional: ['Agricultural Science', 'ICT', 'Economics', 'Geography', 'Business Studies', 'Media Studies', 'Mathematics', 'Art', 'Home Economics'],
+    },
+  };
+
   const initialState = {
     age: '',
     gender: '',
     nativeLanguage: '',
     preferredLanguage: '',
-    olResults: '',
+    olMaths: '',
+    olEnglish: '',
+    olScience: '',
+    olICT: '',
+    olResults: '',         // computed from the 4 fields above before submit
     alStream: '',
     alResults: '',
     otherQualifications: '',
@@ -44,6 +77,10 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState<Partial<Record<keyof typeof formData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const AL_GRADES = ['A', 'B', 'C', 'S', 'F'] as const;
+  const [alSubjects, setAlSubjects] = useState<string[]>([]);
+  const [alSubjectGrades, setAlSubjectGrades] = useState<Record<string, string>>({});
+  const [alSubjectsError, setAlSubjectsError] = useState('');
 
   // Reset form when opened
   useEffect(() => {
@@ -55,6 +92,10 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
           gender: initialData.gender || '',
           nativeLanguage: initialData.nativeLanguage || '',
           preferredLanguage: initialData.preferredLanguage || '',
+          olMaths:   (() => { const m = (initialData.olResults || '').match(/Maths:\s*(\w+)/);   return m ? m[1] : ''; })(),
+          olEnglish: (() => { const m = (initialData.olResults || '').match(/English:\s*(\w+)/); return m ? m[1] : ''; })(),
+          olScience: (() => { const m = (initialData.olResults || '').match(/Science:\s*(\w+)/); return m ? m[1] : ''; })(),
+          olICT:     (() => { const m = (initialData.olResults || '').match(/ICT:\s*(\w+)/);     return m ? m[1] : ''; })(),
           olResults: initialData.olResults || '',
           alStream: initialData.alStream || '',
           alResults: initialData.alResults || '',
@@ -70,8 +111,28 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
           currentLocation: initialData.currentLocation || '',
           preferredLocations: initialData.preferredLocations || ''
         });
+        const _parsedStream = initialData.alStream || '';
+        const _parsedGrades: Record<string, string> = {};
+        const _parsedSubjects = initialData.alResults
+          ? initialData.alResults.split(',').map((part: string) => {
+              const colonIdx = part.lastIndexOf(':');
+              if (colonIdx !== -1) {
+                const subj = part.substring(0, colonIdx).trim();
+                const grade = part.substring(colonIdx + 1).trim();
+                if (subj && grade) _parsedGrades[subj] = grade;
+                return subj;
+              }
+              return part.trim();
+            }).filter(Boolean)
+          : (_parsedStream && STREAM_SUBJECTS[_parsedStream] ? [...STREAM_SUBJECTS[_parsedStream].mandatory] : []);
+        setAlSubjects(_parsedSubjects);
+        setAlSubjectGrades(_parsedGrades);
+        setAlSubjectsError('');
       } else {
         setFormData(initialState);
+        setAlSubjects([]);
+        setAlSubjectGrades({});
+        setAlSubjectsError('');
       }
       setErrors({});
     }
@@ -93,9 +154,19 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
     checkRequired('gender', 'Gender');
     checkRequired('nativeLanguage', 'Native Language');
     checkRequired('preferredLanguage', 'Preferred Language');
-    checkRequired('olResults', 'O/L Results');
+    if (!formData.olMaths)   { newErrors.olMaths   = 'Maths grade is required';   isValid = false; }
+    if (!formData.olEnglish) { newErrors.olEnglish = 'English grade is required'; isValid = false; }
+    if (!formData.olScience) { newErrors.olScience = 'Science grade is required'; isValid = false; }
     checkRequired('alStream', 'A/L Stream');
-    checkRequired('alResults', 'A/L Results');
+    if (alSubjects.length < 3) {
+      setAlSubjectsError('Please select exactly 3 subjects');
+      isValid = false;
+    } else if (alSubjects.some(s => !alSubjectGrades[s])) {
+      setAlSubjectsError('Please select a grade for each subject');
+      isValid = false;
+    } else {
+      setAlSubjectsError('');
+    }
     checkRequired('interestArea', 'Interest Area');
     checkRequired('careerGoal', 'Career Goal');
     checkRequired('monthlyIncome', 'Monthly Income');
@@ -116,14 +187,24 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
       setIsSubmitting(true);
 
       try {
+        // Build the combined O/L results string from individual dropdowns
+        const olParts = [
+          `Maths: ${formData.olMaths}`,
+          `English: ${formData.olEnglish}`,
+          `Science: ${formData.olScience}`,
+          ...(formData.olICT ? [`ICT: ${formData.olICT}`] : []),
+        ];
+        const computedOLResults = olParts.join(', ');
+        const computedALResults = alSubjects.map(s => `${s}: ${alSubjectGrades[s] || ''}`).join(', ');
+
         const submissionData: CreateALProfileRequest = {
           age: formData.age,
           gender: formData.gender as 'Male' | 'Female' | 'Other',
           nativeLanguage: formData.nativeLanguage as 'English' | 'Sinhala' | 'Tamil',
           preferredLanguage: formData.preferredLanguage as 'English' | 'Sinhala' | 'Tamil',
-          olResults: formData.olResults,
+          olResults: computedOLResults,
           alStream: formData.alStream as any,
-          alResults: formData.alResults,
+          alResults: computedALResults,
           otherQualifications: formData.otherQualifications,
           ieltsScore: formData.ieltsScore,
           interestArea: formData.interestArea as any,
@@ -151,6 +232,8 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
         // Also save to local storage for backward compatibility
         const localData: UserData = {
           ...formData,
+          olResults: computedOLResults,
+          alResults: computedALResults,
           qualificationType: 'AL'
         };
         saveUserData(localData);
@@ -169,6 +252,13 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    if (name === 'alStream') {
+      // Reset subjects to mandatory ones of the new stream and clear all grades
+      const streamCfg = STREAM_SUBJECTS[value];
+      setAlSubjects(streamCfg ? [...streamCfg.mandatory] : []);
+      setAlSubjectGrades({});
+      setAlSubjectsError('');
+    }
     setFormData({
       ...formData,
       [name]: value
@@ -181,6 +271,31 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
       });
     }
   };
+
+  const handleSubjectToggle = (subject: string) => {
+    const config = STREAM_SUBJECTS[formData.alStream];
+    if (!config) return;
+    if (config.mandatory.includes(subject)) return; // can't toggle mandatory
+    const optNeeded = 3 - config.mandatory.length;
+    const selOptional = alSubjects.filter(s => !config.mandatory.includes(s));
+    if (alSubjects.includes(subject)) {
+      setAlSubjects(prev => prev.filter(s => s !== subject));
+      setAlSubjectGrades(prev => { const next = { ...prev }; delete next[subject]; return next; });
+    } else if (selOptional.length < optNeeded) {
+      setAlSubjects(prev => [...prev, subject]);
+    }
+    setAlSubjectsError('');
+  };
+
+  const handleGradeChange = (subject: string, grade: string) => {
+    setAlSubjectGrades(prev => ({ ...prev, [subject]: grade }));
+    if (alSubjectsError === 'Please select a grade for each subject') setAlSubjectsError('');
+  };
+
+  // Pre-compute stream config for JSX
+  const streamConfig = STREAM_SUBJECTS[formData.alStream] || null;
+  const optionalNeeded = streamConfig ? 3 - streamConfig.mandatory.length : 3;
+  const selectedOptional = streamConfig ? alSubjects.filter(s => !streamConfig.mandatory.includes(s)) : [];
 
   if (!isOpen) return null;
 
@@ -282,39 +397,159 @@ export default function ALForm({ isOpen, onClose, onBack, initialData, profileId
 
             {/* O/L Results */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">O/L Results (Maths, English, Science, ICT) <span className="text-red-500">*</span></label>
-              <textarea name="olResults" value={formData.olResults} onChange={handleChange} className={inputClass(errors.olResults)} rows={2} placeholder="e.g., Maths: A, English: B..." />
-              <ErrorMsg error={errors.olResults} />
+              <label className="block text-sm font-medium text-gray-700 mb-1">O/L Results</label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {/* Maths */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Maths <span className="text-red-500">*</span></label>
+                  <select name="olMaths" value={formData.olMaths} onChange={handleChange} className={inputClass(errors.olMaths)}>
+                    <option value="" disabled>Select</option>
+                    {OL_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                  <ErrorMsg error={errors.olMaths} />
+                </div>
+                {/* English */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">English <span className="text-red-500">*</span></label>
+                  <select name="olEnglish" value={formData.olEnglish} onChange={handleChange} className={inputClass(errors.olEnglish)}>
+                    <option value="" disabled>Select</option>
+                    {OL_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                  <ErrorMsg error={errors.olEnglish} />
+                </div>
+                {/* Science */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Science <span className="text-red-500">*</span></label>
+                  <select name="olScience" value={formData.olScience} onChange={handleChange} className={inputClass(errors.olScience)}>
+                    <option value="" disabled>Select</option>
+                    {OL_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                  <ErrorMsg error={errors.olScience} />
+                </div>
+                {/* ICT */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">ICT</label>
+                  <select name="olICT" value={formData.olICT} onChange={handleChange} className={inputClass()}>
+                    <option value="">None</option>
+                    {OL_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                </div>
+              </div>
             </div>
 
+            {/* Step 1 – A/L Stream */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Step 1 — A/L Stream <span className="text-red-500">*</span>
+              </label>
+              <select name="alStream" value={formData.alStream} onChange={handleChange} className={inputClass(errors.alStream)}>
+                <option value="" disabled>Select Stream</option>
+                <option value="Bio Science">Bio Science</option>
+                <option value="Physical Science">Physical Science</option>
+                <option value="Commerce">Commerce</option>
+                <option value="Arts">Arts</option>
+                <option value="Engineering Technology">Engineering Technology</option>
+                <option value="Bio-systems Technology">Bio-systems Technology</option>
+              </select>
+              <ErrorMsg error={errors.alStream} />
+            </div>
+
+            {/* Step 2 – A/L Subjects */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Step 2 — A/L Subjects <span className="text-red-500">*</span>
+                <span className="text-xs text-gray-500 ml-2">(Select exactly 3)</span>
+              </label>
+              {formData.alStream && streamConfig ? (
+                <div className="space-y-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                  {streamConfig.mandatory.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Mandatory (pre-selected)</p>
+                      <div className="flex flex-wrap gap-2">
+                        {streamConfig.mandatory.map(subject => (
+                          <div key={subject} className="flex items-center gap-1.5 bg-purple-100 border border-purple-300 rounded-lg px-3 py-1.5">
+                            <div className="w-4 h-4 rounded bg-purple-500 flex items-center justify-center flex-shrink-0">
+                              <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                            <span className="text-sm font-medium text-gray-800">{subject}</span>
+                            <span className="text-xs text-purple-600 font-medium">required</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                      {streamConfig.mandatory.length > 0
+                        ? `Choose ${optionalNeeded - selectedOptional.length} more subject${(optionalNeeded - selectedOptional.length) !== 1 ? 's' : ''}`
+                        : `Choose any 3 — ${3 - alSubjects.length} remaining`}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {streamConfig.optional.map(subject => {
+                        const isSelected = alSubjects.includes(subject);
+                        const canSelect = isSelected || selectedOptional.length < optionalNeeded;
+                        return (
+                          <button
+                            key={subject}
+                            type="button"
+                            onClick={() => handleSubjectToggle(subject)}
+                            disabled={!canSelect}
+                            className={`px-3 py-1.5 rounded-lg text-sm border font-medium transition-all ${
+                              isSelected
+                                ? 'bg-purple-500 border-purple-500 text-white shadow-sm'
+                                : canSelect
+                                  ? 'bg-white border-gray-300 text-gray-700 hover:border-purple-400 hover:bg-purple-50 cursor-pointer'
+                                  : 'bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed'
+                            }`}
+                          >
+                            {subject}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {alSubjectsError && <p className="text-red-500 text-xs mt-1">{alSubjectsError}</p>}
+
+                  {/* Step 2b – Grades for selected subjects */}
+                  {alSubjects.length > 0 && (
+                    <div className="pt-3 border-t border-gray-200">
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Results / Grades</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {alSubjects.map(subject => (
+                          <div key={subject}>
+                            <label className="block text-xs font-medium text-gray-600 mb-1 truncate" title={subject}>
+                              {subject} <span className="text-red-500">*</span>
+                            </label>
+                            <select
+                              value={alSubjectGrades[subject] || ''}
+                              onChange={e => handleGradeChange(subject, e.target.value)}
+                              className={inputClass(!alSubjectGrades[subject] && alSubjectsError === 'Please select a grade for each subject' ? 'err' : undefined)}
+                            >
+                              <option value="" disabled>Grade</option>
+                              {AL_GRADES.map(g => <option key={g} value={g}>{g}</option>)}
+                            </select>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-sm text-amber-700">⬆ Select an A/L Stream above to choose your subjects.</p>
+                </div>
+              )}
+            </div>
+
+            {/* IELTS Score */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* A/L Stream */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">A/L Stream <span className="text-red-500">*</span></label>
-                <select name="alStream" value={formData.alStream} onChange={handleChange} className={inputClass(errors.alStream)}>
-                  <option value="" disabled>Select Stream</option>
-                  <option value="Bio Science">Bio Science</option>
-                  <option value="Physical Science">Physical Science</option>
-                  <option value="Commerce">Commerce</option>
-                  <option value="Arts">Arts</option>
-                  <option value="Engineering Technology">Engineering Technology</option>
-                  <option value="Bio-systems Technology">Bio-systems Technology</option>
-                </select>
-                <ErrorMsg error={errors.alStream} />
-              </div>
-              {/* IELTS Score */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">IELTS Score</label>
                 <input type="number" step="0.5" name="ieltsScore" value={formData.ieltsScore} onChange={handleChange} className={inputClass(errors.ieltsScore)} placeholder="e.g. 6.5" />
                 <ErrorMsg error={errors.ieltsScore} />
               </div>
-            </div>
-
-            {/* A/L Results */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">A/L Results <span className="text-red-500">*</span></label>
-              <textarea name="alResults" value={formData.alResults} onChange={handleChange} className={inputClass(errors.alResults)} rows={2} placeholder="Enter your results..." />
-              <ErrorMsg error={errors.alResults} />
             </div>
 
             {/* Other Qualifications */}

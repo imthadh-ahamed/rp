@@ -1,6 +1,5 @@
 import shutil
 import traceback
-print("DEBUG: Script started")
 import json
 import os
 import sys
@@ -12,23 +11,46 @@ script_dir = os.path.dirname(os.path.abspath(__file__))
 backend_dir = os.path.dirname(script_dir)
 sys.path.insert(0, backend_dir)
 
+persist_dir = os.path.join(backend_dir, "data", "embeddings")
+sqlite_path = os.path.join(persist_dir, "chroma.sqlite3")
+
+# ── Check: is the SQLite file locked by the running server? ─────────────────
+def _is_locked(path: str) -> bool:
+    """Return True if the file exists and is held open by another process."""
+    if not os.path.exists(path):
+        return False
+    try:
+        os.rename(path, path)   # exclusive probe — works on Windows
+        return False
+    except OSError:
+        return True
+
+if _is_locked(sqlite_path):
+    print("\n" + "="*70)
+    print("❌  CANNOT REBUILD — database is locked by the running server!")
+    print("="*70)
+    print("   The uvicorn server has 'chroma.sqlite3' open.")
+    print("   Steps to fix:")
+    print("   1. Stop the server (Ctrl+C in the uvicorn terminal)")
+    print("   2. Run this script again:")
+    print("      cd E:\\rp\\backend")
+    print("      python scripts/build_index.py")
+    print("   3. Restart the server")
+    print("="*70 + "\n")
+    sys.exit(1)
+
 # Import Nomic embedder
 from core.rag.nomic_embedder import get_nomic_embedder
 
 try:
     # Initialize Nomic embedding model
+    print("DEBUG: Script started")
     print("Loading embedding model: nomic-ai/nomic-embed-text-v1.5...")
     embedder = get_nomic_embedder()
 
     # Load JSON
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    backend_dir = os.path.dirname(script_dir)
-
     with open(os.path.join(backend_dir, "data", "raw", "CourseData.json"), "r", encoding="utf-8") as f:
         courses = json.load(f)
-
-    # Chroma DB client - using PersistentClient with cosine similarity
-    persist_dir = os.path.join(backend_dir, "data", "embeddings")
 
     # Clear existing embeddings to ensure clean rebuild
     if os.path.exists(persist_dir):
@@ -36,7 +58,9 @@ try:
         try:
             shutil.rmtree(persist_dir)
         except Exception as e:
-            print(f"Warning: Could not delete {persist_dir}: {e}")
+            print(f"❌ Could not delete {persist_dir}: {e}")
+            print("   Make sure the server is stopped before running this script.")
+            sys.exit(1)
 
     os.makedirs(persist_dir, exist_ok=True)
     chroma = chromadb.PersistentClient(path=persist_dir)
