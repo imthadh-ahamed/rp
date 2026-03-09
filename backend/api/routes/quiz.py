@@ -1,8 +1,10 @@
+import logging
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel
 from core.services import quiz_rag_service
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/quiz", tags=["Quiz"])
 
 class QuizRequest(BaseModel):
@@ -79,7 +81,8 @@ async def generate_quiz(request: QuizRequest):
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail="An unexpected error occurred")
+        logger.error(f"Unexpected error in generate_quiz: {type(e).__name__}: {e}")
+        raise HTTPException(status_code=500, detail=f"{type(e).__name__}: {e}")
 
 @router.post("/submit")
 async def submit_quiz(submission: QuizSubmission):

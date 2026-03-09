@@ -1,7 +1,9 @@
 import json
 import os
+import shutil
 import numpy as np
 import chromadb
+import chromadb.errors
 
 # Import Nomic embedder
 try:
@@ -18,9 +20,63 @@ persist_dir = os.path.join(backend_dir, "data", "embeddings")
 print("Loading embedding model: nomic-ai/nomic-embed-text-v1.5...")
 embedder = get_nomic_embedder()
 
-# Connect to ChromaDB
-chroma = chromadb.PersistentClient(path=persist_dir)
-collection = chroma.get_collection("courses")
+# Lazy-initialized ChromaDB globals
+_chroma = None
+_collection = None
+
+
+def _get_collection():
+    """Lazy-initialize ChromaDB.
+
+    Handles two distinct failure modes:
+    1. Incompatible old-format database (pyo3 Rust panic → BaseException):
+       Deletes the corrupted dir and retries once.
+    2. Collection simply does not exist (chromadb.errors.NotFoundError):
+       The index has never been built. Returns None and prints instructions.
+    """
+    global _chroma, _collection
+    if _collection is not None:
+        return _collection
+
+    for attempt in range(2):
+        try:
+            _chroma = chromadb.PersistentClient(path=persist_dir)
+            _collection = _chroma.get_collection("courses")
+            print(f"✅ ChromaDB courses collection loaded ({_collection.count()} docs)")
+            return _collection
+        except chromadb.errors.NotFoundError:
+            # Collection hasn't been built yet — do NOT wipe the DB, just report.
+            print(
+                "⚠️  ChromaDB 'courses' collection not found.\n"
+                "    Run:  cd backend && python scripts/build_index.py\n"
+                "    (Make sure the server is stopped first on Windows!)"
+            )
+            return None
+        except BaseException as exc:
+            if attempt == 0:
+                print(
+                    f"⚠️  ChromaDB open failed (incompatible database): {exc}\n"
+                    f"    Deleting {persist_dir} and retrying with a fresh store..."
+                )
+                try:
+                    shutil.rmtree(persist_dir)
+                    os.makedirs(persist_dir, exist_ok=True)
+                except Exception as cleanup_err:
+                    print(f"    Could not remove old database: {cleanup_err}")
+                    break
+            else:
+                print(f"❌ ChromaDB initialization failed after retry: {exc}")
+    return None
+
+
+# Keep module-level names for any code that imports them directly
+@property
+def _compat_chroma():
+    return _chroma
+
+
+def _ensure_collection():
+    return _get_collection()
 
 
 def normalize(v):
@@ -90,6 +146,11 @@ def rag_search(user_input: dict, top_k: int = 10):
         return []
 
     # Query vector database
+    collection = _get_collection()
+    if collection is None:
+        print("⚠️ ChromaDB collection unavailable — run scripts/build_index.py to populate.")
+        return []
+
     print(f"Querying ChromaDB with top_k={top_k}...")
     results = collection.query(
         query_embeddings=[query_vec],

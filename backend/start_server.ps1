@@ -12,6 +12,9 @@ Set-Location $PSScriptRoot
 # Set Python path to backend directory
 $env:PYTHONPATH = $PSScriptRoot
 
+# Force UTF-8 output (prevents emoji UnicodeEncodeError on Windows)
+$env:PYTHONUTF8 = "1"
+
 Write-Host "Python Path: $env:PYTHONPATH" -ForegroundColor Yellow
 Write-Host "Starting server on http://127.0.0.1:8000" -ForegroundColor Green
 Write-Host ""
