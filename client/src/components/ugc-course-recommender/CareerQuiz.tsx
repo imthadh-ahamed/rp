@@ -3,11 +3,8 @@
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
-
-export interface CareerQuizAnswer {
-    questionId: string;
-    answer: number;
-}
+import type { CareerQuizAnswer } from '@/utils/recommendationEngine';
+export type { CareerQuizAnswer };
 
 interface CareerQuizProps {
     questionNumber: number;

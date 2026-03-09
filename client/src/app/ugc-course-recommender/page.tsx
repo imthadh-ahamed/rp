@@ -110,7 +110,7 @@ export default function UGCCourseSelectorPage() {
                         q11_urban_corporate: 0,
                         q12_flexible_path:   0,
 
-                        top_n_courses: 10, // show top 5 AI-recommended courses
+                        top_n_courses: 10, // show top 10 AI-recommended courses
                     });
                 }
             }

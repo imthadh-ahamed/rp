@@ -1,4 +1,4 @@
-// hooks/usePrediction.ts
+// hooks/usePredictions.ts
 import { useState, useCallback } from "react";
 import {
   getCombinedPredictions,
@@ -36,16 +36,22 @@ export function useCombinedPrediction() {
       setError(null);
       setResult(null);
 
-      console.log("📤 Combined prediction payload:", JSON.stringify(input, null, 2));
+      if (process.env.NODE_ENV === "development") {
+        console.log("[useCombinedPrediction] payload:", JSON.stringify(input, null, 2));
+      }
 
       try {
         const data = await getCombinedPredictions(input);
-        console.log("✅ Combined result:", data);
+        if (process.env.NODE_ENV === "development") {
+          console.log("[useCombinedPrediction] result:", data);
+        }
         setResult(data);
         return data;
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "Something went wrong";
-        console.error("❌ Combined prediction error:", message);
+        if (process.env.NODE_ENV === "development") {
+          console.error("[useCombinedPrediction] error:", message);
+        }
         setError(message);
         return null;
       } finally {
