@@ -74,9 +74,9 @@ export default function VisualRoadmap({ expandedStep, toggleStep, roadmapSteps }
                                     <div className="p-6 md:p-8">
                                         {/* Header Section */}
                                         <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                                            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${step.lightColor} ${step.textColor} text-sm font-semibold`}>
-                                                <Flag className="w-4 h-4" />
-                                                Goal: {step.goal}
+                                            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${step.lightColor}`}>
+                                                <Flag className="w-4 h-4 text-black" />
+                                                <span className="font-bold text-black">Goal: {step.goal}</span>
                                             </div>
                                             <div className="flex items-center gap-2 text-gray-500 text-sm font-medium">
                                                 <Clock className="w-4 h-4" />

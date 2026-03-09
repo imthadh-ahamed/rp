@@ -319,7 +319,7 @@ export default function CourseRecommendations({
             )}
 
             {/* ── Moderately Recommended ── */}
-            {moderatelyRecommended.length > 0 && (
+            {/* {moderatelyRecommended.length > 0 && (
                 <div>
                     <div className="flex items-center gap-3 mb-6">
                         <div className="w-1 h-8 bg-amber-500 rounded" />
@@ -332,7 +332,7 @@ export default function CourseRecommendations({
                         ))}
                     </div>
                 </div>
-            )}
+            )} */}
 
             {/* ── Conditionally Eligible ── */}
             {conditionallyEligible.length > 0 && (

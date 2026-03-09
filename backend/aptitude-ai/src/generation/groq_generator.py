@@ -1,6 +1,6 @@
 """
-Groq LLM generator — generates structured, mini-structured, and essay questions.
-Uses groq Python client (Llama 3-8B) for fast, free inference.
+LLM generator — generates structured, mini-structured, and essay questions.
+Uses Gemini 2.5 Flash via the shared OpenAI-compatible client for inference.
 
 Question types
 --------------
@@ -38,24 +38,29 @@ load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 logger = logging.getLogger(__name__)
 
 ROOT = Path(__file__).resolve().parents[2]
-with open(ROOT / "config" / "config.yaml") as fh:
-    config = yaml.safe_load(fh)
+try:
+    with open(ROOT / "config" / "config.yaml") as fh:
+        _cfg = yaml.safe_load(fh)
+except FileNotFoundError:
+    _cfg = {}
 
-MODEL_ID    = config.get("groq_model_id", "llama-3.1-8b-instant")
-MAX_TOKENS  = config.get("generation", {}).get("max_tokens", 5048)
+MAX_TOKENS  = _cfg.get("generation", {}).get("max_tokens", 8192)
 TEMPERATURE = 0.95
 
-
-def _get_client():
-    """Lazy-init Groq client — raises if GROQ_API_KEY not set."""
-    from groq import Groq
-    api_key = os.getenv("GROQ_API_KEY")
-    if not api_key:
-        raise EnvironmentError(
-            "GROQ_API_KEY not set. Add it to your .env file. "
-            "Get a free key at https://console.groq.com"
-        )
-    return Groq(api_key=api_key)
+# Shared Gemini client (same one used by the rest of the backend)
+try:
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    from llm.deepseek_client import client as _llm_client, config as _llm_config
+    MODEL_ID = _llm_config["model"]
+except Exception as _e:
+    logger.warning(f"Could not import shared LLM client: {_e}. Falling back to env-based config.")
+    from openai import OpenAI as _OpenAI
+    _llm_client = _OpenAI(
+        base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+        api_key=os.getenv("GEMINI_API_KEY", ""),
+    )
+    MODEL_ID = "gemini-2.5-flash"
 
 
 def _parse_json_array(text: str) -> list:
@@ -322,11 +327,10 @@ Format as a JSON array:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _call_groq(system_msg: str, user_msg: str, question_type: str, n: int) -> List[Dict]:
-    """Shared Groq API call with logging. Retries once on empty/unparseable response."""
-    client = _get_client()
+    """Shared LLM call (Gemini) with logging. Retries once on empty/unparseable response."""
     for attempt in range(2):
         try:
-            response = client.chat.completions.create(
+            response = _llm_client.chat.completions.create(
                 model=MODEL_ID,
                 messages=[
                     {"role": "system", "content": system_msg},
@@ -334,11 +338,22 @@ def _call_groq(system_msg: str, user_msg: str, question_type: str, n: int) -> Li
                 ],
                 max_tokens=MAX_TOKENS,
                 temperature=TEMPERATURE,
+                timeout=180.0,
             )
-            raw = response.choices[0].message.content
+            choice = response.choices[0]
+            raw = choice.message.content
             if raw is None:
-                logger.warning(f"Empty response from Groq for '{question_type}' (attempt {attempt+1})")
+                logger.warning(f"Empty response from LLM for '{question_type}' (attempt {attempt+1})")
                 continue
+            finish = getattr(choice, "finish_reason", "unknown")
+            if finish == "length":
+                logger.warning(
+                    f"LLM response truncated (finish_reason=length) for '{question_type}': "
+                    f"{len(raw)} chars returned."
+                )
+            # Strip code fences if present
+            import re as _re
+            raw = _re.sub(r"```(?:json)?\s*", "", raw).replace("```", "").strip()
             questions = _parse_json_array(raw)
             if questions:
                 logger.info(f"Generated {len(questions)} '{question_type}' questions [n={n}]")
