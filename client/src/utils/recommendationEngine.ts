@@ -1,4 +1,4 @@
-import { ugcCourses, UGCCourse } from './ugcCourseData';
+import { ugcCourses } from './ugcCourseData';
 
 export interface ALResultsData {
     stream: string;

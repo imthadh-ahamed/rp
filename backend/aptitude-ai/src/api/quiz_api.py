@@ -11,7 +11,7 @@ import asyncio
 import logging
 import os
 import uuid
-from collections import defaultdict
+from collections import OrderedDict
 from pathlib import Path
 from typing import Any, Dict, List, Literal, Optional
 
@@ -62,9 +62,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── In-memory session history ─────────────────────────────────────────────────
-_session_history: Dict[str, List[str]] = defaultdict(list)
-MAX_HISTORY = 200  # cap per session
+# ── In-memory session history (LRU-bounded) ──────────────────────────────────
+MAX_HISTORY = 200   # max question strings kept per session
+MAX_SESSIONS = 500  # max live sessions; LRU-evicts oldest when exceeded
+
+
+class _LRUSessionStore:
+    """OrderedDict-backed store that evicts the least-recently-used session
+    once the total count exceeds MAX_SESSIONS, preventing unbounded growth."""
+
+    def __init__(self, max_sessions: int) -> None:
+        self._store: OrderedDict[str, List[str]] = OrderedDict()
+        self._max = max_sessions
+
+    def get(self, session_id: str) -> List[str]:
+        """Return the question history for a session, creating it if needed.
+        Promotes the session to most-recently-used on every access."""
+        if session_id not in self._store:
+            if len(self._store) >= self._max:
+                self._store.popitem(last=False)  # evict LRU entry
+            self._store[session_id] = []
+        else:
+            self._store.move_to_end(session_id)
+        return self._store[session_id]
+
+    def append(self, session_id: str, question: str) -> None:
+        """Append a question string and trim to MAX_HISTORY."""
+        history = self.get(session_id)
+        history.append(question)
+        if len(history) > MAX_HISTORY:
+            del history[: len(history) - MAX_HISTORY]
+
+
+_session_history = _LRUSessionStore(MAX_SESSIONS)
 
 # ── Question type literal ─────────────────────────────────────────────────────
 QuestionTypeEnum = Literal["structured", "mini_structured", "essay"]
@@ -180,7 +210,7 @@ async def generate(req: GenerateRequest):
 
     from src.validation.duplicate_checker import DuplicateChecker
 
-    previously_asked = _session_history[session_id][-MAX_HISTORY:]
+    previously_asked = _session_history.get(session_id)
     context = await _build_context()
     logger.info(f"Mode: {'RAG' if context else 'direct'} | history={len(previously_asked)} forbidden")
 
@@ -262,7 +292,7 @@ async def generate(req: GenerateRequest):
 
     # Store question text in session history to prevent repeats
     for q in questions:
-        _session_history[session_id].append(q.question)
+        _session_history.append(session_id, q.question)
 
     return GenerateResponse(
         session_id=session_id,
