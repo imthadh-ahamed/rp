@@ -123,7 +123,7 @@ export default function AptitudeTestList({
                     <h3 className="text-lg font-bold text-violet-900">AI Quiz Generator</h3>
                     {apiAvailable === false && (
                         <span className="ml-auto text-xs text-amber-600 bg-amber-100 px-2 py-0.5 rounded-full">
-                            API offline – start aptitude-ai server on :8001
+                            API offline – start aptitude-ai server on :8000
                         </span>
                     )}
                     {apiAvailable === true && (

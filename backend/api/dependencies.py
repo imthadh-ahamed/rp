@@ -133,9 +133,11 @@ def preprocess_course(req: StudentProfileRequest) -> pd.DataFrame:
 
 
 def run_course_model(req: StudentProfileRequest, top_n: int) -> list[CourseRecommendation]:
+    from fastapi import HTTPException
     if course_model is None:
-        from fastapi import HTTPException
         raise HTTPException(status_code=503, detail="Course ML model not loaded.")
+    if course_attribute_map is None:
+        raise HTTPException(status_code=503, detail="Course attribute map not loaded.")
     processed = preprocess_course(req)
     probas = course_model.predict_proba(processed)[0]
     sorted_indices = np.argsort(probas)[::-1]

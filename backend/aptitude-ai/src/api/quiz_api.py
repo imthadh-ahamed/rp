@@ -1,6 +1,6 @@
 """
 Aptitude AI — Quiz Generation API
-FastAPI app running on port 8001.
+FastAPI app running on port 8000.
 
 Endpoints
 ---------

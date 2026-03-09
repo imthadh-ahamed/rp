@@ -1,6 +1,6 @@
 /**
  * Aptitude AI Quiz — API service client
- * Communicates with FastAPI on port 8001
+ * Communicates with FastAPI on port 8000
  *
  * Question types:
  *   structured      — full MCQ, 4 options, one correct answer
@@ -11,7 +11,7 @@
  * subsequent calls so the backend knows which questions to avoid repeating.
  */
 
-const QUIZ_BASE = process.env.NEXT_PUBLIC_QUIZ_API_URL ?? "http://localhost:8001";
+const QUIZ_BASE = process.env.NEXT_PUBLIC_QUIZ_API_URL ?? "http://localhost:8000/aptitude-ai";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
