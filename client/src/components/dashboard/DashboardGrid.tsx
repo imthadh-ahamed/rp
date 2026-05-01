@@ -31,7 +31,7 @@ const gridItems = [
     description:
       "Assess and enhance communication, leadership, teamwork skills.",
     buttonText: "Explore",
-    href: "#",
+    href: "/soft-skills",
   },
 ];
 
@@ -39,9 +39,7 @@ export default function DashboardGrid() {
   const router = useRouter();
 
   const handleCardClick = (href: string) => {
-    if (href !== "#") {
-      router.push(href);
-    }
+    router.push(href);
   };
 
   return (
