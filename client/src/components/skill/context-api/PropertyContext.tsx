@@ -1,7 +1,7 @@
 'use client';
 
-import { Filters } from '@/app/types/property/filtertypes';
-import { propertyData } from '@/app/types/property/propertyData';
+import { Filters } from '@/components/skill/app/types/property/filtertypes';
+import { propertyData } from '@/components/skill/app/types/property/propertyData';
 import React, {
   createContext,
   useState,
@@ -10,7 +10,7 @@ import React, {
   Dispatch,
   SetStateAction
 } from 'react';
-import { getDataPath } from '@/utils/pathUtils';
+import { getDataPath } from '@/components/skill/utils/pathUtils';
 
 interface PropertyContextType {
   properties: propertyData[];

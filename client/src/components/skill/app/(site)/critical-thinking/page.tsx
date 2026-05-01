@@ -1,7 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
-import HeroSub from "@/app/components/shared/hero-sub";
-import ProblemSection from "@/app/components/prolemSection/index";
+import HeroSub from "@/components/skill/app/components/shared/hero-sub";
+import ProblemSection from "@/components/skill/app/components/prolemSection/index";
 export const metadata: Metadata = {
   title: "Critical Thinking ",
 };

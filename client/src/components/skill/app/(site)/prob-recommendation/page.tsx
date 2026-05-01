@@ -1,6 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import ProbRecomm from "@/app/components/prob-recomm/index";
+import ProbRecomm from "@/components/skill/app/components/prob-recomm/index";
 export const metadata: Metadata = {
   title: "Results of Evaluation",
 };

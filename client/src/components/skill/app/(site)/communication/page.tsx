@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import VoiceChatbot from '@/app/components/comSection/VoiceChatbot';
+import VoiceChatbot from '@/components/skill/app/components/comSection/VoiceChatbot';
 
 export const metadata: Metadata = {
   title: 'Communication Evaluation | SkillDev',

@@ -6,7 +6,7 @@ import { useTheme } from "next-themes";
 import Logo from "./logo";
 import HeaderLink from "./navigation/HeaderLink";
 import MobileHeaderLink from "./navigation/MobileHeaderLink";
-import { getDataPath, getImgPath } from "@/utils/pathUtils";
+import { getDataPath, getImgPath } from "@/components/skill/utils/pathUtils";
 
 const Header: React.FC = () => {
   const pathUrl = usePathname();

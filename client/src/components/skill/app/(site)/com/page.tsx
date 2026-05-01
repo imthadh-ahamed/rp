@@ -1,7 +1,5 @@
 'use client'
 import React from "react";
-import { Metadata } from "next";
-import HeroSub from "@/app/components/shared/hero-sub";
 import { useState } from "react";
 import { Send, Sparkles, Tag, RefreshCcw, Percent } from "lucide-react";
 

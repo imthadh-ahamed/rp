@@ -2,8 +2,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from 'react';
-import { PropertyContext } from '@/context-api/PropertyContext';
-import { getImgPath } from '@/utils/pathUtils';
+import { PropertyContext } from '@/components/skill/context-api/PropertyContext';
+import { getImgPath } from '@/components/skill/utils/pathUtils';
 
 const Footer = () => {
   const { updateFilter } = useContext(PropertyContext)!;

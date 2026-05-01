@@ -1,13 +1,14 @@
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
-import Aoscompo from "@/utils/aos";
-const dmsans = DM_Sans({ subsets: ["latin"] });
+import Aoscompo from "@/components/skill/utils/aos";
 import NextTopLoader from 'nextjs-toploader';
 import { AppContextProvider } from "../context-api/PropertyContext";
 import Footer from "./components/layout/footer";
 import ScrollToTop from "./components/scroll-to-top";
 import Header from "./components/layout/header";
+
+const dmsans = DM_Sans({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,

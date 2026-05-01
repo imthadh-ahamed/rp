@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import HeroSub from "./components/shared/hero-sub";
 import Link from "next/link";
 import Image from "next/image";
-import { getImgPath } from "@/utils/pathUtils";
+import { getImgPath } from "@/components/skill/utils/pathUtils";
 
 export const metadata: Metadata = {
   title: "404 Page | Property-pro",

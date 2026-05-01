@@ -1,9 +1,9 @@
 "use client";
-import { PropertyContext } from "@/context-api/PropertyContext";
+import { PropertyContext } from "@/components/skill/context-api/PropertyContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
-import { getDataPath, getImgPath } from "@/utils/pathUtils";
+import { getDataPath, getImgPath } from "@/components/skill/utils/pathUtils";
 
 export default function DiscoverProperties() {
   const { properties, updateFilter } = useContext(PropertyContext)!;

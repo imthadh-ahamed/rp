@@ -1,6 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
-import Recommendation from "@/app/components/recommendation/index";
+import Recommendation from "@/components/skill/app/components/recommendation/index";
 export const metadata: Metadata = {
   title: "Critical Thinking | Property-pro",
 };

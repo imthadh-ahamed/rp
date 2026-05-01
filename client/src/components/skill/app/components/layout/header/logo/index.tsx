@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getImgPath } from '@/utils/pathUtils';
+import { getImgPath } from '@/components/skill/utils/pathUtils';
 
 const Logo: React.FC = () => {
 

@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import CommResults from '@/app/components/comSection/CommResults';
+import CommResults from '@/components/skill/app/components/comSection/CommResults';
 
 export const metadata: Metadata = {
   title: 'Communication Results | SkillDev',
